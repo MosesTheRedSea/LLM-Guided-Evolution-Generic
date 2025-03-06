@@ -21,6 +21,7 @@ else:
 	DEVICE = 'cuda'
 	# DEVICE = 'cpu'
 LLM_MODEL = 'mixtral' # Mixtral the GOAT #3
+LLM_MODEL_PATH = '/storage/ice-shared/vip-vvk/llm_storage/mixtral/Mixtral-8x7B-Instruct-v0.1/'
 #LLM_MODEL = 'llama3' # llma3 is wackkkkk  #3
 # SEED_PACKAGE_DIR = "./sota/ExquisiteNetV2/divine_seed_module"
 

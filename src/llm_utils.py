@@ -275,6 +275,34 @@ def submit_mixtral(txt2mixtral, max_new_tokens=764, top_p=0.15, temperature=0.1,
     else:
         return output_txt, generate_text
     
+def submit_mixtral_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, server_url=f"http://{os.getenv('SERVER_HOSTNAME', 'localhost')}:8000/generate", return_gen=False):
+    payload = {
+        "prompt": prompt,
+        "max_new_tokens": max_new_tokens, # can change to random between 800 - 1000 if needed
+        "temperature": temperature,
+        "top_p": top_p
+    }
+    print(os.getenv("SERVER_HOSTNAME", "localhost"))
+
+    headers = {"Content-Type": "application/json"}
+    
+    try:
+        response = requests.post(server_url, headers=headers, json=payload)
+        
+        if response.status_code == 200:
+            output_txt = response.json().get("generated_text", "No output received.")
+            print(f'{response.json().get("response_time_sec", "-1")} sec')
+            if return_gen is False:
+                return output_txt
+            else:
+                return output_txt, generate_text
+        else:
+            print(f"Error: {response.status_code}")
+            print(response.text)
+            return None
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {e}")
+        return None
     
 def mutate_prompts(n=5):
     templates = np.random.choice(glob.glob(f'{ROOT_DIR}/templates/FixedPrompts/*/*.txt'), n)

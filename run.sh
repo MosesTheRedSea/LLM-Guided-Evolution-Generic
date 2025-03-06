@@ -14,6 +14,12 @@ module load cuda
 module load anaconda3 
 #export CUDA_VISIBLE_DEVICES=0
 export MKL_THREADING_LAYER=GNU # Had to Change 
+export SERVER_HOSTNAME=$(hostname)
+
 conda activate llmge-env  
 conda info 
+
+uvicorn server:app --host $SERVER_HOSTNAME --port 8000 --workers 1 &
+sleep 5
+
 python run_improved.py first_test
