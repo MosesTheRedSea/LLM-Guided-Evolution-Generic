@@ -49,7 +49,7 @@ def main():
     # os.chdir('./sota/ExquisiteNetV2')
 
     # I used the absolute path Instead
-    os.chdir('/storage/ice1/2/6/madewolu9/LLM_PointNet/LLM-Guided-PointCloud-Class/sota/ExquisiteNetV2')
+    os.chdir('/storage/ice1/2/6/madewolu9/LLM_PointNet/LLM-Guided-PointCloud-Class/sota/ExquisiteNetV2/')
 
     args = get_args()
 

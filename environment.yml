@@ -1,0 +1,17 @@
+name: llmge-env
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - numpy
+  - torch
+  - torchvision
+  - cudatoolkit=11.3
+  - transformers
+  - uvicorn
+  - fastapi
+  - pip:
+    - flash-attn
+    - accelerate

@@ -27,7 +27,6 @@ def print_ancestery(data):
         print(f"\t{data[gene]['MUTATE_TYPE']}")
         
 
-
 """
 
 ░█▄─░█ ░█▀▀▀█    ░█▀▀█ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ 
@@ -67,8 +66,8 @@ def update_ancestry(gene_id_child, gene_id_parent, ancestery, mutation_type=None
 █── █▀▀█ █▄▄█ █──█ █─▀█ █▀▀ ▀▀█ 
 ▀▀▀ ▀──▀ ▀──▀ ▀──▀ ▀▀▀▀ ▀▀▀ ▀▀▀
 """
+# PointNet++
 
-# Point Transformers Menghao Model
 # def generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, SOTA_ROOT, SEED_NETWORK, ROOT_DIR):
 #     """
 #     Generates a template based on given probabilities and gene information.
@@ -83,8 +82,7 @@ def update_ancestry(gene_id_child, gene_id_parent, ancestery, mutation_type=None
 #     if (PROB_EOT > np.random.uniform()) and (GEN_COUNT > 0):
 #         print("\t‣ EoT")
 #         top_gene = np.random.choice([x[0] for x in TOP_N_GENES])
-#         # Alteration
-#         parts_x = split_file(f"{SOTA_ROOT}/model/llmge_models/model_{top_gene}.py") 
+#         parts_x = split_file(f"{SOTA_ROOT}/models/llmge-models/pointnet2_cls_ssg_{top_gene}.py")
 #         parts_y = split_file(SEED_NETWORK)
 #         parts = [(x.strip(), y.strip(), idx) for idx, (x, y) in enumerate(zip(parts_x[1:], parts_y[1:]))]
 #         random.shuffle(parts)
@@ -108,15 +106,13 @@ def update_ancestry(gene_id_child, gene_id_parent, ancestery, mutation_type=None
 #         with open(f'{ROOT_DIR}/templates/ConstantRules.txt', 'r') as file:
 #             rules_txt = file.read()
 #         template_txt = f'{template_txt}\n{rules_txt}'
-
 #     return template_txt, mute_type
 
 
-# ExquisiteNetV2 - generate_template method
-
+# Point Transformers Menghao Model
 def generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, SOTA_ROOT, SEED_NETWORK, ROOT_DIR):
     """
-    :Generates a template based on given probabilities and gene information.
+    Generates a template based on given probabilities and gene information.
     :param PROB_EOT: Probability for End of Tree (EoT) operation.
     :param GEN_COUNT: Current generation count.
     :param TOP_N_GENES: List of top N genes.
@@ -125,11 +121,11 @@ def generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, SOTA_ROOT, SEED_NETWORK,
     :param ROOT_DIR: Root directory for templates.
     :return: A tuple containing the template text and the mutation type.
     """
-
     if (PROB_EOT > np.random.uniform()) and (GEN_COUNT > 0):
         print("\t‣ EoT")
         top_gene = np.random.choice([x[0] for x in TOP_N_GENES])
-        parts_x = split_file(f"{SOTA_ROOT}/models/network_{top_gene}.py")
+        # Alteration
+        parts_x = split_file(f"{SOTA_ROOT}/models/Menghao/model_{top_gene}.py") # <- Point Transformers changed where the folder directory should be pointed
         parts_y = split_file(SEED_NETWORK)
         parts = [(x.strip(), y.strip(), idx) for idx, (x, y) in enumerate(zip(parts_x[1:], parts_y[1:]))]
         random.shuffle(parts)
@@ -157,20 +153,106 @@ def generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, SOTA_ROOT, SEED_NETWORK,
     return template_txt, mute_type
 
 
+# ExquisiteNetV2 - generate_template method
+# def generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, SOTA_ROOT, SEED_NETWORK, ROOT_DIR):
+#     """
+#     :Generates a template based on given probabilities and gene information.
+#     :param PROB_EOT: Probability for End of Tree (EoT) operation.
+#     :param GEN_COUNT: Current generation count.
+#     :param TOP_N_GENES: List of top N genes.
+#     :param SOTA_ROOT: Directory path for state-of-the-art root.
+#     :param SEED_NETWORK: Seed network file path.
+#     :param ROOT_DIR: Root directory for templates.
+#     :return: A tuple containing the template text and the mutation type.
+#     """
+
+#     if (PROB_EOT > np.random.uniform()) and (GEN_COUNT > 0):
+#         print("\t‣ EoT")
+#         top_gene = np.random.choice([x[0] for x in TOP_N_GENES])
+#         parts_x = split_file(f"{SOTA_ROOT}/models/network_{top_gene}.py")
+#         parts_y = split_file(SEED_NETWORK)
+#         parts = [(x.strip(), y.strip(), idx) for idx, (x, y) in enumerate(zip(parts_x[1:], parts_y[1:]))]
+#         random.shuffle(parts)
+#         for x, y, augment_idx in parts:
+#             if x.strip() != y.strip():
+#                 break
+                
+#         eot_template_path = os.path.join(ROOT_DIR, 'templates/EoT/EoT.txt')
+#         with open(eot_template_path, 'r') as file:
+#             eot_template_txt = file.read()
+            
+#         template_txt = eot_template_txt.format(x, y, "{}")
+#         mute_type = "EoT"
+#     else:
+#         print("\t‣ FixedPrompts")
+#         prompt_templates = glob.glob(f'{ROOT_DIR}/templates/FixedPrompts/*/*.txt')
+#         template_path = np.random.choice(prompt_templates)
+#         mute_type = os.path.basename(template_path).split('.')[0]  # Assuming the file extension needs to be removed
+#         with open(template_path, 'r') as file:
+#             template_txt = file.read()
+#         with open(f'{ROOT_DIR}/templates/ConstantRules.txt', 'r') as file:
+#             rules_txt = file.read()
+#         template_txt = f'{template_txt}\n{rules_txt}'
+#     return template_txt, mute_type
+
 
 """
 █▀▀ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ █▀▀ 
 █── █▀▀█ █▄▄█ █──█ █─▀█ █▀▀ ▀▀█ 
 ▀▀▀ ▀──▀ ▀──▀ ▀──▀ ▀▀▀▀ ▀▀▀ ▀▀▀
 """
+
 """
 Main Job Functions
 """  
 # Made changes to write_bash_script method -> network.py not in PT
 # Point Transformers Menghao Model - write_bash_script
-# def write_bash_script(input_filename_x=f'{SOTA_ROOT}/models/Menghao/model.py', # Different input_filename for Point Transformers
+def write_bash_script(input_filename_x=f'{SOTA_ROOT}/models/Menghao/model.py', # Different input_filename for Point Transformers
+                      input_filename_y=None,
+                      output_filename=f'{SOTA_ROOT}/models/Menghao/model_x.py', 
+                      gpu='TeslaV100-PCIE-32GB',
+                      python_file='src/llm_mutation.py', 
+                      top_p=0.1, temperature=0.2,
+                     ):
+    def fetch_gene(filepath):
+        return os.path.basename(filepath).replace('model_','').replace('.py','')
+    global GLOBAL_DATA_ANCESTERY
+    QC_CHECK_BOOL = PROB_QC > np.random.uniform()
+    # Extract the directory path from the file path
+    dir_path = os.path.dirname(output_filename)
+    # Create the directory, ignore error if it already exists
+    os.makedirs(dir_path, exist_ok=True)
+    gene_id_parent = fetch_gene(input_filename_x)
+    gene_id_child = fetch_gene(output_filename)
+    if python_file=='src/llm_mutation.py':
+        template_txt, mute_type = generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, 
+                                                    SOTA_ROOT, SEED_NETWORK, ROOT_DIR)
+        if GEN_COUNT >= 0: # this does not need to happen at creation of population
+            GLOBAL_DATA_ANCESTERY = update_ancestry(gene_id_child, gene_id_parent, GLOBAL_DATA_ANCESTERY, 
+                                                    mutation_type=mute_type, gene_id_parent2=None)
+            # print(gene_id_child); print(GLOBAL_DATA_ANCESTERY[gene_id_parent])
+        out_dir = str(GENERATION)
+        file_path = os.path.join(out_dir, f'{gene_id_child}_model.txt')
+        os.makedirs(out_dir, exist_ok=True)
+        with open(file_path, 'w') as file:
+            file.write(template_txt)
+        temp_text = f'{python_file} {input_filename_x} {output_filename} {file_path} --top_p {top_p} --temperature {temperature}'
+        python_runline = f"python {temp_text} --apply_quality_control '{QC_CHECK_BOOL}' --hugging_face {HUGGING_FACE_BOOL}"
+    elif python_file=='src/llm_crossover.py':
+        gene_id_parent2 = fetch_gene(input_filename_y)
+        GLOBAL_DATA_ANCESTERY = update_ancestry(gene_id_child, gene_id_parent, GLOBAL_DATA_ANCESTERY, 
+                                                mutation_type=None, gene_id_parent2=gene_id_parent2)
+        temp_text = f"{python_file} {input_filename_x} {input_filename_y} {output_filename} --top_p {top_p} --temperature {temperature}"
+        python_runline = f"python {temp_text} --apply_quality_control '{QC_CHECK_BOOL}' --hugging_face {HUGGING_FACE_BOOL}"
+    else:
+        raise ValueError("Invalid python_file argument")
+    bash_script_content = LLM_BASH_SCRIPT_TEMPLATE.format(gpu, python_runline)
+    return bash_script_content
+
+#ExquisiteNetV2 - write_bash_script
+# def write_bash_script(input_filename_x=f'{SOTA_ROOT}/network.py',
 #                       input_filename_y=None,
-#                       output_filename=f'{SOTA_ROOT}/models/llmge_models/model_x.py',
+#                       output_filename=f'{SOTA_ROOT}/models/network_x.py',
 #                       gpu='TeslaV100-PCIE-32GB',
 #                       python_file='src/llm_mutation.py', 
 #                       top_p=0.1, temperature=0.2,
@@ -178,7 +260,7 @@ Main Job Functions
 #                      ):
     
 #     def fetch_gene(filepath):
-#         return os.path.basename(filepath).replace('model_','').replace('.py','')
+#         return os.path.basename(filepath).replace('network_','').replace('.py','')
     
 #     global GLOBAL_DATA_ANCESTERY
     
@@ -220,61 +302,6 @@ Main Job Functions
 #     bash_script_content = LLM_BASH_SCRIPT_TEMPLATE.format(gpu, python_runline)
 #     return bash_script_content
 
-
-
-#ExquisiteNetV2 - write_bash_script
-def write_bash_script(input_filename_x=f'{SOTA_ROOT}/network.py',
-                      input_filename_y=None,
-                      output_filename=f'{SOTA_ROOT}/models/network_x.py',
-                      gpu='TeslaV100-PCIE-32GB',
-                      python_file='src/llm_mutation.py', 
-                      top_p=0.1, temperature=0.2,
-                     
-                     ):
-    
-    def fetch_gene(filepath):
-        return os.path.basename(filepath).replace('network_','').replace('.py','')
-    
-    global GLOBAL_DATA_ANCESTERY
-    
-    QC_CHECK_BOOL = PROB_QC > np.random.uniform()
-    
-    # Extract the directory path from the file path
-    dir_path = os.path.dirname(output_filename)
-    # Create the directory, ignore error if it already exists
-    os.makedirs(dir_path, exist_ok=True)
-    
-    gene_id_parent = fetch_gene(input_filename_x)
-    gene_id_child = fetch_gene(output_filename)
-    if python_file=='src/llm_mutation.py':
-        template_txt, mute_type = generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, 
-                                                    SOTA_ROOT, SEED_NETWORK, ROOT_DIR)
-        if GEN_COUNT >= 0: # this does not need to happen at creation of population
-            GLOBAL_DATA_ANCESTERY = update_ancestry(gene_id_child, gene_id_parent, GLOBAL_DATA_ANCESTERY, 
-                                                    mutation_type=mute_type, gene_id_parent2=None)
-            # print(gene_id_child); print(GLOBAL_DATA_ANCESTERY[gene_id_parent])
-        out_dir = str(GENERATION)
-        file_path = os.path.join(out_dir, f'{gene_id_child}_model.txt')
-        os.makedirs(out_dir, exist_ok=True)
-        with open(file_path, 'w') as file:
-            file.write(template_txt)
-            
-        temp_text = f'{python_file} {input_filename_x} {output_filename} {file_path} --top_p {top_p} --temperature {temperature}'
-        python_runline = f"python {temp_text} --apply_quality_control '{QC_CHECK_BOOL}' --hugging_face {HUGGING_FACE_BOOL}"
-        
-    elif python_file=='src/llm_crossover.py':
-        gene_id_parent2 = fetch_gene(input_filename_y)
-        GLOBAL_DATA_ANCESTERY = update_ancestry(gene_id_child, gene_id_parent, GLOBAL_DATA_ANCESTERY, 
-                                                mutation_type=None, gene_id_parent2=gene_id_parent2)
-        
-        temp_text = f"{python_file} {input_filename_x} {input_filename_y} {output_filename} --top_p {top_p} --temperature {temperature}"
-        python_runline = f"python {temp_text} --apply_quality_control '{QC_CHECK_BOOL}' --hugging_face {HUGGING_FACE_BOOL}"
-    else:
-        raise ValueError("Invalid python_file argument")
-
-    bash_script_content = LLM_BASH_SCRIPT_TEMPLATE.format(gpu, python_runline)
-    return bash_script_content
-
 """
 
 ░█▄─░█ ░█▀▀▀█    ░█▀▀█ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ 
@@ -292,8 +319,6 @@ def create_bash_file(file_path, **kwargs):
     with open(file_path, 'w') as file:
         file.write(bash_script_content)
     print(f"\t‣ Bash script saved to {file_path}", flush=True)
-
-
 """
 
 ░█▄─░█ ░█▀▀▀█    ░█▀▀█ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ 
@@ -423,44 +448,6 @@ def generate_random_string(length=20):
 ▀▀▀ ▀──▀ ▀──▀ ▀──▀ ▀▀▀▀ ▀▀▀ ▀▀▀
 """
 # Point Transformers create_individual code
-# def create_individual(container, temp_min=0.05, temp_max=0.4):
-#     box_print("Create Individual", print_bbox_len=60, new_line_end=False)
-#     out_dir = str(GENERATION)
-#     gene_id = generate_random_string(length=24)
-#     # Select prompte and temp
-#     temperature = round(random.uniform(temp_min, temp_max), 2)
-#     # Assign a file path and name for the model creation bash
-#     file_path = os.path.join(out_dir, f'{gene_id}.sh')
-#     successful_sub_flag, job_id, local_output = submit_bash(file_path, 
-#                                               input_filename_x=f'{SOTA_ROOT}/models/Menghao/model.py',
-#                                               output_filename =f'{SOTA_ROOT}/models/llmge_models/model_{gene_id}.py',
-#                                               gpu=LLM_GPU,
-#                                               python_file='src/llm_mutation.py', 
-#                                               top_p=0.1, temperature=temperature)
-#     # Log data
-#     GLOBAL_DATA[gene_id] = {'sub_flag':successful_sub_flag, 'job_id':job_id, 
-#                             'status':'subbed file', 'fitness':None, 'start_time':time.time()}
-#     GLOBAL_DATA_ANCESTERY[gene_id] = {'GENES':[gene_id], 'MUTATE_TYPE':["CREATED"]}
-    
-#     individual = container([gene_id])  # Assign a file ID
-    
-#     if DELAYED_CHECK:
-#         GLOBAL_DATA[gene_id]['status'] = 'DELAYED_CHECK'
-#         individual = creator.Individual([gene_id])
-#         return individual
-    
-#     if successful_sub_flag:
-#         if job_id is not None:
-#             print(f'Checking for Job Completion: {job_id} for {gene_id}', flush=True)
-#         else:
-#             print(f'Checking completion for {gene_id}', flush=True)
-#         job_done = check4job_completion(job_id=job_id, local_output=local_output)
-#         # print(f'Model Files for {gene_id} are Loaded') if job_done else print(f'Error Loading Model Files for {gene_id}', flush=True)
-        
-#     return individual
-
-
-# ExquisiteNetV2 - create_individual source code
 def create_individual(container, temp_min=0.05, temp_max=0.4):
     box_print("Create Individual", print_bbox_len=60, new_line_end=False)
     out_dir = str(GENERATION)
@@ -470,8 +457,8 @@ def create_individual(container, temp_min=0.05, temp_max=0.4):
     # Assign a file path and name for the model creation bash
     file_path = os.path.join(out_dir, f'{gene_id}.sh')
     successful_sub_flag, job_id, local_output = submit_bash(file_path, 
-                                              input_filename_x=f'{SOTA_ROOT}/network.py',
-                                              output_filename =f'{SOTA_ROOT}/models/network_{gene_id}.py',
+                                              input_filename_x=f'{SOTA_ROOT}/models/Menghao/model.py',
+                                              output_filename =f'{SOTA_ROOT}/models/Menghao/model_{gene_id}.py',
                                               gpu=LLM_GPU,
                                               python_file='src/llm_mutation.py', 
                                               top_p=0.1, temperature=temperature)
@@ -479,14 +466,11 @@ def create_individual(container, temp_min=0.05, temp_max=0.4):
     GLOBAL_DATA[gene_id] = {'sub_flag':successful_sub_flag, 'job_id':job_id, 
                             'status':'subbed file', 'fitness':None, 'start_time':time.time()}
     GLOBAL_DATA_ANCESTERY[gene_id] = {'GENES':[gene_id], 'MUTATE_TYPE':["CREATED"]}
-    
     individual = container([gene_id])  # Assign a file ID
-    
     if DELAYED_CHECK:
         GLOBAL_DATA[gene_id]['status'] = 'DELAYED_CHECK'
         individual = creator.Individual([gene_id])
         return individual
-    
     if successful_sub_flag:
         if job_id is not None:
             print(f'Checking for Job Completion: {job_id} for {gene_id}', flush=True)
@@ -497,7 +481,39 @@ def create_individual(container, temp_min=0.05, temp_max=0.4):
         
     return individual
 
-
+# ExquisiteNetV2 - create_individual source code
+# def create_individual(container, temp_min=0.05, temp_max=0.4):
+#     box_print("Create Individual", print_bbox_len=60, new_line_end=False)
+#     out_dir = str(GENERATION)
+#     gene_id = generate_random_string(length=24)
+#     # Select prompte and temp
+#     temperature = round(random.uniform(temp_min, temp_max), 2)
+#     # Assign a file path and name for the model creation bash
+#     file_path = os.path.join(out_dir, f'{gene_id}.sh')
+#     successful_sub_flag, job_id, local_output = submit_bash(file_path, 
+#                                               input_filename_x=f'{SOTA_ROOT}/network.py',
+#                                               output_filename =f'{SOTA_ROOT}/models/network_{gene_id}.py',
+#                                               gpu=LLM_GPU,
+#                                               python_file='src/llm_mutation.py', 
+#                                               top_p=0.1, temperature=temperature)
+#     # Log data
+#     GLOBAL_DATA[gene_id] = {'sub_flag':successful_sub_flag, 'job_id':job_id, 
+#                             'status':'subbed file', 'fitness':None, 'start_time':time.time()}
+#     GLOBAL_DATA_ANCESTERY[gene_id] = {'GENES':[gene_id], 'MUTATE_TYPE':["CREATED"]}
+#     individual = container([gene_id])  # Assign a file ID
+#     if DELAYED_CHECK:
+#         GLOBAL_DATA[gene_id]['status'] = 'DELAYED_CHECK'
+#         individual = creator.Individual([gene_id])
+#         return individual
+#     if successful_sub_flag:
+#         if job_id is not None:
+#             print(f'Checking for Job Completion: {job_id} for {gene_id}', flush=True)
+#         else:
+#             print(f'Checking completion for {gene_id}', flush=True)
+#         job_done = check4job_completion(job_id=job_id, local_output=local_output)
+#         # print(f'Model Files for {gene_id} are Loaded') if job_done else print(f'Error Loading Model Files for {gene_id}', flush=True)
+        
+#     return individual
 
 """
 ░█─▄▀ ░█▀▀▀ ░█──░█    ░█▀▀█ ░█─░█ ─█▀▀█ ░█▄─░█ ░█▀▀█ ░█▀▀▀ 
@@ -505,25 +521,84 @@ def create_individual(container, temp_min=0.05, temp_max=0.4):
 ░█─░█ ░█▄▄▄ ──░█──    ░█▄▄█ ░█─░█ ░█─░█ ░█──▀█ ░█▄▄█ ░█▄▄▄
 """
 # general_model - submit_run method implementation
-
 # Point-Net++ - submit_run method implementaton
-
 # Point Transformers - submit_run method implmentation - further alterations may be needed
+
+def submit_run(gene_id):
+    def write_bash_script_py(gene_id, train_file='./sota/Point-Transformers/train_cls.py'):
+        # When I want to train the model I simply call train_cls.py 
+        # I must also make alterations to the cls.yaml file 
+        # Have the Model Absolute path we're trying to change
+
+        cls_yaml_path = '/home/hice1/madewolu9/scratch/madewolu9/LLM_PointNet/LLM-Guided-PointCloud-Class/sota/Point-Transformers/config/cls.yaml'
+
+        with open(cls_yaml_path, 'r') as file:
+            cls_yaml_content = file.readlines()
+
+        for i, line in enumerate(cls_yaml_content):
+            if line.startswith('file:'): 
+                cls_yaml_content[i] = f'file: model_{gene_id}\n'
+        
+        with open(cls_yaml_path, 'w') as file:
+            file.writelines(cls_yaml_content)
+
+        # python_runline = f'python {train_file} -bs 216 -epoch 2 -network "models.network_{gene_id}" {tmp}'
+        # python_runline = f'python {train_file} --model_file "models/Menghao/model_{gene_id}.py"'
+
+        python_runline = f'python {train_file}'
+
+        bash_script_content = PYTHON_BASH_SCRIPT_TEMPLATE.format(python_runline)
+        return bash_script_content
+
+    # This is for subbing the python code
+    def create_bash_file_py(file_path, gene_id, **kwargs):
+        bash_script_content = write_bash_script_py(gene_id, **kwargs)
+        with open(file_path, 'w') as file:
+            file.write(bash_script_content)
+        print(f"\t‣ Bash Script Saved to {file_path}")
+
+    def submit_bash_py(file_path, gene_id, **kwargs):
+        create_bash_file_py(file_path, gene_id, **kwargs)
+        job_id = None
+        successful_sub_flag = False
+        local_output = None
+        result = subprocess.run([RUN_COMMAND, file_path], capture_output=True, text=True)
+        if LOCAL:
+            local_output = result.stdout.strip() + '\n' + result.stderr.strip()
+            print("\t‣ Output:", local_output, flush=True)
+            job_id = None
+            successful_sub_flag = True
+        elif result.returncode == 0:
+            print("\t‣ Script Submitted Successfully.\n\t‣ Output:", result.stdout.strip())
+            successful_sub_flag = True
+            job_id = result.stdout.split('job ')[-1].strip()
+        else:
+            print("\t‣ Failed to Submit script.\n\t‣ Error:", result.stderr.strip())
+            successful_sub_flag = False
+            job_id = None
+        return successful_sub_flag, job_id, local_output
+    
+    out_dir = str(GENERATION)
+    file_path = os.path.join(out_dir, f'{gene_id}_model.sh')
+    successful_sub_flag, job_id, local_output = submit_bash_py(file_path, gene_id)
+    GLOBAL_DATA[gene_id]['status'] = 'running eval'
+    GLOBAL_DATA[gene_id]['results_job'] = job_id
+    GLOBAL_DATA[gene_id]['local_output'] = local_output
+    print(f'\t‣ Running py File for {gene_id}, {job_id}')
+
+
 # def submit_run(gene_id):
 #     def write_bash_script_py(gene_id, train_file='./sota/Point-Transformers/train_cls.py'):  
-
 #         """
 #         Before Point Transformers is ran there is a yaml file that's checked to select which model to run. 
-
 #         So Instead of adding parameters to the train.py call I had to edit that file in the submit_run method
-
 #         This particular aspect of models train.py vs YAML file fo running 
-
 #         Point Transformers also uses .yaml files for picking and choosing which model to use and evaluate
-        
 #         """
 
-#         model_name = f"model.llmge_models.model_{gene_id}"
+#         # model_name = f"model.llmge_models.model_{gene_id}"
+
+#         model_name = f"model_{top_gene}.py"
 
 #         # Update the path to CLS Yaml File
 #         cls_yaml_path = '/home/hice1/madewolu9/scratch/madewolu9/LLM_PointNet/LLM-Guided-PointCloud-Class/sota/Point-Transformers/config/cls.yaml'
@@ -533,7 +608,7 @@ def create_individual(container, temp_min=0.05, temp_max=0.4):
 #             cls_yaml_content = file.read()
 
 #         # Replace the model name in the YAML 
-#         cls_yaml_content = cls_yaml_content.replace('model: Menghao', f'model: {model_name}')
+#         cls_yaml_content = cls_yaml_content.replace('model: Menghao', f'model:{model_name}')
 
 #         # Simply write the updated YAML information back to the file
 #         with open(cls_yaml_path, 'w') as file:
@@ -585,53 +660,53 @@ def create_individual(container, temp_min=0.05, temp_max=0.4):
 
 # ExquisiteNetV2 - submit_run method implmentation
 
-def submit_run(gene_id):
-    def write_bash_script_py(gene_id, train_file='./sota/ExquisiteNetV2/train.py'):
-        if not MACOS:
-            tmp = f"-data {DATA_PATH} -end_lr 0.001 -seed 21 -val_r 0.2 -amp"
-        else:
-            tmp = f"-data {DATA_PATH} -end_lr 0.001 -seed 21 -val_r 0.2 -epoch 2"
+# def submit_run(gene_id):
+#     def write_bash_script_py(gene_id, train_file='./sota/ExquisiteNetV2/train.py'):
+#         if not MACOS:
+#             tmp = f"-data {DATA_PATH} -end_lr 0.001 -seed 21 -val_r 0.2 -amp"
+#         else:
+#             tmp = f"-data {DATA_PATH} -end_lr 0.001 -seed 21 -val_r 0.2 -epoch 2"
 
-        # python_runline = f'python {train_file} -bs 216 -epoch 2 -network "models.network_{gene_id}" {tmp}'
-        python_runline = f'python {train_file} -bs 216 -network "models.network_{gene_id}" {tmp}'
-        bash_script_content = PYTHON_BASH_SCRIPT_TEMPLATE.format(python_runline)
-        return bash_script_content
+#         # python_runline = f'python {train_file} -bs 216 -epoch 2 -network "models.network_{gene_id}" {tmp}'
+#         python_runline = f'python {train_file} -bs 216 -network "models.network_{gene_id}" {tmp}'
+#         bash_script_content = PYTHON_BASH_SCRIPT_TEMPLATE.format(python_runline)
+#         return bash_script_content
 
-    # This is for subbing the python code
-    def create_bash_file_py(file_path, gene_id, **kwargs):
-        bash_script_content = write_bash_script_py(gene_id, **kwargs)
-        with open(file_path, 'w') as file:
-            file.write(bash_script_content)
-        print(f"\t‣ Bash Script Saved to {file_path}")
+#     # This is for subbing the python code
+#     def create_bash_file_py(file_path, gene_id, **kwargs):
+#         bash_script_content = write_bash_script_py(gene_id, **kwargs)
+#         with open(file_path, 'w') as file:
+#             file.write(bash_script_content)
+#         print(f"\t‣ Bash Script Saved to {file_path}")
 
-    def submit_bash_py(file_path, gene_id, **kwargs):
-        create_bash_file_py(file_path, gene_id, **kwargs)
-        job_id = None
-        successful_sub_flag = False
-        local_output = None
-        result = subprocess.run([RUN_COMMAND, file_path], capture_output=True, text=True)
-        if LOCAL:
-            local_output = result.stdout.strip() + '\n' + result.stderr.strip()
-            print("\t‣ Output:", local_output, flush=True)
-            job_id = None
-            successful_sub_flag = True
-        elif result.returncode == 0:
-            print("\t‣ Script Submitted Successfully.\n\t‣ Output:", result.stdout.strip())
-            successful_sub_flag = True
-            job_id = result.stdout.split('job ')[-1].strip()
-        else:
-            print("\t‣ Failed to Submit script.\n\t‣ Error:", result.stderr.strip())
-            successful_sub_flag = False
-            job_id = None
-        return successful_sub_flag, job_id, local_output
+#     def submit_bash_py(file_path, gene_id, **kwargs):
+#         create_bash_file_py(file_path, gene_id, **kwargs)
+#         job_id = None
+#         successful_sub_flag = False
+#         local_output = None
+#         result = subprocess.run([RUN_COMMAND, file_path], capture_output=True, text=True)
+#         if LOCAL:
+#             local_output = result.stdout.strip() + '\n' + result.stderr.strip()
+#             print("\t‣ Output:", local_output, flush=True)
+#             job_id = None
+#             successful_sub_flag = True
+#         elif result.returncode == 0:
+#             print("\t‣ Script Submitted Successfully.\n\t‣ Output:", result.stdout.strip())
+#             successful_sub_flag = True
+#             job_id = result.stdout.split('job ')[-1].strip()
+#         else:
+#             print("\t‣ Failed to Submit script.\n\t‣ Error:", result.stderr.strip())
+#             successful_sub_flag = False
+#             job_id = None
+#         return successful_sub_flag, job_id, local_output
     
-    out_dir = str(GENERATION)
-    file_path = os.path.join(out_dir, f'{gene_id}_model.sh')
-    successful_sub_flag, job_id, local_output = submit_bash_py(file_path, gene_id)
-    GLOBAL_DATA[gene_id]['status'] = 'running eval'
-    GLOBAL_DATA[gene_id]['results_job'] = job_id
-    GLOBAL_DATA[gene_id]['local_output'] = local_output
-    print(f'\t‣ Running py File for {gene_id}, {job_id}')
+#     out_dir = str(GENERATION)
+#     file_path = os.path.join(out_dir, f'{gene_id}_model.sh')
+#     successful_sub_flag, job_id, local_output = submit_bash_py(file_path, gene_id)
+#     GLOBAL_DATA[gene_id]['status'] = 'running eval'
+#     GLOBAL_DATA[gene_id]['results_job'] = job_id
+#     GLOBAL_DATA[gene_id]['local_output'] = local_output
+#     print(f'\t‣ Running py File for {gene_id}, {job_id}')
 
 
 """
@@ -644,26 +719,28 @@ def evalModel(individual):
     # Initially, we don't have a fitness value
     return None
 
+"""
+█▀▀ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ █▀▀ 
+█── █▀▀█ █▄▄█ █──█ █─▀█ █▀▀ ▀▀█ 
+▀▀▀ ▀──▀ ▀──▀ ▀──▀ ▀▀▀▀ ▀▀▀ ▀▀▀
+"""
 # Point Transformers
-# def check4model2run(gene_id):
-#     # model_path = os.path.join(str(GENERATION), f'{gene_id}_model.txt')
-    
-#     print(f'Checking for: SOTA_ROOT ./models/llmge_models/model_{gene_id}.py')
-#     model_path = f'{SOTA_ROOT}/models/llmge_models/model_{gene_id}.py'
-#     if os.path.exists(model_path):
-#         if GLOBAL_DATA[gene_id]['status'] != 'running eval':
-#             submit_run(gene_id)
-
-# ExquisiteNetV2 - check4model2run method implmentation
-
 def check4model2run(gene_id):
     # model_path = os.path.join(str(GENERATION), f'{gene_id}_model.txt')
-    
-    print(f'Checking for: SOTA_ROOT ./models/network_{gene_id}.py')
-    model_path = f'{SOTA_ROOT}/models/network_{gene_id}.py'
+    print(f'Checking for: SOTA_ROOT ./models/Menghao/model_{gene_id}.py')
+    model_path = f'{SOTA_ROOT}/models/Menghao/model_{gene_id}.py'
     if os.path.exists(model_path):
         if GLOBAL_DATA[gene_id]['status'] != 'running eval':
             submit_run(gene_id)
+
+# ExquisiteNetV2 - check4model2run method implmentation
+# def check4model2run(gene_id):
+#     # model_path = os.path.join(str(GENERATION), f'{gene_id}_model.txt')
+#     print(f'Checking for: SOTA_ROOT ./models/network_{gene_id}.py')
+#     model_path = f'{SOTA_ROOT}/models/network_{gene_id}.py'
+#     if os.path.exists(model_path):
+#         if GLOBAL_DATA[gene_id]['status'] != 'running eval':
+#             submit_run(gene_id)
 
 """
 ░█▄─░█ ░█▀▀▀█    ░█▀▀█ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ 
@@ -921,81 +998,6 @@ def delayed_mutate_check(offspring):
 # Point Transformers - custom_cross_over method implementation
 
 # Custom crossover function
-# def customCrossover(ind1, ind2):
-#     def combine_elements(ind1, ind2, temp_min=0.05, temp_max=0.1):
-#         """
-#         Combine elements of two individuals to create a new individual.
-#         Parameters:
-#         ind1, ind2 (list): The parent individuals.
-#         Returns:
-#         str: The gene ID of the new individual.
-#         """
-#         global GLOBAL_DATA
-#         out_dir = str(GENERATION)
-#         # Retrieve gene IDs from the individuals
-#         gene_id_1 = ind1[0]
-#         gene_id_2 = ind2[0]
-#         # Generate the crossover query
-#         print(f'Mating: {gene_id_1} and {gene_id_2}')
-#         temperature = round(random.uniform(temp_min, temp_max), 2)
-#         # Generate a new gene ID for the offspring
-#         new_gene_id = generate_random_string(length=24)
-#         # Create the bash file for the new job
-#         file_path = os.path.join(out_dir, f'{new_gene_id}.sh')
-#         successful_sub_flag, job_id, local_output = submit_bash(file_path, 
-#                                           input_filename_x=f'{SOTA_ROOT}/models/llmge_models/model_{gene_id_1}.py',
-#                                           input_filename_y=f'{SOTA_ROOT}/models/llmge_models/model_{gene_id_2}.py',
-#                                           output_filename=f'{SOTA_ROOT}/models/llmge_models/model_{new_gene_id}.py',
-#                                           gpu=LLM_GPU,
-#                                           python_file='src/llm_crossover.py', 
-#                                           top_p=0.1, temperature=temperature)
-
-#         # Update global data for the new individual
-#         GLOBAL_DATA[new_gene_id] = {'sub_flag':successful_sub_flag, 'job_id':job_id, 
-#                                     'status':'subbed file', 'fitness':None, 'start_time':time.time()}
-        
-#         if DELAYED_CHECK:
-#             GLOBAL_DATA[new_gene_id]['status'] = 'DELAYED_CHECK'
-#             return new_gene_id, None
-        
-#         if successful_sub_flag:
-#             print(f'\t‣ Checking for Crossover Job Completion: {job_id} for {new_gene_id}')
-#             job_done = check4job_completion(job_id, local_output)
-#             if job_done:
-#                 print(f'\t‣ Model Files for {new_gene_id} are Loaded')
-#             else: 
-#                 print(f'\t‣ Error Loading Model Files for {new_gene_id}!!')
-
-#         failed_process = True if (successful_sub_flag is False) or (job_done is False) else False
-#         # Return the new gene ID
-#         return new_gene_id, failed_process
-    
-#     global GLOBAL_DATA
-#     global DELAYED_CHECK
-    
-#     new_gene_id1, failed_process1 = combine_elements(ind1, ind2)
-#     new_gene_id2, failed_process2 = combine_elements(ind2, ind1)
-    
-#     if DELAYED_CHECK:
-#         LINKED_GENES[new_gene_id1] = ind1[0]
-#         LINKED_GENES[new_gene_id2] = ind2[0]
-#         ind1[0] = new_gene_id1
-#         ind2[0] = new_gene_id2
-        
-#         offspring1 = creator.Individual([new_gene_id1])
-#         offspring2 = creator.Individual([new_gene_id2])
-#         return offspring1, offspring2
-
-#     offspring1 = update_individual(ind1, new_gene_id1, old_gene_id=ind1[0], 
-#                                    process_success=(not failed_process1), process_type='Mating')
-    
-#     offspring2 = update_individual(ind2, new_gene_id2, old_gene_id=ind2[0], 
-#                                    process_success=(not failed_process2), process_type='Mating')
-
-#     return offspring1, offspring2
-
-# ExquisiteNetV2 - custom_cross_over method implementation
-# Custom crossover function
 def customCrossover(ind1, ind2):
     def combine_elements(ind1, ind2, temp_min=0.05, temp_max=0.1):
         """
@@ -1018,9 +1020,9 @@ def customCrossover(ind1, ind2):
         # Create the bash file for the new job
         file_path = os.path.join(out_dir, f'{new_gene_id}.sh')
         successful_sub_flag, job_id, local_output = submit_bash(file_path, 
-                                          input_filename_x=f'{SOTA_ROOT}/models/network_{gene_id_1}.py',
-                                          input_filename_y=f'{SOTA_ROOT}/models/network_{gene_id_2}.py',
-                                          output_filename=f'{SOTA_ROOT}/models/network_{new_gene_id}.py',
+                                          input_filename_x=f'{SOTA_ROOT}/models/Menghao/model_{gene_id_1}.py',
+                                          input_filename_y=f'{SOTA_ROOT}/models/Menghao/model_{gene_id_2}.py',
+                                          output_filename=f'{SOTA_ROOT}/models/Menghao/model_{gene_id}.py',
                                           gpu=LLM_GPU,
                                           python_file='src/llm_crossover.py', 
                                           top_p=0.1, temperature=temperature)
@@ -1069,6 +1071,81 @@ def customCrossover(ind1, ind2):
 
     return offspring1, offspring2
 
+# ExquisiteNetV2 - custom_cross_over method implementation
+# Custom crossover function
+# def customCrossover(ind1, ind2):
+#     def combine_elements(ind1, ind2, temp_min=0.05, temp_max=0.1):
+#         """
+#         Combine elements of two individuals to create a new individual.
+#         Parameters:
+#         ind1, ind2 (list): The parent individuals.
+#         Returns:
+#         str: The gene ID of the new individual.
+#         """
+#         global GLOBAL_DATA
+#         out_dir = str(GENERATION)
+#         # Retrieve gene IDs from the individuals
+#         gene_id_1 = ind1[0]
+#         gene_id_2 = ind2[0]
+#         # Generate the crossover query
+#         print(f'Mating: {gene_id_1} and {gene_id_2}')
+#         temperature = round(random.uniform(temp_min, temp_max), 2)
+#         # Generate a new gene ID for the offspring
+#         new_gene_id = generate_random_string(length=24)
+#         # Create the bash file for the new job
+#         file_path = os.path.join(out_dir, f'{new_gene_id}.sh')
+#         successful_sub_flag, job_id, local_output = submit_bash(file_path, 
+#                                           input_filename_x=f'{SOTA_ROOT}/models/network_{gene_id_1}.py',
+#                                           input_filename_y=f'{SOTA_ROOT}/models/network_{gene_id_2}.py',
+#                                           output_filename=f'{SOTA_ROOT}/models/network_{new_gene_id}.py',
+#                                           gpu=LLM_GPU,
+#                                           python_file='src/llm_crossover.py', 
+#                                           top_p=0.1, temperature=temperature)
+
+#         # Update global data for the new individual
+#         GLOBAL_DATA[new_gene_id] = {'sub_flag':successful_sub_flag, 'job_id':job_id, 
+#                                     'status':'subbed file', 'fitness':None, 'start_time':time.time()}
+        
+#         if DELAYED_CHECK:
+#             GLOBAL_DATA[new_gene_id]['status'] = 'DELAYED_CHECK'
+#             return new_gene_id, None
+        
+#         if successful_sub_flag:
+#             print(f'\t‣ Checking for Crossover Job Completion: {job_id} for {new_gene_id}')
+#             job_done = check4job_completion(job_id, local_output)
+#             if job_done:
+#                 print(f'\t‣ Model Files for {new_gene_id} are Loaded')
+#             else: 
+#                 print(f'\t‣ Error Loading Model Files for {new_gene_id}!!')
+
+#         failed_process = True if (successful_sub_flag is False) or (job_done is False) else False
+#         # Return the new gene ID
+#         return new_gene_id, failed_process
+    
+#     global GLOBAL_DATA
+#     global DELAYED_CHECK
+    
+#     new_gene_id1, failed_process1 = combine_elements(ind1, ind2)
+#     new_gene_id2, failed_process2 = combine_elements(ind2, ind1)
+    
+#     if DELAYED_CHECK:
+#         LINKED_GENES[new_gene_id1] = ind1[0]
+#         LINKED_GENES[new_gene_id2] = ind2[0]
+#         ind1[0] = new_gene_id1
+#         ind2[0] = new_gene_id2
+        
+#         offspring1 = creator.Individual([new_gene_id1])
+#         offspring2 = creator.Individual([new_gene_id2])
+#         return offspring1, offspring2
+
+#     offspring1 = update_individual(ind1, new_gene_id1, old_gene_id=ind1[0], 
+#                                    process_success=(not failed_process1), process_type='Mating')
+    
+#     offspring2 = update_individual(ind2, new_gene_id2, old_gene_id=ind2[0], 
+#                                    process_success=(not failed_process2), process_type='Mating')
+
+#     return offspring1, offspring2
+
 
 """
 █▀▀ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ █▀▀ 
@@ -1077,72 +1154,14 @@ def customCrossover(ind1, ind2):
 """
 
 # # Point Transformers - customMutation method implementation
-# def customMutation(individual, indpb, temp_min=0.02, temp_max=0.35):
-#     """ Custom mutation function that randomly changes the temperature parameter of the individual's task and assigns a new ID.
-#     Parameters:
-#     individual (list): The individual to be mutated.
-#     indpb (float): The probability of mutating each gene.
-#     Returns:
-#     tuple: The mutated individual.
-#     """
-#     # Check if mutation occurs (based on the mutation probability)
-#     # if random.random() < indpb: # TODO: connect this to temp
-#     global DELAYED_CHECK
-#     out_dir = str(GENERATION)
-#     old_gene_id = individual[0]
-#     # Generate a new gene ID
-#     new_gene_id = generate_random_string(length=24)
-#     print(f'Mutating: {old_gene_id} and Replaceing with: {new_gene_id}')
-#     # Name of the sh bash file
-#     file_path = os.path.join(str(GENERATION), f'{new_gene_id}.sh')
-#     temperature = round(random.uniform(temp_min, temp_max), 2)
-#     successful_sub_flag, job_id, local_output = submit_bash(file_path, 
-#                                               input_filename_x= f'{SOTA_ROOT}/models/llmge_models/model_{old_gene_id}.py',
-#                                               output_filename = f'{SOTA_ROOT}/models/llmge_models/model_{new_gene_id}.py',
-#                                               gpu=LLM_GPU,
-#                                               python_file='src/llm_mutation.py', 
-#                                               top_p=0.1, temperature=temperature)
-    
-#     # Update the individual with the new gene ID
-#     # individual[0] = new_gene_id
-#     # Update the global data with the new task
-#     GLOBAL_DATA[new_gene_id] = {'sub_flag':successful_sub_flag, 'job_id':job_id, 
-#                                 'status':'subbed file', 'fitness':None, 'start_time':time.time()}
-    
-#     if DELAYED_CHECK:
-#         LINKED_GENES[new_gene_id] = individual[0]
-#         GLOBAL_DATA[new_gene_id]['status'] = 'DELAYED_CHECK'
-#         individual[0] = new_gene_id
-#         individual = creator.Individual([new_gene_id])
-#         return individual
-    
-#     if successful_sub_flag:
-#         print(f'\t‣ Checking for Mutation Job Completion: {job_id} for {new_gene_id}')
-#         job_done = check4job_completion(job_id, local_output)
-#         if job_done:
-#             print(f'\t‣ Model Files for {new_gene_id} are Loaded')
-#         else: 
-#             print(f'\t☠ Error Loading Model Files for {new_gene_id}')
-    
-#     failed_process = not (successful_sub_flag and job_done)
-
-#     individual = update_individual(individual, new_gene_id, old_gene_id,
-#                                    process_success=(not failed_process), process_type='Mutation')
-#     return individual
-
-
-# ExquisiteNetV2 - customMutation method implementation
-
 def customMutation(individual, indpb, temp_min=0.02, temp_max=0.35):
-    """
-    Custom mutation function that randomly changes the temperature parameter of the individual's task and assigns a new ID.
+    """ Custom mutation function that randomly changes the temperature parameter of the individual's task and assigns a new ID.
     Parameters:
     individual (list): The individual to be mutated.
     indpb (float): The probability of mutating each gene.
     Returns:
     tuple: The mutated individual.
     """
-    
     # Check if mutation occurs (based on the mutation probability)
     # if random.random() < indpb: # TODO: connect this to temp
     global DELAYED_CHECK
@@ -1155,8 +1174,8 @@ def customMutation(individual, indpb, temp_min=0.02, temp_max=0.35):
     file_path = os.path.join(str(GENERATION), f'{new_gene_id}.sh')
     temperature = round(random.uniform(temp_min, temp_max), 2)
     successful_sub_flag, job_id, local_output = submit_bash(file_path, 
-                                              input_filename_x= f'{SOTA_ROOT}/models/network_{old_gene_id}.py',
-                                              output_filename = f'{SOTA_ROOT}/models/network_{new_gene_id}.py',
+                                              input_filename_x= f'{SOTA_ROOT}/models/Menghao/model{old_gene_id}.py',
+                                              output_filename = f'{SOTA_ROOT}/models/Menghao/model{new_gene_id}.py',
                                               gpu=LLM_GPU,
                                               python_file='src/llm_mutation.py', 
                                               top_p=0.1, temperature=temperature)
@@ -1187,6 +1206,64 @@ def customMutation(individual, indpb, temp_min=0.02, temp_max=0.35):
     individual = update_individual(individual, new_gene_id, old_gene_id,
                                    process_success=(not failed_process), process_type='Mutation')
     return individual
+
+
+# ExquisiteNetV2 - customMutation method implementation
+
+# def customMutation(individual, indpb, temp_min=0.02, temp_max=0.35):
+#     """
+#     Custom mutation function that randomly changes the temperature parameter of the individual's task and assigns a new ID.
+#     Parameters:
+#     individual (list): The individual to be mutated.
+#     indpb (float): The probability of mutating each gene.
+#     Returns:
+#     tuple: The mutated individual.
+#     """
+    
+#     # Check if mutation occurs (based on the mutation probability)
+#     # if random.random() < indpb: # TODO: connect this to temp
+#     global DELAYED_CHECK
+#     out_dir = str(GENERATION)
+#     old_gene_id = individual[0]
+#     # Generate a new gene ID
+#     new_gene_id = generate_random_string(length=24)
+#     print(f'Mutating: {old_gene_id} and Replaceing with: {new_gene_id}')
+#     # Name of the sh bash file
+#     file_path = os.path.join(str(GENERATION), f'{new_gene_id}.sh')
+#     temperature = round(random.uniform(temp_min, temp_max), 2)
+#     successful_sub_flag, job_id, local_output = submit_bash(file_path, 
+#                                               input_filename_x= f'{SOTA_ROOT}/models/network_{old_gene_id}.py',
+#                                               output_filename = f'{SOTA_ROOT}/models/network_{new_gene_id}.py',
+#                                               gpu=LLM_GPU,
+#                                               python_file='src/llm_mutation.py', 
+#                                               top_p=0.1, temperature=temperature)
+    
+#     # Update the individual with the new gene ID
+#     # individual[0] = new_gene_id
+#     # Update the global data with the new task
+#     GLOBAL_DATA[new_gene_id] = {'sub_flag':successful_sub_flag, 'job_id':job_id, 
+#                                 'status':'subbed file', 'fitness':None, 'start_time':time.time()}
+    
+#     if DELAYED_CHECK:
+#         LINKED_GENES[new_gene_id] = individual[0]
+#         GLOBAL_DATA[new_gene_id]['status'] = 'DELAYED_CHECK'
+#         individual[0] = new_gene_id
+#         individual = creator.Individual([new_gene_id])
+#         return individual
+    
+#     if successful_sub_flag:
+#         print(f'\t‣ Checking for Mutation Job Completion: {job_id} for {new_gene_id}')
+#         job_done = check4job_completion(job_id, local_output)
+#         if job_done:
+#             print(f'\t‣ Model Files for {new_gene_id} are Loaded')
+#         else: 
+#             print(f'\t☠ Error Loading Model Files for {new_gene_id}')
+    
+#     failed_process = not (successful_sub_flag and job_done)
+
+#     individual = update_individual(individual, new_gene_id, old_gene_id,
+#                                    process_success=(not failed_process), process_type='Mutation')
+#     return individual
 
 
 

@@ -1,0 +1,41 @@
+
+Steps to Integrate the Point Transformers Model
+
+Step 1
+    - Create the model with a unique gene_id model_xjnaidbyuerbasybXybaydbfeu.py
+
+Step 2 
+    - Update the cls.yaml file specifying the correct model name
+        batch_size: 16
+        epoch: 200
+        learning_rate: 1e-3
+        gpu: 1
+        num_point: 1024
+        optimizer: Adam
+        weight_decay: 1e-4
+        normal: True
+
+        defaults:
+        - model: model_xjnaidbyuerbasybXybaydbfeu <- Change this line to point to the correct model that you just created
+
+        hydra:
+        run:
+            dir: log/cls/${model.name}
+
+        sweep:
+            dir: log/cls
+            subdir: ${model.name}
+
+Step 3
+    - Create the model folder in the correct directory so that it's updated
+
+        models/
+    ├── PointTransformer/
+    │   └── model.py
+    ├── Menghao/
+    │   └── model.py
+    ├── model_xjnaidbyuerbasybXybaydbfeu.py  # This is your new model
+    └── ...  # Other models
+
+Step 4 
+    - Now we can finally just run the model by calling train_cls.py file 

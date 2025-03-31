@@ -13,18 +13,22 @@ import numpy as np
 #________________________________________________________________________
 
 #POINT_TRANSFORMERS
-# ROOT_DIR = "/home/hice1/madewolu9/scratch/madewolu9/LLM_PointNet/LLM-Guided-PointCloud-Class/" #1
-# DATA_PATH = "./modelnet40_normal_resampled"
-# SOTA_ROOT = os.path.join(ROOT_DIR, 'sota/Point-Transformers') #1
-# SEED_NETWORK = os.path.join(SOTA_ROOT, "models/Menghao/model.py") #2
+ROOT_DIR = "/home/hice1/madewolu9/scratch/madewolu9/LLM_PointNet/LLM-Guided-PointCloud-Class/" #1
+DATA_PATH = "./modelnet40_normal_resampled"
+SOTA_ROOT = os.path.join(ROOT_DIR, 'sota/Point-Transformers') #1
+SEED_NETWORK = os.path.join(SOTA_ROOT, "models/Menghao/model.py") #2
+
+# DATA_PATH absolute or relative to ExquisiteNetV2
+# DATA_PATH = "./cifar10"
+# SOTA_ROOT = os.path.join(ROOT_DIR, 'sota/ExquisiteNetV2')
+# SEED_NETWORK = os.path.join(SOTA_ROOT, "network.py")
 
 # PointNet++
 #ExquisiteNetV2
-ROOT_DIR = "/home/hice1/madewolu9/scratch/madewolu9/LLM_PointNet/LLM-Guided-PointCloud-Class/" #1
-# DATA_PATH absolute or relative to ExquisiteNetV2
-DATA_PATH = "./cifar10"
-SOTA_ROOT = os.path.join(ROOT_DIR, 'sota/ExquisiteNetV2')
-SEED_NETWORK = os.path.join(SOTA_ROOT, "network.py")
+# ROOT_DIR = "/home/hice1/madewolu9/scratch/madewolu9/LLM_PointNet/LLM-Guided-PointCloud-Class/" #1
+# DATA_PATH = "./modelnet40_normal_resampled"
+# SOTA_ROOT = os.path.join(ROOT_DIR, 'sota/PNPP/Pointnet_Pointnet2_pytorch')
+# SEED_NETWORK = os.path.join(ROOT_DIR, 'sota/PNPP/Pointnet_Pointnet2_pytorch/models/pointnet_cls_ssg.py')
 
 LOCAL = False
 if LOCAL:
@@ -39,8 +43,11 @@ if MACOS:
 else:
 	DEVICE = 'cuda'
 	# DEVICE = 'cpu'
-LLM_MODEL = 'mixtral' # Mixtral the GOAT #3
-#LLM_MODEL = 'llama3' # llma3 is wackkkkk  #3
+
+LLM_MODEL = 'mixtral' 
+LLM_MODEL_PATH = '/storage/ice-shared/vip-vvk/llm_storage/mixtral/Mixtral-8x7B-Instruct-v0.1/'
+
+#LLM_MODEL = 'llama3' 
 # SEED_PACKAGE_DIR = "./sota/ExquisiteNetV2/divine_seed_module"
 
 """
@@ -70,7 +77,7 @@ hof_size = 100
 Job Sub Constants/Params
 """
 QC_CHECK_BOOL = False
-HUGGING_FACE_BOOL = True
+HUGGING_FACE_BOOL = False
 #LLM_GPU = 'NVIDIAA100-SXM4-80GB|NVIDIAA10080GBPCIe|TeslaV100-PCIE-32GB|TeslaV100S-PCIE-32GB|NVIDIARTX6000AdaGeneration|NVIDIARTXA6000|NVIDIARTXA5000|NVIDIARTXA4000|GeForceGTX1080Ti|QuadroRTX4000|QuadroP4000|GeForceGTX1080|TeslaP4'
 LLM_GPU = 'A100-40GB|A100-80GB|H100|V100-16GB|V100-32GB|RTX6000|A40|L40S'
 #LLM_GPU = 'NVIDIAA100-SXM4-80GB|NVIDIAA10080GBPCIe|TeslaV100-PCIE-32GB|TeslaV100S-PCIE-32GB|NVIDIARTX6000AdaGeneration|NVIDIARTXA6000|NVIDIARTXA5000|NVIDIARTXA4000|GeForceGTX1080Ti|QuadroRTX4000|QuadroP4000|GeForceGTX1080|TeslaP4'

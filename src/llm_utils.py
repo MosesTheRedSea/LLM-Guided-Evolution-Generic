@@ -29,10 +29,20 @@ def retrieve_base_code(idx):
 
 
 # This Methid is causing the Issues
+# Improve code cleaning from the LLM
 def clean_code_from_llm(code_from_llm):
     """Cleans the code received from LLM."""
-    return '\n'.join(code_from_llm.strip().split("```")[1].split('\n')[1:]).strip()
 
+    # clean code from the llm essentially 
+    split_code = code_from_llm.strip().split("```")
+
+    # Check For Invalid Code
+
+    # if Code is Invalid resubmit the run with that specific individual 
+
+    # Add Error Handling For This ISsue
+
+    return '\n'.join(code_from_llm.strip().split("```")[1].split('\n')[1:]).strip()
 
 def generate_augmented_code(txt2llm, augment_idx, apply_quality_control, top_p, temperature, hugging_face=False):
     """Generates augmented code using Mixtral."""
@@ -40,11 +50,11 @@ def generate_augmented_code(txt2llm, augment_idx, apply_quality_control, top_p, 
     print(txt2llm)
     
     if hugging_face is False:
-        llm_code_generator = submit_mixtral
+        llm_code_generator = submit_mixtral_local
         qc_func = llm_code_qc
     else:
         if LLM_MODEL == 'mixtral':
-            llm_code_generator = submit_mixtral_hf
+            llm_code_generator = submit_mixtral_local
         elif LLM_MODEL == 'llama3':
             llm_code_generator = submit_llama3_hf
         qc_func = llm_code_qc_hf
@@ -116,7 +126,7 @@ def llm_code_qc_hf(code_from_llm, base_code, generate_text=None):
     box_print("QC PROMPT TO LLM", print_bbox_len=120, new_line_end=False)
     print(prompt2llm)
     
-    code_from_llm = submit_mixtral_hf(prompt2llm, max_new_tokens=1500, top_p=0.1, temperature=0.1, 
+    code_from_llm = submit_mixtral_local(prompt2llm, max_new_tokens=1500, top_p=0.1, temperature=0.1, 
                       model_id="mistralai/Mixtral-8x7B-v0.1", return_gen=False)
     box_print("TEXT FROM LLM", print_bbox_len=60, new_line_end=False)
     print(code_from_llm)
@@ -150,6 +160,35 @@ def submit_mixtral_hf(txt2mixtral, max_new_tokens=1024, top_p=0.15, temperature=
     else:
         return results[0]
     
+    
+def submit_mixtral_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, server_url=f"http://{os.getenv('SERVER_HOSTNAME', 'localhost')}:8000/generate", return_gen=False):
+    payload = {
+        "prompt": prompt,
+        "max_new_tokens": max_new_tokens, # can change to random between 800 - 1000 if needed
+        "temperature": temperature,
+        "top_p": top_p
+    }
+    print(os.getenv("SERVER_HOSTNAME", "localhost"))
+
+    headers = {"Content-Type": "application/json"}
+    
+    try:
+        response = requests.post(server_url, headers=headers, json=payload)
+        
+        if response.status_code == 200:
+            output_txt = response.json().get("generated_text", "No output received.")
+            print(f'{response.json().get("response_time_sec", "-1")} sec')
+            if return_gen is False:
+                return output_txt
+            else:
+                return output_txt, generate_text
+        else:
+            print(f"Error: {response.status_code}")
+            print(response.text)
+            return None
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {e}")
+        return None
 
 """
 █▀▀ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ █▀▀ 
@@ -313,7 +352,7 @@ def mutate_prompts(n=5):
         prompt = "Can you rephrase this text:\n```\n{}\n```".format(prompt_text)
         temp = np.random.uniform(0.01, 0.4)
         if LLM_MODEL == 'mixtral':
-            llm_code_generator = submit_mixtral_hf
+            llm_code_generator = submit_mixtral_local
         elif LLM_MODEL == 'llama3':
             llm_code_generator = submit_llama3_hf
         output = llm_code_generator(prompt, temperature=temp).strip()
