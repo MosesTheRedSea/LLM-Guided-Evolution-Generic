@@ -1,5 +1,7 @@
 sota/Data
 sota/ExquisiteNetV2
 sota/PNPP
-sota/Point-Transformers
+sota/Point-Transformers/__pycache__
+sota/Point-Transformers/results
+sota/Point-Transformers/modelnet40_normal_resampled
 *.out

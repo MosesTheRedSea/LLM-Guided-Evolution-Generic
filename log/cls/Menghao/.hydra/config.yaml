@@ -1,11 +1,11 @@
+model:
+  name: Menghao
+  file: model_xXx1hwoovyPqhLDuXLC9TN3LZwD
 batch_size: 16
-epoch: 200
-learning_rate: 0.001
+epoch: 1
 gpu: 1
+learning_rate: 0.001
+normal: true
 num_point: 1024
 optimizer: Adam
 weight_decay: 0.0001
-normal: true
-model:
-  name: Menghao
-  file: model

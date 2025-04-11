@@ -21,12 +21,10 @@ from huggingface_hub import InferenceClient
 import textwrap
 from transformers import AutoTokenizer
 
-
 def retrieve_base_code(idx):
     """Retrieves base code for quality control."""
     base_network = SEED_NETWORK
     return split_file(base_network)[1:][idx].strip()
-
 
 # This Methid is causing the Issues
 # Improve code cleaning from the LLM

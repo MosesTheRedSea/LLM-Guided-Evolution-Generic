@@ -2,16 +2,60 @@ name: llmge-env
 channels:
   - defaults
   - conda-forge
+  - pytorch
+  - nvidia
 dependencies:
-  - python=3.10
+  - python=3.12.9
   - pip
-  - numpy
-  - torch
+  - numpy=2.2.2
+  - cudnn=9.1.1.17
+  - cudatoolkit=11.8
+  - pytorch-cuda=11.8
+  - torchaudio=2.5.1
   - torchvision
-  - cudatoolkit=11.3
   - transformers
-  - uvicorn
+  - ffmpeg
+  - openssl
+  - pyyaml
+  - typing_extensions
   - fastapi
+  - uvicorn
+  - pydantic
+  - filelock
+  - jinja2
+  - certifi
+  - packaging
+  - pillow
+  - tqdm
   - pip:
-    - flash-attn
-    - accelerate
+      - accelerate
+      - flash-attn
+      - deap
+      - huggingface-hub
+      - hydra-core
+      - einops
+      - tokenizers
+      - sympy
+      - nvidia-cublas-cu12
+      - nvidia-cuda-cupti-cu12
+      - nvidia-cuda-nvrtc-cu12
+      - nvidia-cuda-runtime-cu12
+      - nvidia-cudnn-cu12
+      - nvidia-cufft-cu12
+      - nvidia-curand-cu12
+      - nvidia-cusolver-cu12
+      - nvidia-cusparse-cu12
+      - nvidia-cusparselt-cu12
+      - nvidia-nccl-cu12
+      - nvidia-nvjitlink-cu12
+      - nvidia-nvtx-cu12
+      - starlette
+      - regex
+      - annotated-types
+      - click
+      - anyio
+      - h11
+      - safetensors
+      - networkx
+      - psutil
+      - triton

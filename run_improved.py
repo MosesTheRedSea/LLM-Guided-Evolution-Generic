@@ -7,6 +7,7 @@ import random
 import pickle
 import argparse
 import subprocess
+import yaml
 import numpy as np
 from deap import base, creator, tools
 from deap.tools import HallOfFame
@@ -533,20 +534,28 @@ def submit_run(gene_id):
         cls_yaml_path = '/home/hice1/madewolu9/scratch/madewolu9/LLM_PointNet/LLM-Guided-PointCloud-Class/sota/Point-Transformers/config/cls.yaml'
 
         with open(cls_yaml_path, 'r') as file:
-            cls_yaml_content = file.readlines()
+            cls_yaml_content = yaml.safe_load(file)
 
-        for i, line in enumerate(cls_yaml_content):
-            if line.startswith('file:'): 
-                cls_yaml_content[i] = f'file: model_{gene_id}\n'
-        
+        cls_yaml_content['model']['file'] = f'model_{gene_id}'
+
         with open(cls_yaml_path, 'w') as file:
-            file.writelines(cls_yaml_content)
+            yaml.dump(cls_yaml_content, file, default_flow_style=False)
+
+        # with open(cls_yaml_path, 'r') as file:
+        #     cls_yaml_content = file.readlines()
+
+        # for i, line in enumerate(cls_yaml_content):
+        #     if line.startswith('file:'): 
+        #         cls_yaml_content[i] = f'file: model_{gene_id}\n'
+    
+        # with open(cls_yaml_path, 'w') as file:
+        #     file.writelines(cls_yaml_content)
 
         # python_runline = f'python {train_file} -bs 216 -epoch 2 -network "models.network_{gene_id}" {tmp}'
         # python_runline = f'python {train_file} --model_file "models/Menghao/model_{gene_id}.py"'
 
         python_runline = f'python {train_file}'
-
+        
         bash_script_content = PYTHON_BASH_SCRIPT_TEMPLATE.format(python_runline)
         return bash_script_content
 
@@ -585,7 +594,6 @@ def submit_run(gene_id):
     GLOBAL_DATA[gene_id]['results_job'] = job_id
     GLOBAL_DATA[gene_id]['local_output'] = local_output
     print(f'\t‣ Running py File for {gene_id}, {job_id}')
-
 
 # def submit_run(gene_id):
 #     def write_bash_script_py(gene_id, train_file='./sota/Point-Transformers/train_cls.py'):  
@@ -658,6 +666,11 @@ def submit_run(gene_id):
 #     GLOBAL_DATA[gene_id]['local_output'] = local_output
 #     print(f'\t‣ Running py File for {gene_id}, {job_id}')
 
+
+
+
+
+
 # ExquisiteNetV2 - submit_run method implmentation
 
 # def submit_run(gene_id):
@@ -718,7 +731,7 @@ def evalModel(individual):
     gene_id = individual[0]
     # Initially, we don't have a fitness value
     return None
-
+    
 """
 █▀▀ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ █▀▀ 
 █── █▀▀█ █▄▄█ █──█ █─▀█ █▀▀ ▀▀█ 
@@ -732,7 +745,6 @@ def check4model2run(gene_id):
     if os.path.exists(model_path):
         if GLOBAL_DATA[gene_id]['status'] != 'running eval':
             submit_run(gene_id)
-
 # ExquisiteNetV2 - check4model2run method implmentation
 # def check4model2run(gene_id):
 #     # model_path = os.path.join(str(GENERATION), f'{gene_id}_model.txt')
@@ -769,7 +781,6 @@ def check4results(gene_id):
                 else:
                     return state
         return None
-                
     job_done = check4error(gene_id)
     if job_done is True:
         out_dir = str(GENERATION)
@@ -794,7 +805,6 @@ def check4results(gene_id):
     else:
         # print('Job Has Not Finished Running Yet...', flush=True)
         pass
-        
 
 """
 ░█▄─░█ ░█▀▀▀█    ░█▀▀█ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ 
@@ -803,10 +813,8 @@ def check4results(gene_id):
 """
 def check_and_update_fitness(population, timeout=3600*30, loop_delay=60*30):
     """ This function submits jobs and then if submitted it checks for four possibilities.
-    
     timeout: (int): seconds until the model run is killed and assigned the max error
     loop_delay (int): seconds until iterating over the jobs
-    
     for a job four are four possibilities:
         ‣ The Model for Gene: {gene_id} Failed to Run
         ‣ The Model for Gene: {gene_id} Completed Successfully!
@@ -826,11 +834,9 @@ def check_and_update_fitness(population, timeout=3600*30, loop_delay=60*30):
             if gene_id not in GLOBAL_DATA:
                 GLOBAL_DATA[gene_id] = {'sub_flag':False, 'job_id':'None', 'status':'completed', 
                                         'fitness':INVALID_FITNESS_MAX, 'start_time':time.time()}
-            
             if GLOBAL_DATA[gene_id]['sub_flag']==False:
                 ind.fitness.values = INVALID_FITNESS_MAX # Max error
-                GLOBAL_DATA[gene_id]['status'] == "completed"
-                         
+                GLOBAL_DATA[gene_id]['status'] == "completed"      
             if ind.fitness.values == PLACEHOLDER_FITNESS:  # If fitness not assigned
                 # check for gene_id_model.txt file
                 if GLOBAL_DATA[gene_id]['status'] == 'subbed file':
@@ -844,8 +850,6 @@ def check_and_update_fitness(population, timeout=3600*30, loop_delay=60*30):
                         print(f"LLM Failed for Gene: {gene_id}")
                         ind.fitness.values = INVALID_FITNESS_MAX 
                         GLOBAL_DATA[gene_id]['status'] = 'completed'
-                
-                
                 if GLOBAL_DATA[gene_id]['status'] == "completed":
                     # Process results and assign fitness
                     fitness_tuple = GLOBAL_DATA[gene_id]['fitness']  # Implement this function
@@ -866,7 +870,6 @@ def check_and_update_fitness(population, timeout=3600*30, loop_delay=60*30):
         if all_done:
             box_print("Evalutated All Genes", print_bbox_len=60)
             break  # All jobs are done or timed out
-            
         print('Delayed...', flush=True)
         time.sleep(loop_delay)  # Wait some time before checking again
         count+=1
@@ -879,7 +882,6 @@ def check_and_update_fitness(population, timeout=3600*30, loop_delay=60*30):
 def update_individual(ind, new_gene_id, old_gene_id=None, process_success=True, process_type='Mutation'):
     """
     Update an individual based on the success or failure of a process.
-
     :param ind: The individual to be updated.
     :param new_gene_id: The new gene ID to be assigned to the individual.
     :param old_gene_id: The old gene ID to be removed from GLOBAL_DATA. Optional.
@@ -887,7 +889,6 @@ def update_individual(ind, new_gene_id, old_gene_id=None, process_success=True, 
     :param process_type: Type of process ('Mutation', 'Mating', etc.). Default is 'Mutation'.
     """
     operation = 'Mutated' if process_type == 'Mutation' else 'Mated'
-
     if process_success:
         ind[0] = new_gene_id
         ind = creator.Individual([new_gene_id])
@@ -902,7 +903,6 @@ def update_individual(ind, new_gene_id, old_gene_id=None, process_success=True, 
         if old_gene_id is not None:
             ind[0] = old_gene_id
             ind = creator.Individual([old_gene_id])
-
     return ind
 
 """
@@ -910,6 +910,7 @@ def update_individual(ind, new_gene_id, old_gene_id=None, process_success=True, 
 ░█░█░█ ░█──░█    ░█─── █▀▀█ █▄▄█ █──█ █─▀█ █▀▀ 
 ░█──▀█ ░█▄▄▄█    ░█▄▄█ ▀──▀ ▀──▀ ▀──▀ ▀▀▀▀ ▀▀▀
 """
+
 # TODO: I need to cycle through by the job id to match the sub order
 def delayed_mate_check(offspring):
     if DELAYED_CHECK is True:
@@ -1334,6 +1335,8 @@ def load_checkpoint(folder_name="checkpoints", checkpoint_file=None):
 """
 def true_nsga2(pop, k):
     pop = tools.selNSGA2(pop, len(pop)) # 10 diff
+    k = k // 4 * 4
+    pop = k * pop
     new_pop = tools.selTournamentDCD(pop, k) # mults of 4
     return new_pop
 

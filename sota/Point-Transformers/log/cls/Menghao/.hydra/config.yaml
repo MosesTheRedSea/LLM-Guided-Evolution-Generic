@@ -1,0 +1,11 @@
+batch_size: 16
+epoch: 200
+learning_rate: 0.001
+gpu: 1
+num_point: 1024
+optimizer: Adam
+weight_decay: 0.0001
+normal: true
+model:
+  name: Menghao
+  file: model_xXxgll6Rhj1pai1NHRz1NQyUCWQ
