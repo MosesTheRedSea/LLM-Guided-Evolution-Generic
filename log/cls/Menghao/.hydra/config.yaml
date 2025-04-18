@@ -1,6 +1,6 @@
 model:
   name: Menghao
-  file: model_xXx1hwoovyPqhLDuXLC9TN3LZwD
+  file: model_xXx8bf5SQ9VnlGRCe2oBXpdF3vm
 batch_size: 16
 epoch: 1
 gpu: 1

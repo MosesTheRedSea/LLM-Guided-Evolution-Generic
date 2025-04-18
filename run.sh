@@ -1,13 +1,3 @@
-"""
-█▀▀ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ █▀▀ 
-█── █▀▀█ █▄▄█ █──█ █─▀█ █▀▀ ▀▀█ 
-▀▀▀ ▀──▀ ▀──▀ ▀──▀ ▀▀▀▀ ▀▀▀ ▀▀▀
-"""
-#________________________________________________________________________
-# Alternative Configurations for clean run on PACE ICE #1
-# Changed indivudal configrations conda enviroment etc #2
-#________________________________________________________________________
-
 #!/bin/bash
 #SBATCH --job-name=llm_opt
 #SBATCH -t 8:00:00              		# Runtime in D-HH:MM

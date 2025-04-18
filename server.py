@@ -8,18 +8,20 @@ from src.cfg.constants import *
 
 app = FastAPI(title="LLM API", version="1.0")
 
-# Model Path
-MODEL_PATH = '/storage/ice-shared/vip-vvk/llm_storage/mixtral/Mixtral-8x7B-Instruct-v0.1/'
+MODELS = {}
+MODELS['mixtral'] = '/storage/ice-shared/vip-vvk/llm_storage/mixtral/Mixtral-8x7B-Instruct-v0.1/'
+MODELS['qwen'] = "/storage/ice-shared/vip-vvk/llm_storage/Qwen/Qwen2.5-72B-Instruct/"
+MODELS['llama1'] = "/storage/ice-shared/vip-vvk/llm_storage/meta-llama/Llama-3.3-70B-Instruct"
+MODELS['deepseek'] = "/storage/ice-shared/vip-vvk/llm_storage/deepseek-ai/DeepSeek-R1-Distill-Llama-70B"
+
+MODEL_PATH = MODELS['mixtral']
 
 class LLMModel:
     _instance = None
     _lock = threading.Lock()
-
-    # called before __init__
     def __new__(cls):
         if cls._instance is None:
             with cls._lock:
-                # in case another thread created an instance already
                 if cls._instance is None:
                     print(f"Loading model at {MODEL_PATH} for the first time")
                     cls._instance = super(LLMModel, cls).__new__(cls)
@@ -95,5 +97,4 @@ async def generate_text(request: LLMRequest):
 @app.get("/")
 async def root():
     return {"message": "LLM API is running."}
-
 print('Server running!')

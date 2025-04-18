@@ -1,6 +1,5 @@
 import sys
 sys.path.append("src")
-
 import re
 import os
 import glob
@@ -11,10 +10,7 @@ from torch import bfloat16
 from utils.privit import *
 from cfg.constants import *
 from utils.print_utils import box_print
-
 from typing import Optional
-#import fire
-# from llama import Llama
 import requests
 import huggingface_hub
 from huggingface_hub import InferenceClient
@@ -26,27 +22,41 @@ def retrieve_base_code(idx):
     base_network = SEED_NETWORK
     return split_file(base_network)[1:][idx].strip()
 
-# This Methid is causing the Issues
-# Improve code cleaning from the LLM
 def clean_code_from_llm(code_from_llm):
     """Cleans the code received from LLM."""
-
-    # clean code from the llm essentially 
-    split_code = code_from_llm.strip().split("```")
-
-    # Check For Invalid Code
-
-    # if Code is Invalid resubmit the run with that specific individual 
-
-    # Add Error Handling For This ISsue
-
-    return '\n'.join(code_from_llm.strip().split("```")[1].split('\n')[1:]).strip()
+    code_generator = None
+    # Select Correct LLM
+    if LLM_MODEL == 'mixtral':
+        code_generator = submit_mixtral_local
+    elif LLM_MODEL == 'llama3':
+        code_generator = submit_llama3_hf
+    code_checker_prompt = os.path.join(ROOT_DIR, 'templates/FixedPrompts/validation/code_validation_prompt.txt')
+    old_code = ""
+    if "```" in code_from_llm:
+        try:
+            old_code = code_from_llm.split("```")[1]
+            if old_code.strip().startswith("python"):
+                old_code = '\n'.join(old_code.split("\n")[1:])
+        except IndexError:
+            print("Failed to extract code block from LLM response.")
+            old_code = code_from_llm
+    else:
+        old_code = code_from_llm
+    template_text = ""
+    with open(code_checker_prompt, 'r') as file:
+        template_text = file.read()
+    # Read the info from the prompt
+    prompt = template_text.format(old_code.strip())
+    box_print("VALIDATING LLM CODE", print_bbox_len=60, new_line_end=False)
+    print(prompt)
+    verified_code = code_generator(prompt, top_p=0.15, temperature=0.1) 
+    print(verified_code)
+    return '\n'.join(verified_code.strip().split("```")[1].split('\n')[1:])
 
 def generate_augmented_code(txt2llm, augment_idx, apply_quality_control, top_p, temperature, hugging_face=False):
     """Generates augmented code using Mixtral."""
     box_print("PROMPT TO LLM", print_bbox_len=60, new_line_end=False)
     print(txt2llm)
-    
     if hugging_face is False:
         llm_code_generator = submit_mixtral_local
         qc_func = llm_code_qc
@@ -56,18 +66,28 @@ def generate_augmented_code(txt2llm, augment_idx, apply_quality_control, top_p, 
         elif LLM_MODEL == 'llama3':
             llm_code_generator = submit_llama3_hf
         qc_func = llm_code_qc_hf
-    
     if apply_quality_control:
         base_code = retrieve_base_code(augment_idx)
         code_from_llm, generate_text = llm_code_generator(txt2llm, return_gen=True, top_p=top_p, temperature=temperature)
         code_from_llm = qc_func(code_from_llm, base_code, generate_text)
     else:
         code_from_llm = llm_code_generator(txt2llm, top_p=top_p, temperature=temperature)
+        # Dealing with No code returned from the LLM
+        # Give the LLM 3 Tries to Output correct code
+        print("Checking to See if Response was Empty")
+        if not code_from_llm or code_from_llm.strip().lower() == "none":
+            print("Response Was Empty")
+            for i in range(3):
+                code_from_llm = llm_code_generator(txt2llm, top_p=top_p, temperature=temperature) 
+                if code_from_llm != "None":
+                    break
+        print("Response Was Not Empty")
         box_print("TEXT FROM LLM", print_bbox_len=60, new_line_end=False)
         print(code_from_llm)
         code_from_llm = clean_code_from_llm(code_from_llm)
     box_print("CODE FROM LLM", print_bbox_len=60, new_line_end=False)
     print(code_from_llm)
+    # This is where I should be fixing the Code Issue if it's None
     return code_from_llm
 
 def extract_note(txt):
@@ -77,7 +97,6 @@ def extract_note(txt):
         return '# -- NOTE --\n' + note_txt[1].strip() + '# -- NOTE --\n'
     return ''
 
-# Function to load and split the file
 def split_file(filename):
     with open(filename, 'r') as file:
         content = file.read()
@@ -158,7 +177,6 @@ def submit_mixtral_hf(txt2mixtral, max_new_tokens=1024, top_p=0.15, temperature=
     else:
         return results[0]
     
-    
 def submit_mixtral_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, server_url=f"http://{os.getenv('SERVER_HOSTNAME', 'localhost')}:8000/generate", return_gen=False):
     payload = {
         "prompt": prompt,
@@ -187,19 +205,6 @@ def submit_mixtral_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")
         return None
-
-"""
-█▀▀ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ █▀▀ 
-█── █▀▀█ █▄▄█ █──█ █─▀█ █▀▀ ▀▀█ 
-▀▀▀ ▀──▀ ▀──▀ ▀──▀ ▀▀▀▀ ▀▀▀ ▀▀▀
-"""
-#________________________________________________________________________
-# Instead of using Code Llama's for the LLM Query we're using Mixtral
-# Too many "model too busy error"'s with Code Llama via Hugging Face API
-#________________________________________________________________________
-
-
-## We're using google/gemma-2-27b-it LLM Instead of codeLLMA3
 
 def submit_llama3_hf(txt2llama, 
                      max_new_tokens=1024, 
@@ -288,18 +293,6 @@ def submit_llama3_hf(txt2llama, max_new_tokens=1024, top_p=0.15, temperature=0.1
     else:
         return results[0]
 
-
-
-"""
-█▀▀ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ █▀▀ 
-█── █▀▀█ █▄▄█ █──█ █─▀█ █▀▀ ▀▀█ 
-▀▀▀ ▀──▀ ▀──▀ ▀──▀ ▀▀▀▀ ▀▀▀ ▀▀▀
-"""
-#________________________________________________________________________
-# For the model_id in the submit_mixtral method make sure to login to your
-# hugging face account and place your own specific modeL_id after agreeing 
-# to the terms and conditions.
-#________________________________________________________________________
 
 def submit_mixtral(txt2mixtral, max_new_tokens=764, top_p=0.15, temperature=0.1, 
                    model_id="mistralai/Mixtral-8x7B-Instruct-v0.1", return_gen=False):

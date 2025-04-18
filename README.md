@@ -28,6 +28,24 @@ Then follow the instructions to prepare the CIFAR10 dataset in the [ExquisiteNet
 
 This code has been tested on Python 3.12
 
+
+### Generic Integration
+
+This framework can now handle any model architecture by specifying data paths, train file an other important directories.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### Autonomous Model Evolution:
 _____
 <p align="center">

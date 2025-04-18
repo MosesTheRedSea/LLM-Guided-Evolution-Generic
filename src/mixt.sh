@@ -1,12 +1,3 @@
-"""
-█▀▀ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ █▀▀ 
-█── █▀▀█ █▄▄█ █──█ █─▀█ █▀▀ ▀▀█ 
-▀▀▀ ▀──▀ ▀──▀ ▀──▀ ▀▀▀▀ ▀▀▀ ▀▀▀
-"""
-#________________________________________________________________________
-# Changed indivudal configrations like path for main model in Point Transformers #1
-#________________________________________________________________________
-
 #!/bin/bash
 #SBATCH --job-name=AIsur_x1
 #SBATCH -t 8-00:00
@@ -28,18 +19,6 @@ conda info
 # TeslaV100S-PCIE-32GB|TeslaV100S-PCIE-32GB|GeForceGTX1080Ti|GeForceGTX1080
 # Set the TOKENIZERS_PARALLELISM environment variable if needed
 export TOKENIZERS_PARALLELISM=false
-
-
-
-"""
-█▀▀ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ █▀▀ 
-█── █▀▀█ █▄▄█ █──█ █─▀█ █▀▀ ▀▀█ 
-▀▀▀ ▀──▀ ▀──▀ ▀──▀ ▀▀▀▀ ▀▀▀ ▀▀▀
-"""
-#________________________________________________________________________
-# Added Run Scripts Commands to run PointNet++ using PyTorch it reflects my Path update yours as well
-# Added Run Scripts COmmands to run Point Transformers using 
-#________________________________________________________________________
 
 # Run Python script - ExquisiteNetV2
 # python llm_crossover.py '/gv1/projects/AI_Surrogate/dev/clint/CodeLLama/codellama/sota/ExquisiteNetV2/network.py' '/gv1/projects/AI_Surrogate/dev/clint/CodeLLama/codellama/sota/ExquisiteNetV2/models/network_x.py' '/gv1/projects/AI_Surrogate/dev/clint/CodeLLama/codellama/sota/ExquisiteNetV2/models/network_z.py' --top_p 0.15 --temperature 0.1 --apply_quality_control 'True' --bit 8

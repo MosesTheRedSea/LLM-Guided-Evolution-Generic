@@ -16,7 +16,6 @@ from src.llm_utils import split_file, retrieve_base_code, mutate_prompts
 from src.cfg.constants import *
 
 """
-
 ░█▄─░█ ░█▀▀▀█    ░█▀▀█ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ 
 ░█░█░█ ░█──░█    ░█─── █▀▀█ █▄▄█ █──█ █─▀█ █▀▀ 
 ░█──▀█ ░█▄▄▄█    ░█▄▄█ ▀──▀ ▀──▀ ▀──▀ ▀▀▀▀ ▀▀▀
@@ -26,7 +25,6 @@ def print_ancestery(data):
         print(f'gene: {gene}')
         print(f"\t{data[gene]['GENES']}")
         print(f"\t{data[gene]['MUTATE_TYPE']}")
-        
 
 """
 
@@ -61,14 +59,12 @@ def update_ancestry(gene_id_child, gene_id_parent, ancestery, mutation_type=None
     return ancestery
 
 
-
 """
 █▀▀ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ █▀▀ 
 █── █▀▀█ █▄▄█ █──█ █─▀█ █▀▀ ▀▀█ 
 ▀▀▀ ▀──▀ ▀──▀ ▀──▀ ▀▀▀▀ ▀▀▀ ▀▀▀
 """
 # PointNet++
-
 # def generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, SOTA_ROOT, SEED_NETWORK, ROOT_DIR):
 #     """
 #     Generates a template based on given probabilities and gene information.
@@ -108,7 +104,6 @@ def update_ancestry(gene_id_child, gene_id_parent, ancestery, mutation_type=None
 #             rules_txt = file.read()
 #         template_txt = f'{template_txt}\n{rules_txt}'
 #     return template_txt, mute_type
-
 
 # Point Transformers Menghao Model
 def generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, SOTA_ROOT, SEED_NETWORK, ROOT_DIR):
@@ -153,7 +148,6 @@ def generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, SOTA_ROOT, SEED_NETWORK,
 
     return template_txt, mute_type
 
-
 # ExquisiteNetV2 - generate_template method
 # def generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, SOTA_ROOT, SEED_NETWORK, ROOT_DIR):
 #     """
@@ -166,7 +160,6 @@ def generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, SOTA_ROOT, SEED_NETWORK,
 #     :param ROOT_DIR: Root directory for templates.
 #     :return: A tuple containing the template text and the mutation type.
 #     """
-
 #     if (PROB_EOT > np.random.uniform()) and (GEN_COUNT > 0):
 #         print("\t‣ EoT")
 #         top_gene = np.random.choice([x[0] for x in TOP_N_GENES])
@@ -177,11 +170,9 @@ def generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, SOTA_ROOT, SEED_NETWORK,
 #         for x, y, augment_idx in parts:
 #             if x.strip() != y.strip():
 #                 break
-                
 #         eot_template_path = os.path.join(ROOT_DIR, 'templates/EoT/EoT.txt')
 #         with open(eot_template_path, 'r') as file:
 #             eot_template_txt = file.read()
-            
 #         template_txt = eot_template_txt.format(x, y, "{}")
 #         mute_type = "EoT"
 #     else:
@@ -195,7 +186,6 @@ def generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, SOTA_ROOT, SEED_NETWORK,
 #             rules_txt = file.read()
 #         template_txt = f'{template_txt}\n{rules_txt}'
 #     return template_txt, mute_type
-
 
 """
 █▀▀ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ █▀▀ 
@@ -386,7 +376,7 @@ def check_contents_for_error(contents):
 ░█░█░█ ░█──░█    ░█─── █▀▀█ █▄▄█ █──█ █─▀█ █▀▀ 
 ░█──▀█ ░█▄▄▄█    ░█▄▄█ ▀──▀ ▀──▀ ▀──▀ ▀▀▀▀ ▀▀▀
 """
-def check4job_completion(job_id, local_output=None, check_interval=60, timeout=120): # 3600 * 3
+def check4job_completion(job_id, local_output=None, check_interval=60, timeout=3600*3): # 3600 * 3
     """
     Check for the completion of a job by searching for its output file and scanning for errors.
 
@@ -522,11 +512,14 @@ def create_individual(container, temp_min=0.05, temp_max=0.4):
 ░█─░█ ░█▄▄▄ ──░█──    ░█▄▄█ ░█─░█ ░█─░█ ░█──▀█ ░█▄▄█ ░█▄▄▄
 """
 # general_model - submit_run method implementation
+
 # Point-Net++ - submit_run method implementaton
+
 # Point Transformers - submit_run method implmentation - further alterations may be needed
 
 def submit_run(gene_id):
     def write_bash_script_py(gene_id, train_file='./sota/Point-Transformers/train_cls.py'):
+
         # When I want to train the model I simply call train_cls.py 
         # I must also make alterations to the cls.yaml file 
         # Have the Model Absolute path we're trying to change
@@ -547,7 +540,7 @@ def submit_run(gene_id):
         # for i, line in enumerate(cls_yaml_content):
         #     if line.startswith('file:'): 
         #         cls_yaml_content[i] = f'file: model_{gene_id}\n'
-    
+
         # with open(cls_yaml_path, 'w') as file:
         #     file.writelines(cls_yaml_content)
 
@@ -668,9 +661,6 @@ def submit_run(gene_id):
 
 
 
-
-
-
 # ExquisiteNetV2 - submit_run method implmentation
 
 # def submit_run(gene_id):
@@ -737,14 +727,36 @@ def evalModel(individual):
 █── █▀▀█ █▄▄█ █──█ █─▀█ █▀▀ ▀▀█ 
 ▀▀▀ ▀──▀ ▀──▀ ▀──▀ ▀▀▀▀ ▀▀▀ ▀▀▀
 """
+
+def is_file_in_directory(directory_path, filename):
+    file_path = os.path.join(directory_path, filename)
+    return os.path.isfile(file_path)
+
 # Point Transformers
 def check4model2run(gene_id):
-    # model_path = os.path.join(str(GENERATION), f'{gene_id}_model.txt')
+    
+    check_exist = f'{SOTA_ROOT}/models/Menghao/model_{gene_id}.py'
+    print(f'Checking for model file: {check_exist}')
+
+    # Check if the model file exists
+    if not os.path.isfile(check_exist):
+        print(f'\t☠ Model file does not exist for gene_id: {gene_id}, skipping evaluation.')
+        GLOBAL_DATA[gene_id]['status'] = 'completed'
+        GLOBAL_DATA[gene_id]['fitness'] = INVALID_FITNESS_MAX
+        return
+
+    model_path = os.path.join(str(GENERATION), f'{gene_id}_model.txt')
+
+    # Proceed only if the model hasn't been evaluated yet
+    if GLOBAL_DATA[gene_id]['status'] != 'running eval':
+        submit_run(gene_id)
+
     print(f'Checking for: SOTA_ROOT ./models/Menghao/model_{gene_id}.py')
     model_path = f'{SOTA_ROOT}/models/Menghao/model_{gene_id}.py'
     if os.path.exists(model_path):
         if GLOBAL_DATA[gene_id]['status'] != 'running eval':
             submit_run(gene_id)
+
 # ExquisiteNetV2 - check4model2run method implmentation
 # def check4model2run(gene_id):
 #     # model_path = os.path.join(str(GENERATION), f'{gene_id}_model.txt')
@@ -1368,6 +1380,7 @@ toolbox.register("mutate", customMutation, indpb=0.2)
 toolbox.register("select", true_nsga2)
 
 # TODO: start using percent diff of train acc vs val test acc as an over fitt metric 
+
 # 40398682
 GEN_COUNT = -1
 TOP_N_GENES = None
@@ -1375,8 +1388,17 @@ LINKED_GENES = {}
 GLOBAL_DATA = {}
 GLOBAL_DATA_HIST = {}
 GLOBAL_DATA_ANCESTERY = {}
+
 # Main Evolution Loop
 if __name__ == "__main__":
+
+    # Before Anything is tested we make sure to grab all the necessary information from the configuration YML file.
+
+    
+
+
+
+
     parser = argparse.ArgumentParser(description='Run Generation')
     # Add arguments
     parser.add_argument('checkpoints', type=str, help='Save Dir')
@@ -1419,27 +1441,14 @@ if __name__ == "__main__":
         # Select the next generation's parents
         box_print(f"Selection", print_bbox_len=60, new_line_end=False)
         # These bypass the mutation and cross-over so we dont lose them
-        
-        """
-        █▀▀ █──█ █▀▀█ █▀▀▄ █▀▀▀ █▀▀ █▀▀ 
-        █── █▀▀█ █▄▄█ █──█ █─▀█ █▀▀ ▀▀█ 
-        ▀▀▀ ▀──▀ ▀──▀ ▀──▀ ▀▀▀▀ ▀▀▀ ▀▀▀
-        """
-        # This Line right here is causing the error
-        # Add Condtional here to check population size
-        '''
-        Whereever it ini
-        '''
         count = 0
         for i in range(5):
             if len(population) == 0:
                 createPopulation()
             else:
                 break
-
         if len(population) == 0:
             exit() 
-        
         elites = tools.selSPEA2(population, num_elites)
 
         # Select the next generation's parents
