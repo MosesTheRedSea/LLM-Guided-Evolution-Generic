@@ -2,13 +2,21 @@
 # Info Specification
 
 # constants.py
+# Example
 root_directory : 
+# Example
 data_path : 
+# Example
 sota_root : 
+# Example
 seed_network : 
+# Example
 local_device : 
+# Example
 mac_os : 
+# Example
 llm_model : 
+# Example
 llm_model_path : 
 
 # Evolution | Constants | Parameters | Defaults
