@@ -7,14 +7,7 @@ import threading
 from src.cfg.constants import *
 
 app = FastAPI(title="LLM API", version="1.0")
-
-MODELS = {}
-MODELS['mixtral'] = '/storage/ice-shared/vip-vvk/llm_storage/mixtral/Mixtral-8x7B-Instruct-v0.1/'
-MODELS['qwen'] = "/storage/ice-shared/vip-vvk/llm_storage/Qwen/Qwen2.5-72B-Instruct/"
-MODELS['llama1'] = "/storage/ice-shared/vip-vvk/llm_storage/meta-llama/Llama-3.3-70B-Instruct"
-MODELS['deepseek'] = "/storage/ice-shared/vip-vvk/llm_storage/deepseek-ai/DeepSeek-R1-Distill-Llama-70B"
-
-MODEL_PATH = MODELS['mixtral']
+MODEL_PATH = # LLM Local Model Path For Running 
 
 class LLMModel:
     _instance = None
@@ -27,7 +20,7 @@ class LLMModel:
                     cls._instance = super(LLMModel, cls).__new__(cls)
                     cls._instance._initialize()
         return cls._instance
-    
+
     def _initialize(self):
         self.model = transformers.AutoModelForCausalLM.from_pretrained(
             MODEL_PATH,

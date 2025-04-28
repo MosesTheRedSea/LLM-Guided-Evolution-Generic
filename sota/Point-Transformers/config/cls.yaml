@@ -1,19 +1,23 @@
 batch_size: 16
-defaults:
-- model: Menghao
-epoch: 1
-gpu: 1
-hydra:
-  run:
-    dir: log/cls/${model.name}
-  sweep:
-    dir: log/cls
-    subdir: ${model.name}
+epoch: 200
 learning_rate: 1e-3
-model:
-  file: model_xXx8bf5SQ9VnlGRCe2oBXpdF3vm
-  name: Menghao
-normal: true
+gpu: 1
 num_point: 1024
 optimizer: Adam
 weight_decay: 1e-4
+normal: True
+
+defaults:
+  - model: Menghao
+
+hydra:
+  run:
+    dir: log/cls/${model.name}
+
+  sweep:
+    dir: log/cls
+    subdir: ${model.name}
+
+model:
+  file: model 
+  name: Menghao

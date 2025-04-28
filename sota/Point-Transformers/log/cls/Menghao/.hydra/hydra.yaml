@@ -111,11 +111,12 @@ hydra:
   overrides:
     hydra:
     - hydra.mode=RUN
-    task: []
+    task:
+    - model.file=model_xXxPf6MiTZRQ7FQYh1vU8DynxLf
   job:
     name: train_cls
     chdir: null
-    override_dirname: ''
+    override_dirname: model.file=model_xXxPf6MiTZRQ7FQYh1vU8DynxLf
     id: ???
     num: ???
     config_name: cls

@@ -1,22 +1,13 @@
 import os
 import numpy as np
 
-ROOT_DIR = "/home/hice1/madewolu9/scratch/madewolu9/LLM_PointNet/LLM-Guided-PointCloud-Class/" #1
-DATA_PATH = "./modelnet40_normal_resampled"
-SOTA_ROOT = os.path.join(ROOT_DIR, 'sota/Point-Transformers') #1
-SEED_NETWORK = os.path.join(SOTA_ROOT, "models/Menghao/model.py") #2
 
-# DATA_PATH absolute or relative to ExquisiteNetV2
-# DATA_PATH = "./cifar10"
-# SOTA_ROOT = os.path.join(ROOT_DIR, 'sota/ExquisiteNetV2')
-# SEED_NETWORK = os.path.join(SOTA_ROOT, "network.py")
-
-# PointNet++
-#ExquisiteNetV2
-# ROOT_DIR = "/home/hice1/madewolu9/scratch/madewolu9/LLM_PointNet/LLM-Guided-PointCloud-Class/" #1
-# DATA_PATH = "./modelnet40_normal_resampled"
-# SOTA_ROOT = os.path.join(ROOT_DIR, 'sota/PNPP/Pointnet_Pointnet2_pytorch')
-# SEED_NETWORK = os.path.join(ROOT_DIR, 'sota/PNPP/Pointnet_Pointnet2_pytorch/models/pointnet_cls_ssg.py')
+ROOT_DIR = # Root Folder Path
+DATA_PATH = # Model Data Path
+SOTA_ROOT = os.path.join(ROOT_DIR, ) # Mode Directory Path
+SEED_NETWORK = os.path.join(SOTA_ROOT, ) # Main Model Directory Path
+MODEL = # Model Name
+TRAIN_FILE = os.path.join(SOTA_ROOT, ) # Train File 
 
 LOCAL = False
 if LOCAL:
@@ -32,11 +23,8 @@ else:
 	DEVICE = 'cuda'
 	# DEVICE = 'cpu'
 
-LLM_MODEL = 'mixtral' 
-LLM_MODEL_PATH = '/storage/ice-shared/vip-vvk/llm_storage/mixtral/Mixtral-8x7B-Instruct-v0.1/'
-
-#LLM_MODEL = 'llama3' 
-# SEED_PACKAGE_DIR = "./sota/ExquisiteNetV2/divine_seed_module"
+LLM_MODEL = # Local LLM Model Name
+LLM_MODEL_PATH = # Local LLM Path
 
 """
 Evolution Constants/Params
@@ -50,7 +38,7 @@ NUM_EOT_ELITES = 10
 GENERATION = 0
 PROB_QC = 0.0
 PROB_EOT = 0.25
-num_generations = 30  # Number of generations
+num_generations = 10  # Number of generations
 start_population_size = 32
 # start_population_size = 144   # Size of the population 124=72
 #population_size = 44 # with cx_prob (0.25) and mute_prob (0.7) you get about %50 successful turnover

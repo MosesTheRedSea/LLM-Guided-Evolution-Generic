@@ -20,12 +20,6 @@ conda info
 # Set the TOKENIZERS_PARALLELISM environment variable if needed
 export TOKENIZERS_PARALLELISM=false
 
-# Run Python script - ExquisiteNetV2
-# python llm_crossover.py '/gv1/projects/AI_Surrogate/dev/clint/CodeLLama/codellama/sota/ExquisiteNetV2/network.py' '/gv1/projects/AI_Surrogate/dev/clint/CodeLLama/codellama/sota/ExquisiteNetV2/models/network_x.py' '/gv1/projects/AI_Surrogate/dev/clint/CodeLLama/codellama/sota/ExquisiteNetV2/models/network_z.py' --top_p 0.15 --temperature 0.1 --apply_quality_control 'True' --bit 8
-
-# Run Python Script - PointNet++ PyTorch #1
-
-# Run python Script - Point Transformers #1
+# Model 
 python llm_crossover.py '/gv1/projects/AI_Surrogate/dev/dev/clint/CodeLLama/codellama/sota/Point-Transformers/models/Menghao/model.py' '/home/hice1/madewolu9/scratch/madewolu9/LLM_PointNet/LLM-Guided-PointCloud-Class/sota/Point-Transformers/models/llmge_models/model_x.py' '/home/hice1/madewolu9/scratch/madewolu9/LLM_PointNet/LLM-Guided-PointCloud-Class/sota/Point-Transformers/models/llmge_models/model_z.py'  --top_p 0.15   --temperature 0.1 --apply_quality_control 'True' --bit 8
 
-# Run PointNet++ - PyTorch Script

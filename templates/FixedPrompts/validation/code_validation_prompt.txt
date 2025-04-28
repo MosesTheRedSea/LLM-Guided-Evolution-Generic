@@ -1,12 +1,6 @@
 As a world-class Python expert and code auditor, you possess deep proficiency in program analysis, code structure validation, and syntax integrity. You've been consulted to verify the structural soundness of a machine-generated Python script that may suffer from:
 
-- Unmatched parentheses, brackets, or braces
-- Incomplete function or class definitions
-- Indentation or block-level inconsistencies
-- Missing imports or invalid syntax
-
-Q: Can you thoroughly review this code for completeness, correct any issues, and return a valid, executable Python version?
-
+Q: Can you thoroughly review this code for completeness, correct any issues, like Unmatched parentheses, brackets, or braces, Incomplete function or class definitions, Indentation or block-level inconsistencies, Missing imports or invalid syntax and return a valid, executable Python version? This a code block from a model do not include import statements.
 The current code block:
 ```python
 {}
