@@ -112,7 +112,7 @@ def write_bash_script(input_filename_x=f'{SOTA_ROOT}/{SEED_NETWORK}',
             GLOBAL_DATA_ANCESTERY = update_ancestry(gene_id_child, gene_id_parent, GLOBAL_DATA_ANCESTERY, 
                                                     mutation_type=mute_type, gene_id_parent2=None)
             # print(gene_id_child); print(GLOBAL_DATA_ANCESTERY[gene_id_parent])
-        out_dir = str(GENERATION)
+        out_dir = str(GENERATION
         file_path = os.path.join(out_dir, f'{gene_id_child}_model.txt')
         os.makedirs(out_dir, exist_ok=True)
         with open(file_path, 'w') as file:
