@@ -11,8 +11,8 @@ Overview
 
 How to get started and setup your system for Point Cloud Classification Team 
 
-Dr. Zutty's recent paper LLM Guided Evolution -- The Automation of Models Advancing Models. 
-They were able to create a framework that uses LLMs with a layer of creativity to speed up the process of evolving ML models.
+In Morris, Jurado, and Zutty's recent paper "LLM Guided Evolution -- The Automation of Models Advancing Models", 
+they were able to create a framework that uses LLMs with a layer of creativity to speed up the process of evolving ML models.
 Our specific goal is to generalize this framework by improving 2 current state of the start point cloud classification models.
 We picked Point Transformers and PointNet++ along with the Model40Net DataSet.
 
@@ -115,7 +115,54 @@ This unique framework is based off of Morris, Jurado, and Zutty's research paper
 
 ExquisiteNetV2
 """"""""""""""
-Lightweight CNN designed for image classification, tested on 15 datasets (CIFAR-10, MNIST) with 518,230 parameters, achieving 99.71% accuracy on MNIST. 
+Lightweight CNN designed for image classification, tested on 15 datasets \(CIFAR-10, MNIST\) with 518,230 parameters, achieving 99.71% accuracy on MNIST. 
+
+LLM-GE Codebase Structure
+^^^^^^^^^^^^^^^^^^^^^^^^^
+.. image:: point_cloud_resources/repo-structure.png
+
+Code Breakdown
+^^^^^^^^^^^^^^
+
+First Step use the environment.yml file to create the llmge-env environment 
+
+Step 1: ``nano environment.yml``
+
+Step 2: ``conda env create -f environment.yml``
+
+Step 3: ``conda activate llmge-env``
+
+Step 4: ``conda list``
+- This will list out all of the environment details that we have 
+
+ExquisiteNetV2 
+^^^^^^^^^^^^^^
+The default integration model for this framework is ExquisiteNetV2. We're going to go step by step file by file and show you key parts to change so please follow closely. Go into the sota  Directory and click on the ExquisiteNetV2 directory. Inside this directory you will see a README.md file which contains key information for this integration.
+
+train-test data
+""""""""""""""""
+
+
+.. code-block:: markdown
+    
+    # Train Cifar-10
+    The best weight has been in the directory `weight/exp`.
+
+
+    If you want to reproduce the result, you can follow the precedure below.
+    - __Download the cifar-10 from [official website](
+    )__
+    1. Download python version and unzip it.
+    2. Put `split.py` into the directory `cifar-10-python`  
+        then type:
+        ```
+        python split.py
+        ```  
+        Now you get the cifar10 raw image in the directory `cifar10`
+        
+    - __Train from scratch__
+    ```
+    python train.py -da
 
 
 
