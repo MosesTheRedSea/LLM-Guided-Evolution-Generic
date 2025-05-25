@@ -76,9 +76,46 @@ You will be sent to the pace-ice landing page.
 
 .. image:: point_cloud_resources/pace-ice-login.png
 
-Click on the `Flies` dropdown in the top-left corner, then select `Home Directory`
+Click on the ``Flies`` dropdown in the top-left corner, then select ``Home Directory``
 
 .. image:: point_cloud_resources/pace-ice-directory.png
+
+Traverse all the way to your scratch directory so that we can drag and drop our LLM-GE Repository that you cloned to your local computer.
+Click the Upload Button at the top of the window, and drag and drop your IMAGE-Generic Repository into your scratch directory.
+
+Now that we have the repository on PACE ICE we can start to run LLMGE
+
+From here click Interactive Apps dropdown, and select VS Code the last option on the bottom.
+
+.. image:: point_cloud_resources/vs-code-link.png
+
+Check the settings \(change number of hours to 8\) and click launch.
+
+.. image:: point_cloud_resources/set-hours.png
+
+Head back to the home page, and click on ``My Interactive Session``.
+
+.. image:: point_cloud_resources/interactive-session.png
+
+Once you have it will bring you to your current sessions you have. You'll probably have to wait a few seconds because your session will be queued. However, once it's finished you simplify click connect and your session will load you in VSCODE.
+
+Once you're in VSCODE, simply click ``File -> Open Folder``, and go to the directory you saved the LLMGE Repo in your scratch or whichever folder.
+
+.. image:: point_cloud_resources/vs-code.png
+
+Before we get started I want to explain the codebase itself and then afterwards we will discuss the certain information you may need to change in order for it to run properly during your interactive session.
+
+
+Large Language Model Guided Evolution Repository
+------------------------------------------------
+
+Overview
+^^^^^^^^
+This unique framework is based off of Morris, Jurado, and Zutty's research paper called, “The Automation of Models Advancing Models”. They were able to create a framework that uses LLMs with a layer of creativity to speed up the process of evolving ML models, specifically for ExquisiteNetV2.
+
+ExquisiteNetV2
+""""""""""""""
+Lightweight CNN designed for image classification, tested on 15 datasets (CIFAR-10, MNIST) with 518,230 parameters, achieving 99.71% accuracy on MNIST. 
 
 
 
