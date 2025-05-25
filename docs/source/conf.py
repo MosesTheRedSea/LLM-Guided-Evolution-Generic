@@ -14,7 +14,12 @@ release = '1.0'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = []
+extensions = ['sphinx.ext.autosummary',
+              'sphinx.ext.autodoc',
+              'sphinx.ext.napoleon',
+              'sphinx.ext.viewcode']
+
+autosummary_generate = True
 
 templates_path = ['_templates']
 exclude_patterns = []
@@ -26,3 +31,19 @@ exclude_patterns = []
 
 html_theme = 'furo'
 html_static_path = ['_static']
+
+# -- Ensure that the code appears in the path
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path('..', '..', 'src').resolve()))
+sys.path.insert(0, str(Path('..', '..').resolve()))
+print(sys.path)
+# apidoc_modules = [
+#     {'path': '../../run_imporved.py', 'destination': 'source/'},
+#     {'path': '../../src/llm_crossover.py', 'destination': 'source/'},
+#     {'path': '../../src/llm_mutation.py', 'destination': 'source/'},
+#     {'path': '../../src/llm_utils.py', 'destination': 'source/'},
+#     {'path': '../../src/cfg/constants.py', 'destination': 'source/'},
+#     {'path': '../../src/utils/print_utils.py', 'destination': 'source/'}
+# ]

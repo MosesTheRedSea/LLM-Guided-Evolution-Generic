@@ -9,9 +9,9 @@ Point Cloud Classification Optimization
 Overview
 --------
 
-How to get started and setup your system for Point Cloud Classification Team 
+How to get started and setup your system for Point Cloud Classification Team
 
-In Morris, Jurado, and Zutty's recent paper "LLM Guided Evolution -- The Automation of Models Advancing Models", 
+In Morris, Jurado, and Zutty's recent paper "LLM Guided Evolution -- The Automation of Models Advancing Models",
 they were able to create a framework that uses LLMs with a layer of creativity to speed up the process of evolving ML models.
 Our specific goal is to generalize this framework by improving 2 current state of the start point cloud classification models.
 We picked Point Transformers and PointNet++ along with the Model40Net DataSet.
@@ -144,14 +144,13 @@ train-test data
 
 
 .. code-block:: markdown
-    
+
     # Train Cifar-10
     The best weight has been in the directory `weight/exp`.
 
 
-    If you want to reproduce the result, you can follow the precedure below.
-    - __Download the cifar-10 from [official website](
-    )__
+    If you want to reproduce the result, you can follow the procedure below.
+    - __Download the cifar-10 from [official website](https://www.cs.toronto.edu/~kriz/cifar.html)__
     1. Download python version and unzip it.
     2. Put `split.py` into the directory `cifar-10-python`  
         then type:
