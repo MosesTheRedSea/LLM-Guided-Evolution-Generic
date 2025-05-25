@@ -67,11 +67,18 @@ You can access any website through the VPN through the ``enter url`` dropdown.
 
 .. image:: point_cloud_resources/enter_url.png
 
-`PACE ICE <https://ondemand-ice.pace.gatech.edu/>`_
+Enter in the pace-ice link: `PACE-ICE <https://ondemand-ice.pace.gatech.edu/>`_
 """""""""""""""""""""""""""""""""""""""""""""""""""
 .. note::
     You must be on the vpn to access pace.
 
+You will be sent to the pace-ice landing page.
+
+.. image:: point_cloud_resources/pace-ice-login.png
+
+Click on the `Flies` dropdown in the top-left corner, then select `Home Directory`
+
+.. image:: point_cloud_resources/pace-ice-directory.png
 
 
 
