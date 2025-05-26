@@ -20,6 +20,7 @@ extensions = ['sphinx.ext.autosummary',
               'sphinx.ext.viewcode']
 
 autosummary_generate = True
+autosummary_imported_members = True
 
 templates_path = ['_templates']
 exclude_patterns = []
@@ -36,6 +37,8 @@ html_static_path = ['_static']
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path('..', '..', 'src', 'utils').resolve()))
+sys.path.insert(0, str(Path('..', '..', 'src', 'cfg').resolve()))
 sys.path.insert(0, str(Path('..', '..', 'src').resolve()))
 sys.path.insert(0, str(Path('..', '..').resolve()))
 print(sys.path)
