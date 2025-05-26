@@ -6,6 +6,8 @@ API
 
    run_improved
    llm_crossover
+   llm_mutation
+   llm_utils
 
 
 Indices and tables
