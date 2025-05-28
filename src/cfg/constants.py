@@ -1,6 +1,5 @@
 import os
 import numpy as np
-import torch
 
 ROOT_DIR = "/home/hice1/jzutty3/llm-guided-evolution"
 # DATA_PATH absolute or relative to ExquisiteNetV2
@@ -90,6 +89,8 @@ export LD_LIBRARY_PATH=~/.conda/envs/llm_guided_env/lib/python3.12/site-packages
 # Run Python script
 {}
 """
+
+
 
 LLM_BASH_SCRIPT_TEMPLATE = """#!/bin/bash
 #SBATCH --job-name=llm_oper

@@ -14,7 +14,7 @@ from pathlib import Path
 
 
 def augment_network(input_filename='network.py', output_filename='network_x.py', template_txt=None,
-                    top_p=0.15, temperature=0.1, apply_quality_control=False, inference_submission=False):
+                    top_p=0.15, temperature=0.1, apply_quality_control=False, hugging_face=False):
     
     print(f'Loading {input_filename} code')
     parts = split_file(input_filename)
@@ -30,7 +30,7 @@ def augment_network(input_filename='network.py', output_filename='network_x.py',
     # add code to be augmented 
     txt2llm = template_txt.format(code2llm.strip())
     code_from_llm = generate_augmented_code(txt2llm, augment_idx-1, apply_quality_control,
-                                            top_p, temperature, inference_submission=inference_submission)
+                                            top_p, temperature, hugging_face=hugging_face)
     note_txt = extract_note(code2llm)
     parts[augment_idx] = f"\n{note_txt}{code_from_llm}\n"
     # prompt_log = f'# Parent Prompt: {template_path} Root Code: {input_filename}\n'
@@ -57,7 +57,7 @@ if __name__ == "__main__":
     parser.add_argument('--top_p', type=float, default=0.15, help='Top P value for text generation')
     parser.add_argument('--temperature', type=float, default=0.1, help='Temperature value for text generation')
     parser.add_argument('--apply_quality_control', type=str2bool, default=False, help='Use LLM QC')
-    parser.add_argument('--inference_submission', type=str2bool, default=False, help='True to submit for inference remotely')
+    parser.add_argument('--hugging_face', type=str2bool, default=False, help='Hugging Face bool')
 
     # Parse the arguments
     args = parser.parse_args()
@@ -69,5 +69,5 @@ if __name__ == "__main__":
                     top_p=args.top_p, 
                     temperature=args.temperature,
                     apply_quality_control=args.apply_quality_control,
-                    inference_submission=args.inference_submission,
+                    hugging_face=args.hugging_face,
                    )
