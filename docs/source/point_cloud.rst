@@ -160,6 +160,7 @@ Large Language Model Guided Evolution
     **src**
 
         - The main source directory contains the core configuration files:
+
         - Large Language Model Configuration, Specific Directories, and Dataset paths
 
 
@@ -246,14 +247,67 @@ Large Language Model Guided Evolution
 --------------
 Code Workflow
 --------------
+**ExquisiteNetV2**
 
-**Initialization**
+    .. role:: red
+
+    - This section will explain the codebase workflow with the default implemented model,  ExquisiteNetV2.
+
+**Configurations**
+
+    *Download Dataset*
+    
+        - ExquisiteNetV2, a Lightweight CNN designed for image classification, tested on 15 datasets \(CIFAR-10, MNIST\) with 518,230 parameters, achieving 99.71% accuracy on MNIST. 
+    
+        -  Go into the sota (State of the art) directory and click on the ExquisiteNetV2 directory.
+        
+        - Inside this directory you will see a README.md file which contains key information for the dataset.
+
+        .. code-block:: markdown
+
+            # Train Cifar-10
+            The best weight has been in the directory `weight/exp`.
+
+            If you want to reproduce the result, you can follow the procedure below.
+            - __Download the cifar-10 from https://www.cs.toronto.edu/~kriz/cifar.html
+            1. Download python version and unzip it.
+            2. Put `split.py` into the directory `cifar-10-python`  
+         
+                `python split.py`
+                
+                Now you get the cifar10 raw image in the directory `cifar10`
+                
+    *Constants.py*
+
+        .. image:: point_cloud_resources/exquisite-net-v2-constants-py-1.png
+
+        *ROOT_DIR*
+            - Path to LLMGE folder **/home/hice1/madewolu9/scratch/llm-guided-evolution/**
+
+        *DATA_PATH*
+            - Path to SOTA model dataset | ExquisiteNetV2 -> cifar10
+         
+        *SOTA_PATH*
+            - Path to SOTA (state of the art) model -> ExquisiteNetV2
+
+        *SEED_NETWORK*
+            - The main model file for the SOTA model | ExquiteNetV2 -> network.py
+
+        *MODEL*
+            - Simply put the name of the SEED network without .py
+
+        *TRAIN_FILE*
+            - train.py file used within the SOTA model.
+
+        .. image:: point_cloud_resources/exquisite-net-v2-constants-py-2.png
+
+
+
+**Evolutionary Loop**
 
     .. image:: point_cloud_resources/run-improved-individual-deap.png
         
     - We initialize the toolbox which holds the key methods we plan to use during the evolutionary loop.
-
-**Evolutionary Loop**
 
     .. image:: point_cloud_resources/run-improved-individual-creation.png
 
@@ -262,76 +316,61 @@ Code Workflow
 
 **Variant Model Files**
 
+    *Local Large Language Model Setup*
+
+    - 
+
     .. image:: point_cloud_resources/create-individual-run-improved.png
 
-    - The **create_individual method** takes the seed file which has been generically integrated and creates a varaint file with a unique geneId (20 char long random assortment of numbers & letters) in a sub-directory called llmge_models, which will be submitted fo evaluation.
+    - The **create_individual method** takes the seed file which has been generically integrated and creates a varaint file with a unique geneId -> **model_xXPAsb8bdabdyuv28f.py** in a sub-directory called llmge_models, which will be submitted fo evaluation.
 
-    **Seed individuals**
-    
-    - Seed individuals are created at the very start (generation 0) using the create_individual function.
+**Seed individuals**
 
-
---------------------------
-ExquisiteNetV2 Integration
---------------------------
+    - Seed individuals are created at the very start **(generation_0)** using the create_individual function.
 
 
-**Download Dataset**
+**Fitness Evaluation**
 
- - ExquisiteNetV2, a Lightweight CNN designed for image classification, tested on 15 datasets \(CIFAR-10, MNIST\) with 518,230 parameters, achieving 99.71% accuracy on MNIST. 
+    - Then we wait for jobs that were submitted, and assign the fitness to the variant model files.
+    - We take the model_variant files and evaluate them using the train.py file for the model architecture.
+    - The results are stored in a textfile within a directory called **/results**.
 
-    - The default integration model for this framework is ExquisiteNetV2. We're going to go step by step file by file and show you key parts to change so please follow closely. Go into the sota  Directory and click on the ExquisiteNetV2 directory. Inside this directory you will see a README.md file which contains key information for this integration.
+    .. code:: console
+         f"{test_acc},{total_params},{val_acc},{tr_time}"
+        fitness = [float(r.strip()) for r in results]
+        # TODO: get all features later (test_accuracy, total_params)
+        fitness = [fitness[0], fitness[1]] 
+        fitness = tuple(fitness)
 
-    **train-test data**
+**Selection**
 
-    .. code-block:: markdown
+    - Next We choose the best individuals **(elites)** and select for reproduction.
+    - Choose the elities to use in the next generation, default #elites is 10.
 
-        # Train Cifar-10
-        The best weight has been in the directory `weight/exp`.
+**Crossover**
 
+    - We perform a crossover, we combine code/parameters from two models to create offspring.
+    - Pairs of individuals are selected.
+    - For each pair, a crossover operation is performed:
+    - Combine elements **(code segments, parameters)** from both parents, often with LLM assistance/templates.
+    - Create a new gene ID, generate new code **(as a Python file)**, and submit a new job.
+    - The new individual **(“offspring”)** is tracked.
 
-        If you want to reproduce the result, you can follow the procedure below.
-        - __Download the cifar-10 from [official website](https://www.cs.toronto.edu/~kriz/cifar.html)__
-        1. Download python version and unzip it.
-        2. Put `split.py` into the directory `cifar-10-python`  
-            then type:
-            ```
-            python split.py
-            ```  
-            Now you get the cifar10 raw image in the directory `cifar10`
-            
-        - __Train from scratch__
+**Mutation**
 
+    - Randomly alter code/parameters in a model to create a mutant
+    - Each individual has a chance **(with some probability)** to be mutated:
+    - Change hyperparameters **(input_filename, output_filename, template_txt, top_p, temperature, ...) (again, often LLM-guided)**.
+    - Create a new gene ID, generate new code, submit a new training job.
+    - Track the mutated individual.
 
+**Next Generation**
 
-**Constants.py**
-
-
-
-**constants.py**
-
-
-
-**run.sh**
-
-
-
-**mixt.sh**
-
-
-
-**llm_utils.py**
-
-
-**llm_utils.py**
-
-
-**network.py**
-
-
-**train.py**
-
-
+    -  Build new population, remove duplicates, keep elites
+    - The next generation’s population is composed of:
+    - Elites (best models from the previous generation)
+    - Offspring from crossover/mutation
+    - Duplicates are removed to ensure diversity
 
 ------------------------------
 Point Transformers Integration
