@@ -244,9 +244,9 @@ Large Language Model Guided Evolution
 
         - Specialized script for mixed or multi-objective evolution scenarios
 
---------------
+-------------
 Code Workflow
---------------
+-------------
 **ExquisiteNetV2**
 
     .. role:: red
@@ -276,31 +276,59 @@ Code Workflow
                 `python split.py`
                 
                 Now you get the cifar10 raw image in the directory `cifar10`
+
+        - Click the link to go to the cifar10 website
+        
+        .. image:: point_cloud_resources/exquisite-net-v2-dataset-py.png
+
+        - Make sure to sleect the **CIRFAR-10 python version** Link
+
+        .. image:: point_cloud_resources/exquisite-net-v2-dataset-py-2.png
+        
+        - It will download the cifar-10-python.tar file to your computer
+        
+        .. image:: point_cloud_resources/exquisite-net-v2-dataset-py-3.png
+
+        - Once you click on it you will see another ciar-10-bathces-py folder
+
+        - Make sure you extact the contents of cifar-10-python.tar to your computer
+
+        - Then head on over to the PACE ICE Instructional Cluster, then drag & drop the file into the ExquisteNetV2 directory
+
+        .. image:: point_cloud_resources/exquisite-net-v2-dataset-py-4.png
+
+        - Once the file is there you will run 
+
+        .. code-block:: markdown
+
+            `python split.py`
+
+        - This command will format the cifar-10-bathces-py folder and create another directory called cifar-10, with the test and train data.
+
                 
     *Constants.py*
 
         .. image:: point_cloud_resources/exquisite-net-v2-constants-py-1.png
 
-        *ROOT_DIR*
-            - Path to LLMGE folder **/home/hice1/madewolu9/scratch/llm-guided-evolution/**
+        - root directory is the path to LLMGE folder **/home/hice1/madewolu9/scratch/llm-guided-evolution/**
 
-        *DATA_PATH*
-            - Path to SOTA model dataset | ExquisiteNetV2 -> cifar10
+        - data path is the path to the sota model dataset **ExquisiteNetV2/cifar10**
          
-        *SOTA_PATH*
-            - Path to SOTA (state of the art) model -> ExquisiteNetV2
+        - sota path is the  (state of the art) model path **ExquisiteNetV2/**
 
-        *SEED_NETWORK*
-            - The main model file for the SOTA model | ExquiteNetV2 -> network.py
+        - seed network is the main model file for the SOTA model **ExquiteNetV2/network.py**
 
-        *MODEL*
-            - Simply put the name of the SEED network without .py
+        - model variable is the name of the SEED network file without .py
 
-        *TRAIN_FILE*
-            - train.py file used within the SOTA model.
+        - train file path is the path to the train.py file used within the SOTA model.
 
         .. image:: point_cloud_resources/exquisite-net-v2-constants-py-2.png
 
+        - llm_model specifies which Large Language Model you intend to use either one of the localy provided ones on PACE ICE, or Google's Gemini via an API key.
+
+        - Further down you can see the Evolution Cosntants/Params 
+
+        - This is where you can configure the number of elites, total num_generations, starting generation and population size. 
 
 
 **Evolutionary Loop**
@@ -316,38 +344,89 @@ Code Workflow
 
 **Variant Model Files**
 
-    *Local Large Language Model Setup*
+    **Local Large Language Model Setup**
 
-    - 
+    - For LLMGE to create the variant files and valid code we have to setup the Large Language Model.
+    - There are 3 files where changes need to be made, constants, server, & llm_utils.py.
+
+    *constants.py*
+
+        - Within the constants.py file make sure to set the LLM_MODEL global variable to the LLM of your choice.
+        - You can use  **mixtral**, **llama**, and even **gemini** (provide your gemini API key)
+        
+        .. code-block:: markdown
+
+            `os.environ["GEMINI_API_KEY"]` = ""
+
+    *server.py*
+
+    - Inside of server.py make sure to set the LLM Model Path to the **MODEL_PATH** variable.
+
+    - All Locally downloaded LLM's are located on PACE ICE, at **/storage/ice-shared/vip-vvk/llm_storage/choose-your-llm** (You may need to cd .. a few times)
+
+    .. image:: point_cloud_resources/llmge-server-configure.png
+
+    .. code-block:: markdown
+
+        `MODEL_PATH = /storage/ice-shared/vip-vvk/llm_storage/mixtral`
+
+    *llm_utils.py*
+
+  
+    - llm_utils essentially deals with generating the code from the LLM, we submit a request and get a generated reponse in return.
+
+    - However, before any request is sent we have to check the **LLM_MODEL** along with the **code_generator**
+
+    .. image:: point_cloud_resources/llmge-llm-utils-configure.png
+
+    - The code generator varies with whichever LLM_MODEL you plan to use.
+    
+    - If you pick mixtral, make sure to set **code_generator** to **submit_mixtral_local**, do the same for each respective **LLM_MODEL**
 
     .. image:: point_cloud_resources/create-individual-run-improved.png
 
-    - The **create_individual method** takes the seed file which has been generically integrated and creates a varaint file with a unique geneId -> **model_xXPAsb8bdabdyuv28f.py** in a sub-directory called llmge_models, which will be submitted fo evaluation.
+    - The **create_individual method** takes the seed file which has been generically integrated and creates a varaint file with a unique geneId -> **model_xXPAsb8bdabdyuv28f.py** in a sub-directory called llmge_models, which will be submitted for evaluation.
 
 **Seed individuals**
 
-    - Seed individuals are created at the very start **(generation_0)** using the create_individual function.
+    .. image:: point_cloud_resources/llmge-env-network-py.png
 
+    - Seed individuals are created at the very start **(generation_0)**, using the LLM to make modifications to the main model file **network.py** inside of EquisteNetV2.
 
 **Fitness Evaluation**
+
+    - **submit_run** takes in the gene_id associated with a unique model variant file.
+
+    - We take the **TRAIN_FILE** that we defined inside of the **constants.py** file and use it to train the seed_files in the **llmge_models** directory.
+
+    - We include the appropiate parameters, for each respective sota model, and finally create the python runline to evaluate the model.
+
+    .. image:: point_cloud_resources/llmge-evaluation-network.png
 
     - Then we wait for jobs that were submitted, and assign the fitness to the variant model files.
     - We take the model_variant files and evaluate them using the train.py file for the model architecture.
     - The results are stored in a textfile within a directory called **/results**.
 
-    .. code:: console
-         f"{test_acc},{total_params},{val_acc},{tr_time}"
-        fitness = [float(r.strip()) for r in results]
-        # TODO: get all features later (test_accuracy, total_params)
-        fitness = [fitness[0], fitness[1]] 
-        fitness = tuple(fitness)
+    .. code:: markdown
 
-**Selection**
+       `f"{test_acc},{total_params},{val_acc},{tr_time}"`
+       `fitness = [float(r.strip()) for r in results]`
+
+       # TODO: get all features later (test_accuracy, total_params)
+
+       `fitness = [fitness[0], fitness[1]] `
+       `fitness = tuple(fitness)`
+
+**Selection**   
+
+    .. image:: point_cloud_resources/llmge-elites-code.png
 
     - Next We choose the best individuals **(elites)** and select for reproduction.
-    - Choose the elities to use in the next generation, default #elites is 10.
+    - Choose the elities to use in the next generation, default **#elites** is 10.
 
 **Crossover**
+
+    .. image:: point_cloud_resources/llmge-crossover-code.png
 
     - We perform a crossover, we combine code/parameters from two models to create offspring.
     - Pairs of individuals are selected.
@@ -358,13 +437,17 @@ Code Workflow
 
 **Mutation**
 
+    .. image:: point_cloud_resources/llmge-custom-mutation.png
+
     - Randomly alter code/parameters in a model to create a mutant
     - Each individual has a chance **(with some probability)** to be mutated:
     - Change hyperparameters **(input_filename, output_filename, template_txt, top_p, temperature, ...) (again, often LLM-guided)**.
     - Create a new gene ID, generate new code, submit a new training job.
     - Track the mutated individual.
 
-**Next Generation**
+**Next Generation** 
+
+    .. image:: point_cloud_resources/llmge-new-generation.png
 
     -  Build new population, remove duplicates, keep elites
     - The next generation’s population is composed of:
@@ -415,6 +498,10 @@ PointNet++ Integration
 **network.py**
 
 **train.py**
+
+******
+Errors
+******
 
 .. toctree::
    :maxdepth: 2
