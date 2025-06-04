@@ -34,18 +34,6 @@ This code has been tested on Python 3.12
 This framework can now handle any model architecture by specifying data paths, train file an other important directories.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 ### Autonomous Model Evolution:
 _____
 <p align="center">
@@ -56,3 +44,20 @@ _____
 _____
 
 [LLM Guided Evolution - The Automation of Models Advancing Models](./assets/paper/LLM_Guided_Evolution___The_Automation_of_Models_Advancing_Models.pdf)
+
+
+### Cited by DeepMind **AlphaEvolve**
+
+DeepMind’s agent **AlphaEvolve** references our *LLM-Guided Evolution* framework as prior work (see reference \[72\] in the white-paper). 
+
+AlphaEvolve shares the GE concept of letting an LLM propose, mutate, and test code and scales it to discover state-of-the-art algorithms across mathematics, scheduling, and hardware design.
+
+We’re proud that the concepts first open-sourced here are now being implemented in frontier research at Google DeepMind.  
+Read the white-paper below:
+
+<p align="left">
+  <a href="https://deepmind.google/discover/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/d/dc/Google_DeepMind_logo.svg" alt="DeepMind logo" width="250" style="height:auto;">
+  </a>
+</p>
+<br>
