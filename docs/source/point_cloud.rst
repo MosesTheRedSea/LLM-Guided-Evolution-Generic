@@ -193,6 +193,66 @@ Large Language Model Guided Evolution
 
     **llm_mutation.py**
 
+
+        .. image:: point_cloud_resources/llmge-llm-mutations-augment_network.png
+
+        - Handles LLM-directed mutation operations for architecture modification and enhancement.
+
+    **llm_utils.py**
+
+        - Utility functions supporting LLM interactions, prompt processing, and response parsing.
+
+        .. image:: point_cloud_resources/llmge-llm-utils-clean-code-from-llm-code.png
+
+        - llm_utils possess all the necessary methods needed for llm code generation and quality control. 
+      
+        - The clean_code_from_llm has a validation sequence that ensures the quality of code recieved from the LLM, is 
+
+        .. image:: point_cloud_resources/llmge-llm-utils-generate-code.png
+
+        - The **generate_augmented_code** allows for a wide variety of LLM configurations, either using the hugging-face API, or a local LLM. 
+        
+        - You can specifiy eother by configuring the **LLM_MODAL** & **hugging_face** values in constants.py
+
+    **run.sh**
+
+        .. image:: point_cloud_resources/llmge-run-sh-main.png
+        
+        - Primary shell script for launching evolution experiments
+
+    **run_improved.py**
+
+        .. image:: point_cloud_resources/llmge-run-improved-code-snippet.png
+
+        - Enhanced execution script for running evolution experiments with improved features
+
+    **server.py**
+
+         - Server component for distributed Local or API LLM execution
+
+        .. image:: point_cloud_resources/llmge-local-llm-integration-server-py.png
+
+        - The **server.py** file helps with loading the local LLM stored on PACE ICE, for us to submit the mutation prompts to.
+
+        .. image:: point_cloud_resources/llmge-local-llm-integration-server-py-2.png
+
+        - We load the Local LLM, so that we can submit prompts of different token lengths and get a reponse in a reasonable amount of time.
+
+    **mixt.sh**
+
+        .. image:: point_cloud_resources/llmge-mixt-sh-main.png
+
+        - Specialized script for mixed or multi-objective evolution scenarios
+
+-------------
+Code Workflow
+-------------
+**ExquisiteNetV2**
+
+    .. role:: red
+
+    - This section will explain the codebase workflow with the default implemented model,  ExquisiteNetV2.
+
         .. image:: point_cloud_resources/llmge-llm-mutations-augment_network.png
 
         - Handles LLM-directed mutation operations for architecture modification and enhancement.
@@ -244,17 +304,6 @@ Large Language Model Guided Evolution
 
         - Specialized script for mixed or multi-objective evolution scenarios
 
--------------
-Code Workflow
--------------
-**ExquisiteNetV2**
-
-    .. role:: red
-
-    - This section will explain the codebase workflow with the default implemented model,  ExquisiteNetV2.
-
-**Configurations**
-
     *Download Dataset*
     
         - ExquisiteNetV2, a Lightweight CNN designed for image classification, tested on 15 datasets \(CIFAR-10, MNIST\) with 518,230 parameters, achieving 99.71% accuracy on MNIST. 
@@ -279,6 +328,7 @@ Code Workflow
 
         - Click the link to go to the cifar10 website
         
+
         .. image:: point_cloud_resources/exquisite-net-v2-dataset-py.png
 
         - Make sure to sleect the **CIRFAR-10 python version** Link
@@ -325,6 +375,7 @@ Code Workflow
         .. image:: point_cloud_resources/exquisite-net-v2-constants-py-2.png
 
         - llm_model specifies which Large Language Model you intend to use either one of the localy provided ones on PACE ICE, or Google's Gemini via an API key.
+        
 
         - Further down you can see the Evolution Cosntants/Params 
 
@@ -536,8 +587,7 @@ PointNet++ Integration
         - farthest_point_sample(xyz, npoint): a method of sampling to select well spaced points
         - query_ball_point(radius, nsample, xyz, new_xyz): finds a ball of certain radius centered at sampled points
         - sample_and_group(npoint, radius, nsample, xyz, points, returnfps=False): uses the above methods to give each sampled point a local grouping
-
-
+        
 
 ******
 Errors
