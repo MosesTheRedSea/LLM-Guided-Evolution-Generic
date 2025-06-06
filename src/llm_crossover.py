@@ -10,29 +10,8 @@ from llm_utils import (split_file, submit_mixtral, submit_mixtral_hf,
 
 def augment_network(input_filename_x, input_filename_y, output_filename,
                     top_p=0.15, temperature=0.1, apply_quality_control=False,
-                    inference_submission=False):
-    """
-    Augment Python Network Script.
-
-    Parameters
-    ----------
-    input_filename_x : os.PathLike
-        _description_
-    input_filename_y : os.PathLike
-        _description_
-    output_filename : os.PathLike
-        _description_
-    top_p : float, optional
-        _description_, by default 0.15
-    temperature : float, optional
-        _description_, by default 0.1
-    apply_quality_control : bool, optional
-        _description_, by default False
-    inference_submission : bool, optional
-        _description_, by default False
-    """    
-
-
+                    hugging_face=False):
+    """Augment Python Network Script."""
     # Split the input files
     parts_x = split_file(input_filename_x)
     parts_y = split_file(input_filename_y)
@@ -54,7 +33,7 @@ def augment_network(input_filename_x, input_filename_y, output_filename,
     txt2llm = template_txt.format(x.strip(), y.strip())
     # Generate augmented code
     code_from_llm = generate_augmented_code(txt2llm, augment_idx, apply_quality_control,
-                                            top_p, temperature, inference_submission=inference_submission)
+                                            top_p, temperature, hugging_face=hugging_face)
     # Insert note if present
     temp_txt = parts_x[augment_idx]
     note_txt = extract_note(temp_txt)
@@ -67,19 +46,7 @@ def augment_network(input_filename_x, input_filename_y, output_filename,
 
 
 def write_augmented_code(output_filename, parts_x, parts_y):
-    """
-    Writes the augmented code to the output file.
-
-    Parameters
-    ----------
-    output_filename : os.PathLike
-        _description_
-    parts_x : _type_
-        _description_
-    parts_y : _type_
-        _description_
-    """    
-
+    """Writes the augmented code to the output file."""
     try:
         prompt_log_cross = parts_y[0].split("# --PROMPT LOG--\n")[0]
         prompt_log_cross = f"\n# {'='*10} Start: GeneCrossed\n{prompt_log_cross.strip()}\n# {'='*10} End:\n"
@@ -103,7 +70,7 @@ if __name__ == "__main__":
     parser.add_argument('--top_p', type=float, default=0.15, help='Top P value for text generation')
     parser.add_argument('--temperature', type=float, default=0.1, help='Temperature value for text generation')
     parser.add_argument('--apply_quality_control', type=str2bool, default=False, help='Use LLM QC')
-    parser.add_argument('--inference_submission', type=str2bool, default=False, help='Hugging Face bool')
+    parser.add_argument('--hugging_face', type=str2bool, default=False, help='Hugging Face bool')
 
     # Parse the arguments
     args = parser.parse_args()
@@ -115,5 +82,5 @@ if __name__ == "__main__":
                     top_p=args.top_p, 
                     temperature=args.temperature,
                     apply_quality_control=args.apply_quality_control,
-                    inference_submission=args.inference_submission,
+                    hugging_face=args.hugging_face,
                    )
