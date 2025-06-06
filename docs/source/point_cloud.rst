@@ -193,6 +193,66 @@ Large Language Model Guided Evolution
 
     **llm_mutation.py**
 
+
+        .. image:: point_cloud_resources/llmge-llm-mutations-augment_network.png
+
+        - Handles LLM-directed mutation operations for architecture modification and enhancement.
+
+    **llm_utils.py**
+
+        - Utility functions supporting LLM interactions, prompt processing, and response parsing.
+
+        .. image:: point_cloud_resources/llmge-llm-utils-clean-code-from-llm-code.png
+
+        - llm_utils possess all the necessary methods needed for llm code generation and quality control. 
+      
+        - The clean_code_from_llm has a validation sequence that ensures the quality of code recieved from the LLM, is 
+
+        .. image:: point_cloud_resources/llmge-llm-utils-generate-code.png
+
+        - The **generate_augmented_code** allows for a wide variety of LLM configurations, either using the hugging-face API, or a local LLM. 
+        
+        - You can specifiy eother by configuring the **LLM_MODAL** & **hugging_face** values in constants.py
+
+    **run.sh**
+
+        .. image:: point_cloud_resources/llmge-run-sh-main.png
+        
+        - Primary shell script for launching evolution experiments
+
+    **run_improved.py**
+
+        .. image:: point_cloud_resources/llmge-run-improved-code-snippet.png
+
+        - Enhanced execution script for running evolution experiments with improved features
+
+    **server.py**
+
+         - Server component for distributed Local or API LLM execution
+
+        .. image:: point_cloud_resources/llmge-local-llm-integration-server-py.png
+
+        - The **server.py** file helps with loading the local LLM stored on PACE ICE, for us to submit the mutation prompts to.
+
+        .. image:: point_cloud_resources/llmge-local-llm-integration-server-py-2.png
+
+        - We load the Local LLM, so that we can submit prompts of different token lengths and get a reponse in a reasonable amount of time.
+
+    **mixt.sh**
+
+        .. image:: point_cloud_resources/llmge-mixt-sh-main.png
+
+        - Specialized script for mixed or multi-objective evolution scenarios
+
+-------------
+Code Workflow
+-------------
+**ExquisiteNetV2**
+
+    .. role:: red
+
+    - This section will explain the codebase workflow with the default implemented model,  ExquisiteNetV2.
+
         .. image:: point_cloud_resources/llmge-llm-mutations-augment_network.png
 
         - Handles LLM-directed mutation operations for architecture modification and enhancement.
@@ -244,17 +304,6 @@ Large Language Model Guided Evolution
 
         - Specialized script for mixed or multi-objective evolution scenarios
 
--------------
-Code Workflow
--------------
-**ExquisiteNetV2**
-
-    .. role:: red
-
-    - This section will explain the codebase workflow with the default implemented model,  ExquisiteNetV2.
-
-**Configurations**
-
     *Download Dataset*
     
         - ExquisiteNetV2, a Lightweight CNN designed for image classification, tested on 15 datasets \(CIFAR-10, MNIST\) with 518,230 parameters, achieving 99.71% accuracy on MNIST. 
@@ -279,6 +328,7 @@ Code Workflow
 
         - Click the link to go to the cifar10 website
         
+
         .. image:: point_cloud_resources/exquisite-net-v2-dataset-py.png
 
         - Make sure to sleect the **CIRFAR-10 python version** Link
@@ -314,7 +364,7 @@ Code Workflow
 
         - data path is the path to the sota model dataset **ExquisiteNetV2/cifar10**
          
-        - sota path is the  (state of the art) model path **ExquisiteNetV2/**
+        - sota path is the (state of the art) model path **ExquisiteNetV2/**
 
         - seed network is the main model file for the SOTA model **ExquiteNetV2/network.py**
 
@@ -325,6 +375,7 @@ Code Workflow
         .. image:: point_cloud_resources/exquisite-net-v2-constants-py-2.png
 
         - llm_model specifies which Large Language Model you intend to use either one of the localy provided ones on PACE ICE, or Google's Gemini via an API key.
+        
 
         - Further down you can see the Evolution Cosntants/Params 
 
@@ -483,21 +534,60 @@ PointNet++ Integration
 
 **Download Dataset**
 
+    - To download the dataset go to `<https://www.kaggle.com/datasets/chenxaoyu/modelnet-normal-resampled>`_
+    - Then save the dataset in `data/modelnet40_normal_resampled/`
+
 **Constants.py**
 
-**constants.py**
+    .. image:: point_cloud_resources/pointnet-constants.png
+    - This shows us what is needed from the model for it to run:
+        - ROOT_DIR: sets the location of where our framework is located
+        - DATA_PATH: sets the location of where our data is located, for people using PACE-ICE the location is already preset so they can save storage
+        - SOTA_ROOT: sets the location of where our state of the art (SOTA) machine is and accesses the right one
+        - SEED_NETWORK: The architecture of the model that we are augmenting
+        - MODEL: Name of the SEED_NETWORK so that we can limit the number of changes we need to make in run_improved.py if we want to switch between models
+        - TRAIN_FILE: The training file to train the augmented model on the data
 
 **run.sh**
+    
+    .. image:: point_cloud_resources/pointnet-bash.png
+    - Shell script needed to load in the right CUDA, conda, activate the correct environment, initialize a server to start the local LLM, and run the framework
 
 **mixt.sh**
 
-**llm_utils.py**
+    .. image:: point_cloud_resources/pointnet-mixt.png
+    - Shell script needed to run the LLM-augmented python files on the model
 
-**llm_utils.py**
+**run_improved.py**
 
-**network.py**
+    .. image:: point_cloud_resources/pointnet-runline.png
+    - This file is the backbone of the framework
+    - For the pointnet++ implementation we need to replace the runline with the one that takes in the right arguments and is for pointnet++
 
-**train.py**
+**train_classification.py**
+
+    .. image:: point_cloud_resources/pointnet-train-1.png
+    .. image:: point_cloud_resources/pointnet-train-2.png
+    .. image:: point_cloud_resources/pointnet-train-3.png
+    - Modified train file to run all augmented pointnet model files
+    - Modified sections:
+        - Added implementation to run a certain seed on the models
+        - Redirected paths to access the dataset and the correct augmented files to run specific seed
+        - Added timer to calculate how long each run training cycle takes for a specific seed
+        - Added section to print results to a text file that measures the best epoch's train accuracy, test accuracy, and class accuracy, and time each training cycle takes for that seed
+        - Added implementation to use best available core no matter the device the model is run on
+
+**pointnet_cls_ssg.py**
+
+    - Restructed the format for how this file works, the original implementation had all the necessary methods and classes needed for augmentation in a separate file which was useful for the author of this model to just call the file and import the needed methods and classes
+    - To restructure, I copied all necessary methods and classes from pointnet_utils.py that were called in pointnet_cls_ssg.py so the LLM will know which methods and classes need to be augmented
+    - Restructured Code:
+        - square_distance(src, dst): finds the pairwise squared Euclidean distance between two sets of points
+        - index_points(points, idx): indexes a set of points using their provided indicies
+        - farthest_point_sample(xyz, npoint): a method of sampling to select well spaced points
+        - query_ball_point(radius, nsample, xyz, new_xyz): finds a ball of certain radius centered at sampled points
+        - sample_and_group(npoint, radius, nsample, xyz, points, returnfps=False): uses the above methods to give each sampled point a local grouping
+        
 
 ******
 Errors
@@ -506,4 +596,3 @@ Errors
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-
