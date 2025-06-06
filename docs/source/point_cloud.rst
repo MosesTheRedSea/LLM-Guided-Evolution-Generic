@@ -368,7 +368,7 @@ Code Workflow
 
         - seed network is the main model file for the SOTA model **ExquiteNetV2/network.py**
 
-        - model variable is the name of the SEED network file without .py
+        - model variable is the name of the SEED network file without .py **network**
 
         - train file path is the path to the train.py file used within the SOTA model.
 
@@ -512,21 +512,66 @@ Point Transformers Integration
 
 **Download Dataset**
 
-**Constants.py**
+    - ModelNet40Resampled Download Link
+    - `<https://www.kaggle.com/datasets/chenxaoyu/modelnet-normal-resampled>`_
+    - Save dataset to this path `data/modelnet40_normal_resampled/`
 
 **constants.py**
 
+    .. image:: point_cloud_resources/point-transformers-llmge-constants-py.png
+
+    - Here are the important files, directories, & paths to integrate Point Transformers into LLMGE.
+
+    - root directory is the path to LLMGE folder **/home/hice1/madewolu9/scratch/llm-guided-evolution/**
+
+    - data path is the path to the sota model dataset **Point-Transformers/data/modelnet40_normal_resampled**
+        
+    - sota path is the (state of the art) model path **Point-Transformers/**
+
+    - seed network is the main model file for the SOTA model **Point-Transformers/model.py**
+
+    - model variable is the name of the SEED network file without .py **model**
+
+    - train file path is the path to the train.py file used within the SOTA model.
+
+
 **run.sh**
+
+    .. image:: point_cloud_resources/point-transformers-llmge-run-sh.png
+
+    - Shell script needed to load in the right CUDA, conda, activate the correct environment, initialize a server to start the local LLM, and run the framework
 
 **mixt.sh**
 
-**llm_utils.py**
+    .. image:: point_cloud_resources/point-transformers-llmge-mixt-sh.png
 
-**llm_utils.py**
+    - Shell script needed to run the LLM-augmented python files on the model
 
-**network.py**
+**run_improved.py**
+
+    .. image:: point_cloud_resources/point-transformers-llmge-run-improved-submit-run-py.png
+
+    - This file is key for the LLMGE framework
+
+    - For the Point-Transformers implementation we need to replace the runline with the one that takes in the right arguments, **variant_model_file**
+
+
+**model.py**
+
+    .. image:: point_cloud_resources/point-transformers-llmge-model-py.png
+
+    - Modified train file to run all augmented Point-Transformers model files
+    - Added implementation to run a certain seed on the models
+        
 
 **train.py**
+
+    .. image:: point_cloud_resources/point-transformers-llmge-train-cls-py-1.png
+
+    .. image:: point_cloud_resources/point-transformers-llmge-train-cls-py-2.png
+
+     - Added section to print results to a text file that measures the best epoch's train accuracy, test accuracy, and class accuracy, and time each training cycle takes for that seed
+    
 
 ----------------------
 PointNet++ Integration
@@ -587,11 +632,7 @@ PointNet++ Integration
         - farthest_point_sample(xyz, npoint): a method of sampling to select well spaced points
         - query_ball_point(radius, nsample, xyz, new_xyz): finds a ball of certain radius centered at sampled points
         - sample_and_group(npoint, radius, nsample, xyz, points, returnfps=False): uses the above methods to give each sampled point a local grouping
-        
 
-******
-Errors
-******
 
 .. toctree::
    :maxdepth: 2

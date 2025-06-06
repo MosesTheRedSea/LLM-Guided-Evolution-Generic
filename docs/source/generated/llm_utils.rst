@@ -18,10 +18,10 @@
       retrieve_base_code
       split_file
       str2bool
-      submit_gemini_api
       submit_llama3_hf
       submit_mixtral
       submit_mixtral_hf
+      submit_mixtral_local
    
    .. rubric:: Classes
 
