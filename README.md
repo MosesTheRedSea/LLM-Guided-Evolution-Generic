@@ -35,10 +35,16 @@ This framework can now handle any model architecture by specifying data paths, t
 
 
 ### Autonomous Model Evolution:
+
+#### ExqusiteNetV2
 _____
 <p align="center">
   <img src="./assets/ge_run1.gif" alt="">
 </p>
+
+#### Point Transformers
+
+#### PointNet++
 
 ### Paper
 _____
