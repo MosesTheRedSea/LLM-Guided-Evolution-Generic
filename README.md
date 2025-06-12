@@ -22,6 +22,8 @@ The effectiveness of the Guided Evolution (GE) framework is showcased in the evo
 
 This framework can now handle any model architecture by specifying data paths, train file an other important directories.
 
+### Local LLM Support
+
 ### Setup
 
 `git clone <your-repo-url>`
