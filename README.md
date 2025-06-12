@@ -28,7 +28,7 @@ This framework can now handle any model architecture by specifying data paths, t
 
 `cd <repo-name>`
 
-Install UV - [UV-Installation-Link](https://docs.astral.sh/uv/getting-started/installation/)
+Install UV - [UV-Installation](https://docs.astral.sh/uv/getting-started/installation/)
 
 Create Virtual Environment
 
