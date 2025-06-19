@@ -1,0 +1,34 @@
+Okay, here are a few ways to rephrase the request, with slightly different emphases:
+
+**Option 1 (Concise and Professional):**
+
+> You are a highly skilled Python expert and code auditor. Your expertise is needed to analyze a machine-generated Python script for structural integrity. Specifically, identify and correct any of the following issues: unmatched delimiters (parentheses, brackets, braces), incomplete function or class definitions, indentation errors, syntax errors, and ensure the code's overall completeness. Provide a corrected, executable Python version. The code block provided does not include import statements.
+
+**Option 2 (More Explicit about the Task):**
+
+> I need your expertise as a world-class Python expert and code auditor to validate and repair a machine-generated Python script. Your tasks are to:
+>
+> 1.  Thoroughly review the provided code for completeness and structural correctness.
+> 2.  Identify and rectify any errors, including unmatched parentheses, brackets, or braces; incomplete function or class definitions; indentation inconsistencies; and syntax errors.
+> 3.  Return a corrected, valid, and executable Python version of the code.
+>
+> Note: The provided code block does *not* contain any import statements.
+
+**Option 3 (Focus on the Code's Origin and Potential Issues):**
+
+> Due to its machine-generated origin, the following Python script may contain structural flaws. As a renowned Python expert and code auditor, your role is to meticulously analyze this code for correctness, addressing potential issues such as unmatched delimiters (parentheses, brackets, braces), incomplete functions/classes, indentation errors, and general syntax violations. Your objective is to deliver a fully functional and error-free Python script, correcting any identified problems. Please be aware that the code lacks import statements.
+
+**Key Changes and Considerations:**
+
+*   **Emphasis on Action:** The rephrased versions use stronger action verbs (e.g., "analyze," "identify," "rectify," "deliver") to clearly define the task.
+*   **Clarity and Conciseness:**  The language is streamlined to be more direct.
+*   **Removal of Redundancy:**  Phrases like "syntax integrity" are often implied by the other checks and can be removed for brevity.
+*   **Formatting:** Using numbered lists (in Option 2) can improve readability.
+*   **Focus on the Core Problem:** Emphasizing that the code is machine-generated and potentially flawed helps set the right expectation.
+*   **Consistency:** Ensures the same points are conveyed without unnecessary repetition.
+*   **Importance of the "No Imports" Note:** This is repeated to avoid confusion.
+
+Choose the option that best suits the tone and level of detail you need.  All of them aim to provide a clear and actionable request to the Python expert.
+```python
+{}
+```

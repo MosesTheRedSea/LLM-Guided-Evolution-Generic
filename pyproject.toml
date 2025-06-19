@@ -1,7 +1,7 @@
 [project]
 name = "llm-guided-evolution"
 version = "0.1.0"
-description = "Add your description here"
+description = "Remember to Lock your screen"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -13,4 +13,8 @@ dependencies = [
     "torch==2.6.0",
     "torchvision",
     "transformers",
+    "numpy",
+    "tqdm",
+    "hydra-core==1.2",
+    "omegaconf"
 ]

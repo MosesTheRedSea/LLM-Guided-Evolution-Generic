@@ -17,10 +17,12 @@ module load anaconda3 #1
 export MKL_THREADING_LAYER=GNU 
 export SERVER_HOSTNAME=$(hostname)
 
-conda activate llmge-env  
-conda info 
+source .venv/bin/activate
 
-uvicorn server:app --host $SERVER_HOSTNAME --port 8002 --workers 1 & 
-sleep 5
+conda info 
+# export LD_LIBRARY_PATH=~/.conda/envs/llmge-env/lib/python3.12/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
+
+# uvicorn server:app --host $SERVER_HOSTNAME --port 8002 --workers 1 & 
+# sleep 5
 
 python run_improved.py first_test

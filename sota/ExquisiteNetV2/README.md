@@ -47,6 +47,4 @@ If you want to reproduce the result, you can follow the precedure below.
 python eval.py -data cifar10/test -weight md.pt
 ```
 
-
-
 If my code has defect or there is better algorithm, welcome to contact me :)

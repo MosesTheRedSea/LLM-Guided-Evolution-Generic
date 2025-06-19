@@ -12,7 +12,6 @@ from llm_utils import (split_file, submit_mixtral, submit_mixtral_hf,
                        extract_note, clean_code_from_llm, retrieve_base_code)
 from pathlib import Path
 
-
 def augment_network(input_filename='network.py', output_filename='network_x.py', template_txt=None,
                     top_p=0.15, temperature=0.1, apply_quality_control=False, hugging_face=False):
     

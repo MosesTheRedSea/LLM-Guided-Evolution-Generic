@@ -46,13 +46,16 @@ def get_args():
 
 def main():
     # ADDED FOR LLM
-    os.chdir('./sota/ExquisiteNetV2')
+    os.chdir('/home/hice1/madewolu9/scratch/madewolu9/LLMGE_Point_Cloud_Generic/LLM-Guided-Evolution-Generic/sota/ExquisiteNetV2')
 
     args = get_args()
 
     # This is LLM Guided Code
     # Import the module dynamically
     networks_module = importlib.import_module(args.network)
+
+
+
     # Now you can use `networks_module` to access the contents of `networks`
     ExquisiteNetV2 = getattr(networks_module, 'ExquisiteNetV2')
     get_optimizer = getattr(networks_module, 'get_optimizer')
@@ -62,9 +65,6 @@ def main():
     except:
         gene_id = 'seed'
     save_dir = f'{args.save_dir}/{gene_id}' 
-
-
-    
 
     # ExquisiteNetV2 Code
     create_save_dir(save_dir)
@@ -297,7 +297,6 @@ def main():
     If the file does not exist, it will be created.
     The results_text string is written to the file.
     """
-    
 
     print(f"results have been written to {filename}")
 

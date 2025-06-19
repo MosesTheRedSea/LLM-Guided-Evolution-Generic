@@ -7,7 +7,7 @@ import threading
 from src.cfg.constants import *
 
 app = FastAPI(title="LLM API", version="1.0")
-MODEL_PATH = # LLM Local Model Path For Running 
+MODEL_PATH = "/storage/ice-shared/vip-vvk/llm_storage/deepseek-ai/DeepSeek-R1-Distill-Llama-70B/"
 
 class LLMModel:
     _instance = None

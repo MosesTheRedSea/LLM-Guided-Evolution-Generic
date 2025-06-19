@@ -1,12 +1,24 @@
 import os
 import numpy as np
 
-ROOT_DIR = "/home/hice1/jzutty3/llm-guided-evolution"
-# DATA_PATH absolute or relative to ExquisiteNetV2
-DATA_PATH = "./cifar10"
-SOTA_ROOT = os.path.join(ROOT_DIR, 'sota/ExquisiteNetV2')
-SEED_NETWORK = os.path.join(SOTA_ROOT, "network.py")
-LOCAL = True
+# ROOT_DIR = "/home/hice1/madewolu9/scratch/madewolu9/LLMGE_Point_Cloud_Generic/LLM-Guided-Evolution-Generic"
+# DATA_PATH = "./cifar10"
+# SOTA_ROOT = os.path.join(ROOT_DIR, 'sota/ExquisiteNetV2')
+# SEED_NETWORK = os.path.join(SOTA_ROOT, "network.py")
+# MODEL = "network"
+# VARIANT_DIR = os.path.join(SOTA_ROOT, "models/llmge_models") 
+# TRAIN_FILE = os.path.join(SOTA_ROOT, 'train.py')
+
+ROOT_DIR = "/home/hice1/madewolu9/scratch/madewolu9/LLMGE_Point_Cloud_Generic/LLM-Guided-Evolution-Generic"
+DATA_PATH = "./modelnet40_normal_resampled"
+SOTA_ROOT = os.path.join(ROOT_DIR, 'sota/PT/Point-Transformers')
+SEED_NETWORK = os.path.join(SOTA_ROOT, 'models/Menghao/model.py')
+MODEL = "model" 
+VARIANT_DIR = os.path.join(SOTA_ROOT, "models/llmge_models") 
+TRAIN_FILE = os.path.join(SOTA_ROOT, "train_cls.py") 
+
+LOCAL = False
+
 if LOCAL:
 	RUN_COMMAND = 'bash'
 	DELAYED_CHECK = False
@@ -15,36 +27,34 @@ else:
 	DELAYED_CHECK = True
 
 MACOS = False
-if torch.mps.is_available():
-	DEVICE = 'mps'
-	MACOS = True
-elif torch.cuda.is_available():
-	DEVICE = 'cuda'
-else:
-	DEVICE = 'cpu'
 
-#LLM_MODEL = 'mixtral'
-#LLM_MODEL = 'llama3'
+if MACOS:
+	DEVICE = 'mps'
+else:
+	DEVICE = 'cuda'
+
 LLM_MODEL = 'gemini'
+
+os.environ['GEMINI_API_KEY'] = "AIzaSyDOKJVXNSY75q6tmKPLFZzyVP82oCvlpnk"
+
 try:
 	GEMINI_API_KEY = os.environ['GEMINI_API_KEY']
 except:
 	GEMINI_API_KEY = ''
-# SEED_PACKAGE_DIR = "./sota/ExquisiteNetV2/divine_seed_module"
+
 
 """
 Evolution Constants/Params
 """
 FITNESS_WEIGHTS = (1.0, -1.0)
 INVALID_FITNESS_MAX = tuple([float(x*np.inf*-1) for x in FITNESS_WEIGHTS])
-# this is just a unique value
 PLACEHOLDER_FITNESS = tuple([int(x*9999999999*-1) for x in FITNESS_WEIGHTS])
 
 NUM_EOT_ELITES = 10
 GENERATION = 0
 PROB_QC = 0.0
 PROB_EOT = 0.25
-num_generations = 30  # Number of generations
+num_generations = 25  # Number of generations
 start_population_size = 32
 # start_population_size = 144   # Size of the population 124=72
 #population_size = 44 # with cx_prob (0.25) and mute_prob (0.7) you get about %50 successful turnover
@@ -59,6 +69,7 @@ hof_size = 100
 Job Sub Constants/Params
 """
 QC_CHECK_BOOL = False
+HUGGING_FACE_BOOL = False
 INFERENCE_SUBMISSION = True
 #LLM_GPU = 'NVIDIAA100-SXM4-80GB|NVIDIAA10080GBPCIe|TeslaV100-PCIE-32GB|QuadroRTX4000|GeForceGTX1080Ti|GeForceGTX1080|TeslaV100-PCIE-32GB|TeslaV100S-PCIE-32GB'
 #LLM_GPU = 'NVIDIAA100-SXM4-80GB|NVIDIAA10080GBPCIe|TeslaV100-PCIE-32GB|TeslaV100S-PCIE-32GB|NVIDIARTX6000AdaGeneration|NVIDIARTXA6000|NVIDIARTXA5000|NVIDIARTXA4000|GeForceGTX1080Ti|QuadroRTX4000|QuadroP4000|GeForceGTX1080|TeslaP4'
@@ -79,7 +90,8 @@ hostname
 module load cuda
 module load anaconda3
 # Activate Conda environment
-conda activate llm_guided_env
+#conda activate llm_guided_env
+source .venv/bin/activate
 export LD_LIBRARY_PATH=~/.conda/envs/llm_guided_env/lib/python3.12/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
 # conda info
 
@@ -109,7 +121,8 @@ hostname
 module load cuda
 module load anaconda3
 # Activate Conda environment
-conda activate llm_guided_env
+#conda activate llm_guided_env
+source .venv/bin/activate
 export LD_LIBRARY_PATH=~/.conda/envs/llm_guided_env/lib/python3.12/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
 # conda info
 
