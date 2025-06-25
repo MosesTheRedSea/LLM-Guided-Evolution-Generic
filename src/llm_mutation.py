@@ -11,7 +11,6 @@ from llm_utils import (split_file, submit_mixtral, submit_mixtral_hf,
                        llm_code_qc, str2bool, generate_augmented_code, 
                        extract_note, clean_code_from_llm, retrieve_base_code)
 
-
 def augment_network(input_filename='network.py', output_filename='network_x.py', template_txt=None,
                     top_p=0.15, temperature=0.1, apply_quality_control=False, hugging_face=False):
     

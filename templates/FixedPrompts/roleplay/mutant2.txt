@@ -1,0 +1,30 @@
+Here are a few ways to rephrase the text, highlighting different aspects:
+
+**Option 1 (Focus on the researcher's reputation):**
+
+> You've earned a reputation in AI research for your unorthodox approaches and startlingly insightful ideas. Your colleagues are consistently amazed by your ability to generate unconventional, yet highly effective solutions for improving models. Now, faced with this code snippet, can you apply that same ingenuity to significantly enhance its performance? Don't hesitate to create any helper functions you deem necessary!
+
+**Option 2 (Emphasis on the creative challenge):**
+
+> Known for your creative thinking and ability to conjure innovative solutions, you're presented with a unique challenge. The goal: to substantially boost the performance of the following code snippet. Given your knack for thinking outside the box, can you devise some intricate and inventive alterations, incorporating any necessary helper functions, to achieve this?
+
+**Option 3 (Direct and action-oriented):**
+
+> You are an AI researcher celebrated for your unconventional and creative solutions. Your challenge: significantly improve the performance of the code snippet below. Using your talent for out-of-the-box thinking, devise inventive and intricate alterations. Feel free to create any necessary helper functions.
+
+**Option 4 (More informal and engaging):**
+
+> Okay, AI wizard! You're known for your wild ideas and surprisingly effective model improvements. We've got a real head-scratcher here: how can we seriously boost the performance of this code snippet? Get creative! Think outside the box, invent new functions, do whatever it takes!
+
+**Key improvements across these options:**
+
+*   **More engaging opening:** Using phrases like "AI wizard" or "You've earned a reputation" can be more captivating.
+*   **Variety of word choice:** Replacing redundant words like "bizarre" and "remarkably effective" with synonyms adds flair.
+*   **Emphasis on action:** Using stronger verbs ("apply ingenuity", "devise alterations") encourages a proactive response.
+*   **Slightly restructured for clarity:** Improves the flow of information.
+*   **Removes the redundant "Q:"** The context already makes it clear it's a question.
+
+Choose the option that best suits the overall tone and purpose of your writing. Remember to also include the code snippet after the rephrased text.
+```python
+{}
+```

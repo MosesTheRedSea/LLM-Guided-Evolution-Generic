@@ -1,4 +1,7 @@
+import argparse
 import sys
+
+from new_server import generate_text
 sys.path.append("src")
 import re
 import os
@@ -10,12 +13,15 @@ from torch import bfloat16
 from utils.privit import *
 from cfg.constants import *
 from utils.print_utils import box_print
+
 from typing import Optional
 import requests
 import huggingface_hub
 from huggingface_hub import InferenceClient
 import textwrap
-from transformers import AutoTokenizer
+#from transformers import AutoTokenizer
+from google import genai
+from google.genai import types
 
 def retrieve_base_code(idx):
     """Retrieves base code for quality control."""
@@ -30,65 +36,81 @@ def clean_code_from_llm(code_from_llm):
         code_generator = submit_mixtral_local
     elif LLM_MODEL == 'llama3':
         code_generator = submit_llama3_hf
-    code_checker_prompt = os.path.join(ROOT_DIR, 'templates/FixedPrompts/validation/code_validation_prompt.txt')
-    old_code = ""
-    if "```" in code_from_llm:
-        try:
-            old_code = code_from_llm.split("```")[1]
-            if old_code.strip().startswith("python"):
-                old_code = '\n'.join(old_code.split("\n")[1:])
-        except IndexError:
-            print("Failed to extract code block from LLM response.")
-            old_code = code_from_llm
-    else:
-        old_code = code_from_llm
-    template_text = ""
-    with open(code_checker_prompt, 'r') as file:
-        template_text = file.read()
-    # Read the info from the prompt
-    prompt = template_text.format(old_code.strip())
-    box_print("VALIDATING LLM CODE", print_bbox_len=60, new_line_end=False)
-    print(prompt)
-    verified_code = code_generator(prompt, top_p=0.15, temperature=0.1) 
-    print(verified_code)
-    return '\n'.join(verified_code.strip().split("```")[1].split('\n')[1:])
+    elif LLM_MODEL == 'gemini':
+        code_generator = submit_gemini_api
+    elif LLM_MODEL == 'deepseek':
+        code_generator = submit_deepseek_local
+
+    # code_checker_prompt = os.path.join(ROOT_DIR, 'templates/FixedPrompts/validation/code_validation_prompt.txt')
+    # model_varaint_code = ""
+    # # Check if initial code receive from LLM is present
+    # if "```" in code_from_llm:
+    #     model_varaint_code = '\n'.join(code_from_llm.split("```")[1].strip().split("\n")[1:])
+    # else:
+    #     # If no code in the LLM set code to blank
+    #     model_varaint_code = None
+    # if model_varaint_code:
+    #     # Initiate Validation Sequence
+    #     box_print("VALIDATING LLM CODE", print_bbox_len=60, new_line_end=False)
+    #     template_text = ""
+    #     with open(code_checker_prompt, 'r') as file:
+    #         template_text = file.read()
+    #     # Read the info from the prompt
+    #     prompt = template_text.format(model_varaint_code.strip())
+    #     print(prompt)
+    #     # Submit new prompt to LLM For Code Validation & Completion
+    #     verified_code = code_generator(prompt, top_p=0.15, temperature=0.1) 
+    #     print(verified_code)
+        # Return the validated from received from the LLM
+        # return '\n'.join(verified_code.strip().split("```")[1].split('\n')[1:])
+    return '\n'.join(code_from_llm.strip().split("```")[1].split('\n')[1:])
+
 
 def generate_augmented_code(txt2llm, augment_idx, apply_quality_control, top_p, temperature, hugging_face=False):
     """Generates augmented code using Mixtral."""
     box_print("PROMPT TO LLM", print_bbox_len=60, new_line_end=False)
     print(txt2llm)
+    
     if hugging_face is False:
-        llm_code_generator = submit_mixtral_local
+        llm_code_generator = submit_gemini_api
         qc_func = llm_code_qc
     else:
         if LLM_MODEL == 'mixtral':
             llm_code_generator = submit_mixtral_local
         elif LLM_MODEL == 'llama3':
             llm_code_generator = submit_llama3_hf
+        elif LLM_MODEL == 'gemini':
+            llm_code_generator = submit_gemini_api
+        elif LLM_MODEL == 'deepseek':
+            llm_code_generator = submit_deepseek_local
         qc_func = llm_code_qc_hf
-    if apply_quality_control:
-        base_code = retrieve_base_code(augment_idx)
-        code_from_llm, generate_text = llm_code_generator(txt2llm, return_gen=True, top_p=top_p, temperature=temperature)
-        code_from_llm = qc_func(code_from_llm, base_code, generate_text)
-    else:
-        code_from_llm = llm_code_generator(txt2llm, top_p=top_p, temperature=temperature)
-        # Dealing with No code returned from the LLM
-        # Give the LLM 3 Tries to Output correct code
-        print("Checking to See if Response was Empty")
-        if not code_from_llm or code_from_llm == None:
-            print("Response Was Empty")
-            for i in range(3):
-                code_from_llm = llm_code_generator(txt2llm, top_p=top_p, temperature=temperature) 
-                if code_from_llm != "None":
-                    break
-        print("Response Was Not Empty")
+        
+    retries = 0
+    while retries < 3:
+        if apply_quality_control:
+            base_code = retrieve_base_code(augment_idx)
+            code_from_llm, generate_text = llm_code_generator(txt2llm, return_gen=True, top_p=top_p, temperature=temperature)
+            code_from_llm = qc_func(code_from_llm, base_code, generate_text)
+        else:
+            code_from_llm = llm_code_generator(txt2llm, top_p=top_p, temperature=temperature)
+
+        # Check if code from LLM is None - No Response
+        print("Checking LLM Response")
+        if not code_from_llm :
+            retries += 1
+            print("Response Invalid")
+            continue
+        else:
+            print("Response Valid")
+            break
+
         box_print("TEXT FROM LLM", print_bbox_len=60, new_line_end=False)
         print(code_from_llm)
         code_from_llm = clean_code_from_llm(code_from_llm)
+
     box_print("CODE FROM LLM", print_bbox_len=60, new_line_end=False)
-    print(code_from_llm)
-    # This is where I should be fixing the Code Issue if it's None
-    return code_from_llm
+    code_from_llm = clean_code_from_llm(code_from_llm)
+    return code_from_llm # if code from LLM is None Just Remove that Individual From Being Evaluted
 
 def extract_note(txt):
     """Extracts note from the part if present."""
@@ -167,7 +189,7 @@ def submit_mixtral_hf(txt2mixtral, max_new_tokens=1024, top_p=0.15, temperature=
             },     
     ]
 
-    tokenizer_converter = AutoTokenizer.from_pretrained(model_id)
+    tokenizer_converter = transformers.AutoTokenizer.from_pretrained(model_id)
     prompt = tokenizer_converter.apply_chat_template(instructions, tokenize=False)
     results = [client.text_generation(prompt, max_new_tokens=max_new_tokens, 
                                       return_full_text=False, 
@@ -177,7 +199,36 @@ def submit_mixtral_hf(txt2mixtral, max_new_tokens=1024, top_p=0.15, temperature=
     else:
         return results[0]
     
-def submit_mixtral_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, server_url=f"http://{os.getenv('SERVER_HOSTNAME', 'localhost')}:8000/generate", return_gen=False):
+def submit_deepseek_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, server_url=f"http://{os.getenv('SERVER_HOSTNAME', 'localhost')}:8002/generate", return_gen=False):
+    payload = {
+        "prompt": prompt,
+        "max_new_tokens": max_new_tokens, # can change to random between 800 - 1000 if needed
+        "temperature": temperature,
+        "top_p": top_p
+    }
+    print(os.getenv("SERVER_HOSTNAME", "localhost"))
+
+    headers = {"Content-Type": "application/json"}
+    
+    try:
+        response = requests.post(server_url, headers=headers, json=payload)
+        
+        if response.status_code == 200:
+            output_txt = response.json().get("generated_text", "No output received.")
+            print(f'{response.json().get("response_time_sec", "-1")} sec')
+            if return_gen is False:
+                return output_txt
+            else:
+                return output_txt, generate_text
+        else:
+            print(f"Error: {response.status_code}")
+            print(response.text)
+            return None
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {e}")
+        return None
+
+def submit_mixtral_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, server_url=f"http://{os.getenv('SERVER_HOSTNAME', 'localhost')}:8002/generate", return_gen=False):
     payload = {
         "prompt": prompt,
         "max_new_tokens": max_new_tokens, # can change to random between 800 - 1000 if needed
@@ -232,7 +283,7 @@ def submit_llama3_hf(txt2llama,
     ]
 
     # Load the tokenizer for the model
-    tokenizer_converter = AutoTokenizer.from_pretrained(model_id)
+    tokenizer_converter = transformers.AutoTokenizer.from_pretrained(model_id)
 
     tokenizer_converter.add_special_tokens({'pad_token': '[PAD]'})
 
@@ -283,7 +334,7 @@ def submit_llama3_hf(txt2llama, max_new_tokens=1024, top_p=0.15, temperature=0.1
             },     
     ]
 
-    tokenizer_converter = AutoTokenizer.from_pretrained(model_id)
+    tokenizer_converter = transformers.AutoTokenizer.from_pretrained(model_id)
     prompt = tokenizer_converter.apply_chat_template(instructions, tokenize=False) # Line causing Error
     results = [client.text_generation(prompt, max_new_tokens=max_new_tokens, 
                                       return_full_text=False, 
@@ -292,6 +343,16 @@ def submit_llama3_hf(txt2llama, max_new_tokens=1024, top_p=0.15, temperature=0.1
         return results[0], None
     else:
         return results[0]
+    
+def submit_gemini_api(txt2gemini, **kwargs):
+    client = genai.Client(api_key=GEMINI_API_KEY)
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=[txt2gemini],
+        
+    )
+    return response.text
+
 
 
 def submit_mixtral(txt2mixtral, max_new_tokens=764, top_p=0.15, temperature=0.1, 
@@ -346,6 +407,10 @@ def mutate_prompts(n=5):
             llm_code_generator = submit_mixtral_local
         elif LLM_MODEL == 'llama3':
             llm_code_generator = submit_llama3_hf
+        elif LLM_MODEL == 'gemini':
+            llm_code_generator = submit_gemini_api
+        elif LLM_MODEL == 'deepseek':
+            llm_code_generator = submit_deepseek_local
         output = llm_code_generator(prompt, temperature=temp).strip()
         if "```" in output:
             output = output.split("```")[0]

@@ -1,0 +1,33 @@
+Here are a few ways to rephrase the text, focusing on different aspects:
+
+**Option 1 (Emphasizing the researcher's reputation):**
+
+> Renowned for your unconventional approach and ingenious solutions, you're the go-to AI researcher for breakthroughs. Your challenge: leverage your out-of-the-box thinking to drastically improve model performance. We provide a starting point:
+
+**Option 2 (Focusing on the open-ended nature of the challenge):**
+
+> We're challenging you, an AI researcher celebrated for your innovative and sometimes eccentric methods, to push the boundaries of model performance. Using your unique blend of creativity and technical skill, devise significant enhancements to the provided code, including inventing any necessary helper functions.
+
+**Option 3 (More direct and concise):**
+
+> Your reputation precedes you: an AI researcher known for imaginative solutions and impactful results. Given the code below, how would you creatively modify it (including adding helper functions) to dramatically improve model performance?
+
+**Option 4 (Highlighting the potential for significant improvement):**
+
+> Leveraging your expertise in unconventional AI techniques, we task you with unlocking significant performance gains for this model. Your challenge: develop inventive and complex code modifications, incorporating any necessary helper functions, that result in a substantial performance boost.
+
+**Option 5 (More playful and encouraging):**
+
+> Get ready to unleash your inner AI wizard! We're counting on your celebrated out-of-the-box thinking to conjure up some truly remarkable improvements to this model. Your challenge: inventively and intricately alter the provided code snippet (including helper functions!) to achieve a significant performance boost.
+
+All of these options aim to:
+
+*   Acknowledge the researcher's skill and reputation.
+*   Clearly state the task: improving model performance by modifying code.
+*   Emphasize the need for creativity and invention.
+*   Remind the researcher they can add helper functions.
+
+Choose the phrasing that best suits the tone and context of your situation.
+```python
+{}
+```

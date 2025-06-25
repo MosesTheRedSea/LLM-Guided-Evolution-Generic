@@ -1,0 +1,58 @@
+run.sh
+------
+#!/bin/bash
+#SBATCH --job-name=llm_opt
+#SBATCH -t 8:00:00              	
+#SBATCH --mem-per-gpu 16G
+#SBATCH -n 1                         
+#SBATCH -N 1
+#SBATCH --gres=gpu:1
+#SBATCH -C "A100-40GB|A100-80GB|H100|V100-16GB|V100-32GB|RTX6000|A40|L40S"
+------
+
+
+mixt.sh
+------
+#!/bin/bash
+#SBATCH --job-name=AIsur_x1
+#SBATCH -t 8-00:00
+#SBATCH --gres=gpu:3
+#SBATCH -C "NVIDIAA100-SXM4-80GB|NVIDIAA10080GBPCIe|TeslaV100-PCIE-32GB|GeForceGTX1080Ti|GeForceGTX1080"
+#SBATCH --mem 10G
+#SBATCH -c 48
+------
+
+
+llm-gpu
+------
+A100-40GB|A100-80GB|H100|V100-16GB|V100-32GB|RTX6000|A40|L40S
+------
+
+
+python-bash-script
+------
+#!/bin/bash
+#SBATCH --job-name=evaluateGene
+#SBATCH -t 8:00:00
+#SBATCH --gres=gpu:1
+#SBATCH -G 1
+#SBATCH -C "A100-40GB|A100-80GB|H100|V100-16GB|V100-32GB|RTX6000|A40|L40S"
+#SBATCH --mem-per-gpu 16G
+#SBATCH -n 12
+#SBATCH -N 1
+------
+
+
+llm-bash-script
+------
+#!/bin/bash
+#SBATCH --job-name=llm_oper
+#SBATCH -t 8:00:00
+#SBATCH --gres=gpu:1
+#SBATCH -G 1
+#SBATCH -C "{}"
+#SBATCH --mem-per-gpu 16G
+#SBATCH -n 12
+#SBATCH -N 1
+------
+
