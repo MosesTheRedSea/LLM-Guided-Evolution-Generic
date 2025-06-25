@@ -1,11 +1,12 @@
 #!/bin/bash
 #SBATCH --job-name=llm_opt
-#SBATCH -t 8:00:00
-#SBATCH --mem-per-gpu 16G
-#SBATCH -n 1
-#SBATCH -N 1
-#SBATCH --gres=gpu:1
-#SBATCH -C "A100-40GB|A100-80GB|H100|V100-16GB|V100-32GB|RTX6000|A40|L40S"
+#SBATCH --ntasks=2
+#SBATCH --cpus-per-task=32
+#SBATCH -c 16
+#SBATCH --mem=160G
+#SBATCH --gres=gpu:2
+#SBATCH -t 7-00:00
+#SBATCH -C "NVIDIAA10080GBPCIe"
 
 echo "launching LLM Guided Evolution" 
 hostname 
@@ -20,9 +21,14 @@ export SERVER_HOSTNAME=$(hostname)
 source .venv/bin/activate
 
 conda info 
-# export LD_LIBRARY_PATH=~/.conda/envs/llmge-env/lib/python3.12/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
+
+# export LD_LIBRARY_PATH=~/.conda/envs/llmge-env/lib/python3.12/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_ PATH
 
 # uvicorn server:app --host $SERVER_HOSTNAME --port 8002 --workers 1 & 
 # sleep 5
+
+# Set Slurm Configurations
+
+python slurm.py
 
 python run_improved.py first_test

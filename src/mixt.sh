@@ -1,14 +1,15 @@
 #!/bin/bash
 #SBATCH --job-name=AIsur_x1
-#SBATCH -t 8-00:00
-#SBATCH --gres=gpu:3
-#SBATCH -C "NVIDIAA100-SXM4-80GB|NVIDIAA10080GBPCIe|TeslaV100-PCIE-32GB|GeForceGTX1080Ti|GeForceGTX1080"
-#SBATCH --mem 10G
-#SBATCH -c 48
+#SBATCH --ntasks=2
+#SBATCH --cpus-per-task=32
+#SBATCH -c 16
+#SBATCH --mem=160G
+#SBATCH --gres=gpu:2
+#SBATCH -time=7-00:00
+#SBATCH -C "TeslaV100S-PCIE-32GB"
+
 echo "Launching AIsurBL"
 hostname
-
-
 
 # Load GCC version 9.2.0
 module load gcc/13.2.0

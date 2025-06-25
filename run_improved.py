@@ -280,9 +280,7 @@ def submit_run(gene_id):
         # bash_script_content = PYTHON_BASH_SCRIPT_TEMPLATE.format(python_runline)
         model_file_override = f'model.file={MODEL}_{gene_id}.py'
         python_runline = f'python {train_file} {model_file_override}'
-        bash_script_content = PYTHON_BASH_SCRIPT_TEMPLATE.format(python_runline)
-        return bash_script_content
-        
+        bash_script_content = PYTHON_BASH_SCRIPT_TEMPLATE.format(PYTHON_BASH_SCRIPT_CONFIG, python_runline)
         return bash_script_content
 
     # This is for subbing the python code
@@ -779,6 +777,8 @@ GLOBAL_DATA_ANCESTERY = {}
 
 # Main Evolution Loop
 if __name__ == "__main__":
+
+    # Set Cluter Configurations
 
     parser = argparse.ArgumentParser(description='Run Generation')
     # Add arguments

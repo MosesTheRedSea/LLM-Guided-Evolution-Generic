@@ -1,14 +1,6 @@
 import os
 import numpy as np
 
-# ROOT_DIR = "/home/hice1/madewolu9/scratch/madewolu9/LLMGE_Point_Cloud_Generic/LLM-Guided-Evolution-Generic"
-# DATA_PATH = "./cifar10"
-# SOTA_ROOT = os.path.join(ROOT_DIR, 'sota/ExquisiteNetV2')
-# SEED_NETWORK = os.path.join(SOTA_ROOT, "network.py")
-# MODEL = "network"
-# VARIANT_DIR = os.path.join(SOTA_ROOT, "models/llmge_models") 
-# TRAIN_FILE = os.path.join(SOTA_ROOT, 'train.py')
-
 ROOT_DIR = "/home/hice1/madewolu9/scratch/madewolu9/LLMGE_Point_Cloud_Generic/LLM-Guided-Evolution-Generic"
 DATA_PATH = "./modelnet40_normal_resampled"
 SOTA_ROOT = os.path.join(ROOT_DIR, 'sota/PT/Point-Transformers')
@@ -16,6 +8,9 @@ SEED_NETWORK = os.path.join(SOTA_ROOT, 'models/Menghao/model.py')
 MODEL = "model" 
 VARIANT_DIR = os.path.join(SOTA_ROOT, "models/llmge_models") 
 TRAIN_FILE = os.path.join(SOTA_ROOT, "train_cls.py") 
+
+#CLUSTER = "pace-ice"
+CLUSTER = "ice-hammer"
 
 LOCAL = False
 
@@ -33,15 +28,13 @@ if MACOS:
 else:
 	DEVICE = 'cuda'
 
-LLM_MODEL = 'gemini'
+LLM_MODEL = 'gemma'
 
-os.environ['GEMINI_API_KEY'] = "AIzaSyDOKJVXNSY75q6tmKPLFZzyVP82oCvlpnk"
-
+os.environ['GEMINI_API_KEY'] = ""
 try:
 	GEMINI_API_KEY = os.environ['GEMINI_API_KEY']
 except:
 	GEMINI_API_KEY = ''
-
 
 """
 Evolution Constants/Params
@@ -64,6 +57,8 @@ mutation_probability = 0.8 # Probability of mutating an individual
 num_elites = 44
 hof_size = 100
 
+PYTHON_BASH_SCRIPT_CONFIG = ""
+LLM_BASH_SCRIPT_CONFIG = ""
 
 """
 Job Sub Constants/Params
@@ -74,14 +69,8 @@ INFERENCE_SUBMISSION = True
 #LLM_GPU = 'NVIDIAA100-SXM4-80GB|NVIDIAA10080GBPCIe|TeslaV100-PCIE-32GB|QuadroRTX4000|GeForceGTX1080Ti|GeForceGTX1080|TeslaV100-PCIE-32GB|TeslaV100S-PCIE-32GB'
 #LLM_GPU = 'NVIDIAA100-SXM4-80GB|NVIDIAA10080GBPCIe|TeslaV100-PCIE-32GB|TeslaV100S-PCIE-32GB|NVIDIARTX6000AdaGeneration|NVIDIARTXA6000|NVIDIARTXA5000|NVIDIARTXA4000|GeForceGTX1080Ti|QuadroRTX4000|QuadroP4000|GeForceGTX1080|TeslaP4'
 LLM_GPU = 'A100-40GB|A100-80GB|H100|V100-16GB|V100-32GB|RTX6000|A40|L40S'
-PYTHON_BASH_SCRIPT_TEMPLATE = """#!/bin/bash
-#SBATCH --job-name=evaluateGene
-#SBATCH -t 8:00:00
-#SBATCH --gres=gpu:1
-#SBATCH -C "A100-40GB|A100-80GB|H100|V100-16GB|V100-32GB|RTX6000|A40|L40S"
-#SBATCH --mem-per-gpu 16G
-#SBATCH -n 12
-#SBATCH -N 1
+
+PYTHON_BASH_SCRIPT_TEMPLATE = """
 echo "Launching Python Evaluation"
 hostname
 
@@ -104,14 +93,7 @@ export LD_LIBRARY_PATH=~/.conda/envs/llm_guided_env/lib/python3.12/site-packages
 
 
 
-LLM_BASH_SCRIPT_TEMPLATE = """#!/bin/bash
-#SBATCH --job-name=llm_oper
-#SBATCH -t 8:00:00
-#SBATCH --gres=gpu:1
-#SBATCH -C "{}"
-#SBATCH --mem-per-gpu 16G
-#SBATCH -n 12
-#SBATCH -N 1
+LLM_BASH_SCRIPT_TEMPLATE = """
 echo "Launching AIsurBL"
 hostname
 
