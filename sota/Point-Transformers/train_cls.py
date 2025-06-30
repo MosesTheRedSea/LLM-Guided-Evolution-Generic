@@ -181,8 +181,7 @@ def main(args):
         global_epoch += 1
 
     gene_id = model_file.split("_")
-    
-    second_part = gene_id[1] if len(gene_id) > 1 else "unknown"
+    second_part = gene_id.split(".")[0] if len(gene_id) > 1 else "unknown"
 
     filename = f'{constants.SOTA_ROOT}/results/{second_part}_results.txt'
 
