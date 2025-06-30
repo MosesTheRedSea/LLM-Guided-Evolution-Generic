@@ -17,6 +17,8 @@ import importlib
 import shutil
 import hydra
 import omegaconf
+from src.cfg import constants
+
 
 def test(model, loader, num_class=40):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -179,13 +181,15 @@ def main(args):
         global_epoch += 1
 
     gene_id = model_file.split("_")
+    
     second_part = gene_id[1] if len(gene_id) > 1 else "unknown"
 
-    filename = f'/home/hice1/madewolu9/scratch/madewolu9/LLMGE_Point_Cloud_Generic/LLM-Guided-Evolution-Generic/sota/PT/Point-Transformers/results/{second_part}_results.txt'
+    filename = f'{constants.SOTA_ROOT}/results/{second_part}_results.txt'
 
     os.makedirs(os.path.dirname(filename), exist_ok=True)
 
     total_params = sum(p.numel() for p in classifier.parameters())
+
     results_text = f"{best_instance_acc},{total_params},{best_class_acc},{best_epoch}"
 
     with open(filename, 'w') as file:

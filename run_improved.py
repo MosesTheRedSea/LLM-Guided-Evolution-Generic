@@ -14,8 +14,6 @@ from src.utils.print_utils import print_population, print_scores, box_print, pri
 from src.llm_utils import split_file, retrieve_base_code, mutate_prompts
 from src.cfg.constants import *
 
-# All working implementation with Pointnet and ExquisiteNetV2
-
 def print_ancestery(data):
     for gene in data.keys():
         print(f'gene: {gene}')
@@ -117,14 +115,14 @@ def write_bash_script(input_filename_x=f'{SOTA_ROOT}/{SEED_NETWORK}',
         with open(file_path, 'w') as file:
             file.write(template_txt)
         temp_text = f'{python_file} {input_filename_x} {output_filename} {file_path} --top_p {top_p} --temperature {temperature}'
-        python_runline = f"python {temp_text} --apply_quality_control '{QC_CHECK_BOOL}' --hugging_face {HUGGING_FACE_BOOL}"
+        python_runline = f"python {temp_text} --apply_quality_control '{QC_CHECK_BOOL}' --inference_submission {INFERENCE_SUBMISSION}"
     elif python_file=='src/llm_crossover.py':
         gene_id_parent2 = fetch_gene(input_filename_y)
         GLOBAL_DATA_ANCESTERY = update_ancestry(gene_id_child, gene_id_parent, GLOBAL_DATA_ANCESTERY, 
                                                 mutation_type=None, gene_id_parent2=gene_id_parent2)
         
         temp_text = f"{python_file} {input_filename_x} {input_filename_y} {output_filename} --top_p {top_p} --temperature {temperature}"
-        python_runline = f"python {temp_text} --apply_quality_control '{QC_CHECK_BOOL}' --hugging_face {HUGGING_FACE_BOOL}"
+        python_runline = f"python {temp_text} --apply_quality_control '{QC_CHECK_BOOL}' --inference_submission {INFERENCE_SUBMISSION}"
     else:
         raise ValueError("Invalid python_file argument")
     bash_script_content = LLM_BASH_SCRIPT_TEMPLATE.format(gpu, python_runline)
@@ -228,15 +226,12 @@ def check4job_completion(job_id, local_output=None, check_interval=60, timeout=3
                 else:
                     return state
 
-        # Wait for some time before checking again
         time.sleep(check_interval)
         print(f'\t‣ Waiting on check4job_completion LLM job: {job_id} Time: {round(time.time() - start_time)}s', flush=True)
         
         
 def generate_random_string(length=20):
-    # Define the characters that can be used in the string
     characters = string.ascii_letters + string.digits
-    # Generate a random strconing of specified length
     random_string = ''.join(random.choice(characters) for i in range(length))
     random_string = 'xXx'+random_string
     return random_string
@@ -259,7 +254,7 @@ def create_individual(container, temp_min=0.05, temp_max=0.4):
                             'status':'subbed file', 'fitness':None, 'start_time':time.time()}
     GLOBAL_DATA_ANCESTERY[gene_id] = {'GENES':[gene_id], 'MUTATE_TYPE':["CREATED"]}
     
-    individual = container([gene_id])  # Assign a file ID
+    individual = container([gene_id])  
     
     if DELAYED_CHECK:
         GLOBAL_DATA[gene_id]['status'] = 'DELAYED_CHECK'
@@ -277,20 +272,11 @@ def create_individual(container, temp_min=0.05, temp_max=0.4):
 
 def submit_run(gene_id):
     def write_bash_script_py(gene_id, train_file=f'{TRAIN_FILE}'):
-        # ExquisiteNetV2 Python Runline Configuration
-        # if not MACOS:
-        #     tmp = f"-data {DATA_PATH} -end_lr 0.001 -seed 21 -val_r 0.2 -amp -epoch 2"
-        # else:
-        #     tmp = f"-data {DATA_PATH} -end_lr 0.001 -seed 21 -val_r 0.2 -epoch 2"
-        # python_runline = f'python {train_file} -bs 216 -network "models.llmge_models.{MODEL}_{gene_id}" {tmp}'
-        
-        # bash_script_content = PYTHON_BASH_SCRIPT_TEMPLATE.format(python_runline)
-        model_file_override = f'model.file={MODEL}_{gene_id}.py'
-        python_runline = f'python {train_file} {model_file_override}'
+        model_file_override = RUNLINE_TMP.format(MODEL, gene_id)
+        python_runline = EVAL_RUNLINE.format(train_file, model_file_override)
         bash_script_content = PYTHON_BASH_SCRIPT_TEMPLATE.format(PYTHON_BASH_SCRIPT_CONFIG, python_runline)
         return bash_script_content
 
-    # This is for subbing the python code
     def create_bash_file_py(file_path, gene_id, **kwargs):
         bash_script_content = write_bash_script_py(gene_id, **kwargs)
         with open(file_path, 'w') as file:
@@ -782,8 +768,6 @@ toolbox.register("mate", customCrossover)
 toolbox.register("mutate", customMutation, indpb=0.2)
 toolbox.register("select", true_nsga2)
 
-# TODO: start using percent diff of train acc vs val test acc as an over fitt metric 
-
 # 40398682
 GEN_COUNT = -1
 TOP_N_GENES = None
@@ -793,7 +777,6 @@ GLOBAL_DATA_HIST = {}
 GLOBAL_DATA_ANCESTERY = {}
 
 # Create Population 
-
 def createPopulation():
     start_gen = 0
     box_print("CREATING POPULATION FROM SEED CODE")
@@ -801,8 +784,6 @@ def createPopulation():
     box_print("Batch Checking Created Genes", print_bbox_len=60, new_line_end=False)
     delayed_creation_check(population)
     hof = tools.HallOfFame(hof_size)
-
-
 
 # Main Evolution Loop
 if __name__ == "__main__":

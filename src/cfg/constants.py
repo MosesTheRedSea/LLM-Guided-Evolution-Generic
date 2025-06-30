@@ -1,7 +1,8 @@
 import os
 import numpy as np
+import torch
 
-ROOT_DIR = "/home/hice1/madewolu9/scratch/madewolu9/LLMGE_Point_Cloud_Generic/LLM-Guided-Evolution-Generic"
+ROOT_DIR = "LLM-Guided-Evolution-Generic"
 DATA_PATH = "./modelnet40_normal_resampled"
 SOTA_ROOT = os.path.join(ROOT_DIR, 'sota/PT/Point-Transformers')
 SEED_NETWORK = os.path.join(SOTA_ROOT, 'models/Menghao/model.py')
@@ -9,31 +10,36 @@ MODEL = "model"
 VARIANT_DIR = os.path.join(SOTA_ROOT, "models/llmge_models") 
 TRAIN_FILE = os.path.join(SOTA_ROOT, "train_cls.py") 
 
-#CLUSTER = "pace-ice"
 CLUSTER = "ice-hammer"
+LLM_MODEL = 'gemma'
+ENVIRONMENT_DIR = ""
 
 LOCAL = False
-
 if LOCAL:
 	RUN_COMMAND = 'bash'
 	DELAYED_CHECK = False
 else: 
 	RUN_COMMAND = 'sbatch'
 	DELAYED_CHECK = True
+
 MACOS = False
-
-if MACOS:
+RUNLINE_AMP = ''
+if torch.mps.is_available():
 	DEVICE = 'mps'
-else:
+	MACOS = True
+	RUNLINE_AMP = "-amp"
+elif torch.cuda.is_available():
 	DEVICE = 'cuda'
+else:
+	DEVICE = 'cpu'
 
-LLM_MODEL = 'gemma'
+# ExquisiteNetV2
+# RUNLINE_TMP = f"-data {DATA_PATH} -end_lr 0.001 -seed 21 -val_r 0.2 {RUNLINE_AMP} -epoch 200"
+# EVAL_RUNLINE = 'python {} -bs 216 -network "models.llmge_models.{MODEL}_{}" {}'
 
-os.environ['GEMINI_API_KEY'] = ""
-try:
-	GEMINI_API_KEY = os.environ['GEMINI_API_KEY']
-except:
-	GEMINI_API_KEY = ''
+# Point-Transformers
+RUNLINE_TMP = 'model.file={}_{}.py'
+EVAL_RUNLINE = 'python {} {}'
 
 """
 Evolution Constants/Params
@@ -89,7 +95,6 @@ export LD_LIBRARY_PATH=~/.conda/envs/llm_guided_env/lib/python3.12/site-packages
 # Run Python script
 {}
 """
-
 
 
 LLM_BASH_SCRIPT_TEMPLATE = """

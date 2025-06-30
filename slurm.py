@@ -1,77 +1,73 @@
 import os
-from src.cfg.constants import *
+from src.cfg import constants
 
 def replace_script_configuration(file_path, new_config):
-    with open(file_path, 'r') as f:
-        lines = f.readlines()
-    empty_line_index = -1
-    for i, line in enumerate(lines):
-        if line.strip() == '': 
-            empty_line_index = i
-            break
-    new_lines = new_config.split('\n')
-    new_lines = [line + '\n' if not line.endswith('\n') and line.strip() else line for line in new_lines]
-    updated_content = new_lines + lines[empty_line_index:]
     with open(file_path, 'w') as f:
-        f.writelines(updated_content)
+        f.write(new_config if new_config.endswith('\n') else new_config + '\n')
 
 if __name__ == "__main__":
-    configuration_path = f'/home/hice1/madewolu9/scratch/madewolu9/LLMGE_Point_Cloud_Generic/LLM-Guided-Evolution-Generic/slurm-config/{CLUSTER}.txt'
+    configuration_path = f'slurm-config/{constants.CLUSTER}.txt'
 
     with open(configuration_path, 'r') as file:
         content = [item.strip() for item in file.readlines()]
         indices = [index for index, value in enumerate(content) if value == "------"]
-        # run.sh sbatch configuration
         runsh_config_lines = "\n".join(content[indices[0]+1:indices[1]])
-        
-        replace_script_configuration("run.sh", runsh_config_lines)
-        
-        # mixt.sh sbatch configuration
+
+        run_sh = f"""echo "launching LLM Guided Evolution"
+hostname
+module load cuda
+module load anaconda3
+export CUDA_VISIBLE_DEVICES=0
+export MKL_THREADING_LAYER=GNU 
+export SERVER_HOSTNAME=$(hostname)
+source {constants.ENVIRONMENT_DIR}
+uvicorn new_server:app --host $SERVER_HOSTNAME --port 8000 --workers 1 &
+source geminikey.sh
+python run_improved.py point_transformers_test
+"""
+        replace_script_configuration("run.sh", runsh_config_lines + run_sh)
+
         mixtsh_config_lines = "\n".join(content[indices[2]+1:indices[3]])
         
-        replace_script_configuration("src/mixt.sh", mixtsh_config_lines)
+        mixt_sh = f"""
+echo "Launching AIsurBL"
+hostname
+module load gcc/13.2.0
+source {constants.ENVIRONMENT_DIR}
+# Set the TOKENIZERS_PARALLELISM environment variable if needed
+export TOKENIZERS_PARALLELISM=false
+python llm_crossover.py '/gv1/projects/AI_Surrogate/dev/dev/clint/CodeLLama/codellama/{constants.SEED_NETWORK}' '{constants.SOTA_ROOT}/models/Menghao/model_x.py' '{constants.SOTA_ROOT}/models/Menghao/model_z.py'  --top_p 0.15   --temperature 0.1 --apply_quality_control 'True' --bit 8
+"""
+        replace_script_configuration("src/mixt.sh", mixtsh_config_lines + mixt_sh)
 
-        # llm-gpu sbtach configuration
-        LLM_GPU = content[indices[4]+1:indices[5]][0]
-   
-        # python-bash-script sbatch configuration
-        PYTHON_BASH_SCRIPT_TEMPLATE = "\n".join(content[indices[6]+1:indices[7]]) + """
+        constants.LLM_GPU = content[indices[4]+1:indices[5]][0]
+
+        constants.PYTHON_BASH_SCRIPT_TEMPLATE = "\n".join(content[indices[6]+1:indices[7]]) + """
 echo "Launching Python Evaluation"
 hostname
-
 # Load GCC version 9.2.0
 # module load gcc/13.2.0
 module load cuda
 module load anaconda3
-# Activate Conda environment
-#conda activate llm_guided_env
-source .venv/bin/activate
+# Activate Virtual environment
+source {constants.ENVIRONMENT_DIR}
 export LD_LIBRARY_PATH=~/.conda/envs/llm_guided_env/lib/python3.12/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
-# conda info
-
 # Set the TOKENIZERS_PARALLELISM environment variable if needed
 # export TOKENIZERS_PARALLELISM=false
-
 # Run Python script
 {}
 """
 
-        # llm-bash-script sbatch configuration
-        LLM_BASH_SCRIPT_TEMPLATE = "\n".join(content[indices[8]+1:indices[9]]) +  """
+        constants.LLM_BASH_SCRIPT_TEMPLATE = "\n".join(content[indices[8]+1:indices[9]]) +  """
 echo "Launching AIsurBL"
 hostname
-
 # Load GCC version 9.2.0
 # module load gcc/13.2.0
 # module load cuda/11.8
 module load cuda
 module load anaconda3
-# Activate Conda environment
-#conda activate llm_guided_env
-source .venv/bin/activate
-export LD_LIBRARY_PATH=~/.conda/envs/llm_guided_env/lib/python3.12/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
-# conda info
-
+# Activate Virtual environment
+source {constants.ENVIRONMENT_DIR}
 # Set the TOKENIZERS_PARALLELISM environment variable if needed
 # export TOKENIZERS_PARALLELISM=false
 

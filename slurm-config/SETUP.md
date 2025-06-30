@@ -1,6 +1,6 @@
 # Slurm Script Setup Guide
 
-- This guide will demonstrate 
+- This guide outlines standard Slurm directives used across scripts and provides template examples in the expected order.
 
 ## run.sh
 
@@ -10,23 +10,28 @@
 
 **#SBATCH --job-name=llm_opt**
 
-- the **--job-name** flag allows you to specify the name of the slurm job
+- Sets the name of the Slurm job to llm_opt for easy identification in job queues.
 
 **#SBATCH --ntasks=2**
--
+- Specifies the number of tasks to run. For MPI jobs, this is the total number of processes.
 
 **#SBATCH --cpus-per-task=32**
+- Allocates 32 CPUs per task. Useful for multi-threaded tasks.
 
 **#SBATCH -c 16**
+- Alternative syntax for --cpus-per-task=16. You should standardize usage to avoid confusion.
 
 **#SBATCH --mem=160G**         
+- Requests 160 GB of memory for the job.
 
 **#SBATCH --gres=gpu:2**
+- Requests 2 GPUs for the job.
 
 **#SBATCH -t 7-00:00**   
+- Sets a time limit of 7 days for the job.
 
 **#SBATCH -C "NVIDIAA10080GBPCIe"**
-
+- Requests nodes with specific constraints, e.g., NVIDIA A100 80GB GPUs.
 
 ## mixt.sh
 

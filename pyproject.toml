@@ -1,7 +1,7 @@
 [project]
 name = "llm-guided-evolution"
 version = "0.1.0"
-description = "Remember to Lock your screen"
+description = "llm-guided-evolution, virtual envrionment that includes packages necessary for local llm integration & model evalution."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

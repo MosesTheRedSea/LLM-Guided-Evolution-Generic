@@ -41,30 +41,23 @@ def clean_code_from_llm(code_from_llm):
     elif LLM_MODEL == 'deepseek':
         code_generator = submit_deepseek_local
 
-    # code_checker_prompt = os.path.join(ROOT_DIR, 'templates/FixedPrompts/validation/code_validation_prompt.txt')
-    # model_varaint_code = ""
-    # # Check if initial code receive from LLM is present
-    # if "```" in code_from_llm:
-    #     model_varaint_code = '\n'.join(code_from_llm.split("```")[1].strip().split("\n")[1:])
-    # else:
-    #     # If no code in the LLM set code to blank
-    #     model_varaint_code = None
-    # if model_varaint_code:
-    #     # Initiate Validation Sequence
-    #     box_print("VALIDATING LLM CODE", print_bbox_len=60, new_line_end=False)
-    #     template_text = ""
-    #     with open(code_checker_prompt, 'r') as file:
-    #         template_text = file.read()
-    #     # Read the info from the prompt
-    #     prompt = template_text.format(model_varaint_code.strip())
-    #     print(prompt)
-    #     # Submit new prompt to LLM For Code Validation & Completion
-    #     verified_code = code_generator(prompt, top_p=0.15, temperature=0.1) 
-    #     print(verified_code)
-        # Return the validated from received from the LLM
-        # return '\n'.join(verified_code.strip().split("```")[1].split('\n')[1:])
+    code_checker_prompt = os.path.join(ROOT_DIR, 'templates/FixedPrompts/validation/code_validation_prompt.txt')
+    model_varaint_code = ""
+    if "```" in code_from_llm:
+        model_varaint_code = '\n'.join(code_from_llm.split("```")[1].strip().split("\n")[1:])
+    else:
+        model_varaint_code = None
+    if model_varaint_code:
+        box_print("VALIDATING LLM CODE", print_bbox_len=60, new_line_end=False)
+        template_text = ""
+        with open(code_checker_prompt, 'r') as file:
+            template_text = file.read()
+        prompt = template_text.format(model_varaint_code.strip())
+        print(prompt)
+        verified_code = code_generator(prompt, top_p=0.15, temperature=0.1) 
+        print(verified_code)
+        return '\n'.join(verified_code.strip().split("```")[1].split('\n')[1:])
     return '\n'.join(code_from_llm.strip().split("```")[1].split('\n')[1:])
-
 
 def generate_augmented_code(txt2llm, augment_idx, apply_quality_control, top_p, temperature, hugging_face=False):
     """Generates augmented code using Mixtral."""
@@ -94,8 +87,8 @@ def generate_augmented_code(txt2llm, augment_idx, apply_quality_control, top_p, 
         else:
             code_from_llm = llm_code_generator(txt2llm, top_p=top_p, temperature=temperature)
 
-        # Check if code from LLM is None - No Response
         print("Checking LLM Response")
+
         if not code_from_llm :
             retries += 1
             print("Response Invalid")
@@ -105,12 +98,14 @@ def generate_augmented_code(txt2llm, augment_idx, apply_quality_control, top_p, 
             break
 
         box_print("TEXT FROM LLM", print_bbox_len=60, new_line_end=False)
+
         print(code_from_llm)
+
         code_from_llm = clean_code_from_llm(code_from_llm)
 
     box_print("CODE FROM LLM", print_bbox_len=60, new_line_end=False)
     code_from_llm = clean_code_from_llm(code_from_llm)
-    return code_from_llm # if code from LLM is None Just Remove that Individual From Being Evaluted
+    return code_from_llm 
 
 def extract_note(txt):
     """Extracts note from the part if present."""
@@ -153,7 +148,6 @@ def llm_code_qc(code_from_llm, base_code, generate_text):
     code_from_llm = '\n'.join(code_from_llm.strip().split("```")[1].split('\n')[1:]).strip()
     return code_from_llm
 
-
 def llm_code_qc_hf(code_from_llm, base_code, generate_text=None):
     # TODO: make parameter
     fname = np.random.choice(['llm_quality_control_p.txt', 'llm_quality_control_p.txt'])
@@ -171,7 +165,6 @@ def llm_code_qc_hf(code_from_llm, base_code, generate_text=None):
     print(code_from_llm)
     code_from_llm = clean_code_from_llm(code_from_llm)
     return code_from_llm
-
 
 def submit_mixtral_hf(txt2mixtral, max_new_tokens=1024, top_p=0.15, temperature=0.1, 
                       model_id="mistralai/Mixtral-8x7B-Instruct-v0.1", return_gen=False):
@@ -199,7 +192,44 @@ def submit_mixtral_hf(txt2mixtral, max_new_tokens=1024, top_p=0.15, temperature=
     else:
         return results[0]
     
-def submit_deepseek_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, server_url=f"http://{os.getenv('SERVER_HOSTNAME', 'localhost')}:8002/generate", return_gen=False):
+def submit_mixtral(txt2mixtral, max_new_tokens=764, top_p=0.15, temperature=0.1, 
+                   model_id="mistralai/Mixtral-8x7B-Instruct-v0.1", return_gen=False):
+    max_new_tokens = np.random.randint(800, 1000)
+    print(f'max_new_tokens: {max_new_tokens}')
+    start_time = time.time()
+    model = transformers.AutoModelForCausalLM.from_pretrained(
+        model_id,
+        trust_remote_code=True,
+        torch_dtype=bfloat16,
+        device_map='auto'
+    )
+    model.eval()
+    print(model.device)
+    tokenizer = transformers.AutoTokenizer.from_pretrained(model_id)
+
+    generate_text = transformers.pipeline(
+        model=model, tokenizer=tokenizer,
+        return_full_text=False, 
+        task="text-generation",
+        temperature=temperature, 
+        top_p=top_p,  
+        top_k=0, 
+        max_new_tokens=max_new_tokens, 
+        repetition_penalty=1.1,
+        do_sample=True,
+    )
+
+    res = generate_text(txt2mixtral)
+    output_txt = res[0]["generated_text"]
+    box_print("LLM OUTPUT", print_bbox_len=60, new_line_end=False)
+    print(output_txt)
+    box_print(f'time to load in seconds: {round(time.time()-start_time)}', print_bbox_len=120, new_line_end=False)   
+    if return_gen is False:
+        return output_txt
+    else:
+        return output_txt, generate_text
+    
+def submit_mixtral_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, server_url=f"http://{os.getenv('SERVER_HOSTNAME', 'localhost')}:8000/generate", return_gen=False):
     payload = {
         "prompt": prompt,
         "max_new_tokens": max_new_tokens, # can change to random between 800 - 1000 if needed
@@ -228,7 +258,7 @@ def submit_deepseek_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.1
         print(f"Request failed: {e}")
         return None
 
-def submit_mixtral_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, server_url=f"http://{os.getenv('SERVER_HOSTNAME', 'localhost')}:8002/generate", return_gen=False):
+def submit_deepseek_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, server_url=f"http://{os.getenv('SERVER_HOSTNAME', 'localhost')}:8000/generate", return_gen=False):
     payload = {
         "prompt": prompt,
         "max_new_tokens": max_new_tokens, # can change to random between 800 - 1000 if needed
@@ -263,18 +293,14 @@ def submit_llama3_hf(txt2llama,
                      temperature=0.1,                   
                      model_id="google/gemma-2-27b-it",
                      return_gen=False):
-    # Randomly set max_new_tokens between 900 and 1300
     max_new_tokens = np.random.randint(900, 1300)
     
-    # Set up Hugging Face API key and login
-    os.environ['HF_API_KEY'] = "DONT_SCRAPE_ME"  # Replace with your actual key or a method to retrieve it securely
+    os.environ['HF_API_KEY'] = "DONT_SCRAPE_ME" 
     huggingface_hub.login(new_session=False)
     
-    # Create an inference client for the model
     client = InferenceClient(model=model_id)
     client.headers["x-use-cache"] = "0"
 
-    # Prepare the instructions for the model
     instructions = [
         {
             "role": "user",
@@ -282,24 +308,15 @@ def submit_llama3_hf(txt2llama,
         },
     ]
 
-    # Load the tokenizer for the model
     tokenizer_converter = transformers.AutoTokenizer.from_pretrained(model_id)
-
     tokenizer_converter.add_special_tokens({'pad_token': '[PAD]'})
-
-    # Manually format the prompt for the model from instructions
-    # The original code used apply_chat_template which may not exist in the current tokenizer
     prompt = f"{instructions[0]['role']}: {instructions[0]['content']}\n"
-
-    # Encode the prompt into a tensor suitable for the model
     encoded_prompt = tokenizer_converter.encode(
         prompt, 
         return_tensors='pt', 
         padding=True, 
         truncation=True
     )
-
-    # Generate text from the model
     results = client.text_generation(
         encoded_prompt, 
         max_new_tokens=max_new_tokens, 
@@ -307,38 +324,6 @@ def submit_llama3_hf(txt2llama,
         temperature=temperature, 
         seed=101
     )
-
-    # Return results based on the specified return type
-    if return_gen:
-        return results[0], None
-    else:
-        return results[0]
-
-
-def submit_llama3_hf(txt2llama, max_new_tokens=1024, top_p=0.15, temperature=0.1,                   # google/gemma-2-27b-it
-                     # EleutherAI/gpt-neox-20b
-                     # bigcode/starcoder
-                     # google/gemma-2-2b-jpn-it
-                      model_id="google/gemma-2-2b-jpn-it",
-                      return_gen=False):
-    max_new_tokens = np.random.randint(900, 1300)
-    os.environ['HF_API_KEY'] = DONT_SCRAPE_ME
-    huggingface_hub.login(new_session=False)
-    client = InferenceClient(model=model_id)
-    client.headers["x-use-cache"] = "0"
-
-    instructions = [
-            {
-                "role": "user",
-                "content": "Provide code in Python\n" + txt2llama,
-            },     
-    ]
-
-    tokenizer_converter = transformers.AutoTokenizer.from_pretrained(model_id)
-    prompt = tokenizer_converter.apply_chat_template(instructions, tokenize=False) # Line causing Error
-    results = [client.text_generation(prompt, max_new_tokens=max_new_tokens, 
-                                      return_full_text=False, 
-                                      temperature=temperature, seed=101)]
     if return_gen:
         return results[0], None
     else:
@@ -353,47 +338,6 @@ def submit_gemini_api(txt2gemini, **kwargs):
     )
     return response.text
 
-
-
-def submit_mixtral(txt2mixtral, max_new_tokens=764, top_p=0.15, temperature=0.1, 
-                   model_id="mistralai/Mixtral-8x7B-Instruct-v0.1", return_gen=False):
-    max_new_tokens = np.random.randint(800, 1000)
-    print(f'max_new_tokens: {max_new_tokens}')
-    start_time = time.time()
-    model = transformers.AutoModelForCausalLM.from_pretrained(
-        model_id,
-        trust_remote_code=True,
-        torch_dtype=bfloat16,
-        device_map='auto'
-    )
-    model.eval()
-    print(model.device)
-    tokenizer = transformers.AutoTokenizer.from_pretrained(model_id)
-
-    generate_text = transformers.pipeline(
-        model=model, tokenizer=tokenizer,
-        return_full_text=False,  # if using langchain set True
-        task="text-generation",
-        # we pass model parameters here too
-        temperature=temperature,  # 'randomness' of outputs, 0.0 is the min and 1.0 the max
-        top_p=top_p,  # select from top tokens whose probability add up to 15%
-        top_k=0,  # select from top 0 tokens (because zero, relies on top_p)
-        max_new_tokens=max_new_tokens,  # max number of tokens to generate in the output
-        repetition_penalty=1.1,  # if output begins repeating increase
-        do_sample=True,
-    )
-
-    res = generate_text(txt2mixtral)
-    output_txt = res[0]["generated_text"]
-    box_print("LLM OUTPUT", print_bbox_len=60, new_line_end=False)
-    print(output_txt)
-    box_print(f'time to load in seconds: {round(time.time()-start_time)}', print_bbox_len=120, new_line_end=False)   
-    if return_gen is False:
-        return output_txt
-    else:
-        return output_txt, generate_text
-    
-    
 def mutate_prompts(n=5):
     templates = np.random.choice(glob.glob(f'{ROOT_DIR}/templates/FixedPrompts/*/*.txt'), n)
     for i, template in enumerate(templates):
