@@ -1,39 +1,84 @@
 # Slurm Script Setup Guide
 
-- This guide outlines standard Slurm directives used across scripts and provides template examples in the expected order.
+This guide outlines standard Slurm directives used across scripts and provides template examples in the expected order for your HPC jobs.
 
-## run.sh
+## General Notes
 
-**!/bin/bash**
-- shebang line in a Slurm script tells the system to use the Bash shell to execute the commands within the script. 
+### Shebang Line
+
+#!/bin/bash
+
+The shebang line tells the system to use the Bash shell to execute the script.
 
 
-**#SBATCH --job-name=llm_opt**
+### Job Naming
 
-- Sets the name of the Slurm job to llm_opt for easy identification in job queues.
+#SBATCH --job-name=example_name
 
-**#SBATCH --ntasks=2**
-- Specifies the number of tasks to run. For MPI jobs, this is the total number of processes.
+Sets the name of your Slurm job for easier identification in job queues and outputs.
 
-**#SBATCH --cpus-per-task=32**
-- Allocates 32 CPUs per task. Useful for multi-threaded tasks.
+### Number of Tasks
 
-**#SBATCH -c 16**
-- Alternative syntax for --cpus-per-task=16. You should standardize usage to avoid confusion.
+#SBATCH --ntasks=2
 
-**#SBATCH --mem=160G**         
-- Requests 160 GB of memory for the job.
+Specifies the total number of tasks to run. For MPI jobs, this equals the number of processes.
 
-**#SBATCH --gres=gpu:2**
-- Requests 2 GPUs for the job.
+### CPU Allocation
 
-**#SBATCH -t 7-00:00**   
-- Sets a time limit of 7 days for the job.
+#SBATCH --cpus-per-task=32
 
-**#SBATCH -C "NVIDIAA10080GBPCIe"**
-- Requests nodes with specific constraints, e.g., NVIDIA A100 80GB GPUs.
+Allocates CPUs per task. Use this for multi-threaded tasks.
 
-## mixt.sh
+Note: `-c` is an alternative to `--cpus-per-task`. Standardize usage in your team to avoid confusion.
+
+
+### Memory Allocation
+
+#SBATCH --mem=160G
+
+Requests the total memory needed for the job.
+
+
+### GPU Allocation
+
+#SBATCH --gres=gpu:2
+
+Requests the number of GPUs needed for the job.
+
+### Time Limit
+
+#SBATCH -t 7-00:00
+
+Sets a maximum runtime for the job (in this example, 7 days).
+
+### Node Constraints
+
+#SBATCH -C "GPU_MODEL"
+
+Specifies node constraints, such as a specific GPU model (e.g., NVIDIA A100 80GB).
+
+
+## Example Scripts
+
+### run.sh
+
+#!/bin/bash
+
+#SBATCH --job-name=llm_opt
+
+#SBATCH --ntasks=2
+
+#SBATCH --cpus-per-task=32
+
+#SBATCH --mem=160G
+
+#SBATCH --gres=gpu:2
+
+#SBATCH -t 7-00:00
+
+#SBATCH -C "NVIDIAA10080GBPCIe"
+
+### mixt.sh
 
 #!/bin/bash
 
@@ -43,23 +88,16 @@
 
 #SBATCH --cpus-per-task=32
 
-#SBATCH -c 16
-
-#SBATCH --mem=160G     
+#SBATCH --mem=160G
 
 #SBATCH --gres=gpu:2
 
-#SBATCH -time=7-00:00    
+#SBATCH -t 7-00:00
 
 #SBATCH -C "TeslaV100S-PCIE-32GB"
 
 
-## llm-gpu
-
-TeslaV100S-PCIE-32GB
-
-
-## python-bash-script
+### python-bash-script
 
 #!/bin/bash
 
@@ -69,31 +107,36 @@ TeslaV100S-PCIE-32GB
 
 #SBATCH --cpus-per-task=32
 
-#SBATCH -c 16
-
-#SBATCH --mem=160G     
+#SBATCH --mem=160G
 
 #SBATCH --gres=gpu:2
 
-#SBATCH -time=7-00:00     
+#SBATCH -t 7-00:00
 
 #SBATCH -C "TeslaV100S-PCIE-32GB"
 
 
-## llm-bash-script
+### llm-bash-script
 
 #!/bin/bash
 
 #SBATCH --job-name=llm_oper
 
-#SBATCH -time=5-00:00  
-
-#SBATCH --gres=gpu:2
-
-#SBATCH -C "{}"
-
-#SBATCH --mem=32G
-
 #SBATCH --ntasks=2
 
 #SBATCH --cpus-per-task=32
+
+#SBATCH --mem=32G
+
+#SBATCH --gres=gpu:2
+
+#SBATCH -t 5-00:00
+
+#SBATCH -C "{}"
+
+
+## Final Tips
+
+- Review cluster-specific documentation for available GPU models and node constraints.
+- Maintain consistency in syntax and directive ordering across scripts for team clarity.
+- Test scripts with minimal resources before scaling to full GPU jobs.

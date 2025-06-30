@@ -20,9 +20,9 @@ module load anaconda3
 export CUDA_VISIBLE_DEVICES=0
 export MKL_THREADING_LAYER=GNU 
 export SERVER_HOSTNAME=$(hostname)
+source geminikey.sh
 source {constants.ENVIRONMENT_DIR}
 uvicorn new_server:app --host $SERVER_HOSTNAME --port 8000 --workers 1 &
-source geminikey.sh
 python run_improved.py point_transformers_test
 """
         replace_script_configuration("run.sh", runsh_config_lines + run_sh)
