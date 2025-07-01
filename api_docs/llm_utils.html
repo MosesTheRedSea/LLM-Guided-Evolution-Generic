@@ -178,7 +178,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -204,7 +204,12 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../point_cloud.html">Point Cloud Classification Optimization</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Point Cloud Classification Optimization</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/llm_crossover.html">llm_crossover</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/llm_mutation.html">llm_mutation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/llm_utils.html">llm_utils</a></li>
+</ul>
+</li>
 </ul>
 
 </div>
@@ -239,14 +244,143 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="llm-utils-module">
-<h1>llm_utils module<a class="headerlink" href="#llm-utils-module" title="Link to this heading">¶</a></h1>
+          <section id="module-llm_utils">
+<span id="llm-utils-module"></span><h1>llm_utils module<a class="headerlink" href="#module-llm_utils" title="Link to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="llm_utils.clean_code_from_llm">
+<span class="sig-prename descclassname"><span class="pre">llm_utils.</span></span><span class="sig-name descname"><span class="pre">clean_code_from_llm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code_from_llm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/llm_utils.html#clean_code_from_llm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#llm_utils.clean_code_from_llm" title="Link to this definition">¶</a></dt>
+<dd><p>Cleans the code received from LLM.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="llm_utils.extract_note">
+<span class="sig-prename descclassname"><span class="pre">llm_utils.</span></span><span class="sig-name descname"><span class="pre">extract_note</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">txt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/llm_utils.html#extract_note"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#llm_utils.extract_note" title="Link to this definition">¶</a></dt>
+<dd><p>Extracts note from the part if present.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="llm_utils.generate_augmented_code">
+<span class="sig-prename descclassname"><span class="pre">llm_utils.</span></span><span class="sig-name descname"><span class="pre">generate_augmented_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">txt2llm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">augment_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_quality_control</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inference_submission</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/llm_utils.html#generate_augmented_code"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#llm_utils.generate_augmented_code" title="Link to this definition">¶</a></dt>
+<dd><p>Generates augmented code using Mixtral.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="llm_utils.llm_code_qc">
+<span class="sig-prename descclassname"><span class="pre">llm_utils.</span></span><span class="sig-name descname"><span class="pre">llm_code_qc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code_from_llm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generate_text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/llm_utils.html#llm_code_qc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#llm_utils.llm_code_qc" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="llm_utils.llm_code_qc_hf">
+<span class="sig-prename descclassname"><span class="pre">llm_utils.</span></span><span class="sig-name descname"><span class="pre">llm_code_qc_hf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code_from_llm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generate_text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/llm_utils.html#llm_code_qc_hf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#llm_utils.llm_code_qc_hf" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="llm_utils.mutate_prompts">
+<span class="sig-prename descclassname"><span class="pre">llm_utils.</span></span><span class="sig-name descname"><span class="pre">mutate_prompts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/llm_utils.html#mutate_prompts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#llm_utils.mutate_prompts" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="llm_utils.retrieve_base_code">
+<span class="sig-prename descclassname"><span class="pre">llm_utils.</span></span><span class="sig-name descname"><span class="pre">retrieve_base_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/llm_utils.html#retrieve_base_code"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#llm_utils.retrieve_base_code" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieves base code for quality control.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="llm_utils.split_file">
+<span class="sig-prename descclassname"><span class="pre">llm_utils.</span></span><span class="sig-name descname"><span class="pre">split_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/llm_utils.html#split_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#llm_utils.split_file" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="llm_utils.str2bool">
+<span class="sig-prename descclassname"><span class="pre">llm_utils.</span></span><span class="sig-name descname"><span class="pre">str2bool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/llm_utils.html#str2bool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#llm_utils.str2bool" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="llm_utils.submit_deepseek_local">
+<span class="sig-prename descclassname"><span class="pre">llm_utils.</span></span><span class="sig-name descname"><span class="pre">submit_deepseek_local</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_new_tokens</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">850</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server_url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'http://localhost:8000/generate'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_gen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/llm_utils.html#submit_deepseek_local"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#llm_utils.submit_deepseek_local" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="llm_utils.submit_gemini_api">
+<span class="sig-prename descclassname"><span class="pre">llm_utils.</span></span><span class="sig-name descname"><span class="pre">submit_gemini_api</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">txt2gemini</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/llm_utils.html#submit_gemini_api"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#llm_utils.submit_gemini_api" title="Link to this definition">¶</a></dt>
+<dd><p>This function submits a model prompt to Gemini through its API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>txt2gemini</strong> (<em>str</em>) – Prompt that will be sent to Gemini</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Model’s output from inference</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="llm_utils.submit_llama3_hf">
+<span class="sig-prename descclassname"><span class="pre">llm_utils.</span></span><span class="sig-name descname"><span class="pre">submit_llama3_hf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">txt2llama</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_new_tokens</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'google/gemma-2-27b-it'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_gen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/llm_utils.html#submit_llama3_hf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#llm_utils.submit_llama3_hf" title="Link to this definition">¶</a></dt>
+<dd><p>This function submits a model prompt to Llama3 through the HuggingFace Inference API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>txt2llama</strong> (<em>str</em>) – Prompt that will be sent to Llama3</p></li>
+<li><p><strong>max_new_tokens</strong> (<em>int</em><em>, </em><em>optional</em>) – A setting to tell the LLM the maximum number of tokens to return, by default 1024</p></li>
+<li><p><strong>top_p</strong> (<em>float</em><em>, </em><em>optional</em>) – _description_, by default 0.15</p></li>
+<li><p><strong>temperature</strong> (<em>float</em><em>, </em><em>optional</em>) – _description_, by default 0.1</p></li>
+<li><p><strong>model_id</strong> (<em>str</em><em>, </em><em>optional</em>) – Which Llama3 variant to utilize for inference, by default “meta-llama/Meta-Llama-3.1-70B-Instruct”</p></li>
+<li><p><strong>return_gen</strong> (<em>bool</em><em>, </em><em>optional</em>) – _description_, by default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Model’s output from inference</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="llm_utils.submit_mixtral">
+<span class="sig-prename descclassname"><span class="pre">llm_utils.</span></span><span class="sig-name descname"><span class="pre">submit_mixtral</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">txt2mixtral</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_new_tokens</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">764</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mistralai/Mixtral-8x7B-Instruct-v0.1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_gen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/llm_utils.html#submit_mixtral"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#llm_utils.submit_mixtral" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="llm_utils.submit_mixtral_hf">
+<span class="sig-prename descclassname"><span class="pre">llm_utils.</span></span><span class="sig-name descname"><span class="pre">submit_mixtral_hf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">txt2mixtral</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_new_tokens</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mistralai/Mixtral-8x7B-Instruct-v0.1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_gen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/llm_utils.html#submit_mixtral_hf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#llm_utils.submit_mixtral_hf" title="Link to this definition">¶</a></dt>
+<dd><p>This function submits a model prompt to mixtral through the HuggingFace Inference API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>txt2mixtral</strong> (<em>str</em>) – Prompt that will be sent to mixtral</p></li>
+<li><p><strong>max_new_tokens</strong> (<em>int</em><em>, </em><em>optional</em>) – A setting to tell the LLM the maximum number of tokens to return, by default 1024</p></li>
+<li><p><strong>top_p</strong> (<em>float</em><em>, </em><em>optional</em>) – _description_, by default 0.15</p></li>
+<li><p><strong>temperature</strong> (<em>float</em><em>, </em><em>optional</em>) – _description_, by default 0.1</p></li>
+<li><p><strong>model_id</strong> (<em>str</em><em>, </em><em>optional</em>) – Which mixtral variant to utilize for inference, by default “mistralai/Mixtral-8x7B-Instruct-v0.1”</p></li>
+<li><p><strong>return_gen</strong> (<em>bool</em><em>, </em><em>optional</em>) – _description_, by default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Model’s output from inference</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="llm_utils.submit_mixtral_local">
+<span class="sig-prename descclassname"><span class="pre">llm_utils.</span></span><span class="sig-name descname"><span class="pre">submit_mixtral_local</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_new_tokens</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">850</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server_url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'http://localhost:8000/generate'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_gen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/llm_utils.html#submit_mixtral_local"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#llm_utils.submit_mixtral_local" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
 
         </article>
@@ -274,8 +408,41 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">llm_utils module</a><ul>
+<li><a class="reference internal" href="#llm_utils.clean_code_from_llm"><code class="docutils literal notranslate"><span class="pre">clean_code_from_llm()</span></code></a></li>
+<li><a class="reference internal" href="#llm_utils.extract_note"><code class="docutils literal notranslate"><span class="pre">extract_note()</span></code></a></li>
+<li><a class="reference internal" href="#llm_utils.generate_augmented_code"><code class="docutils literal notranslate"><span class="pre">generate_augmented_code()</span></code></a></li>
+<li><a class="reference internal" href="#llm_utils.llm_code_qc"><code class="docutils literal notranslate"><span class="pre">llm_code_qc()</span></code></a></li>
+<li><a class="reference internal" href="#llm_utils.llm_code_qc_hf"><code class="docutils literal notranslate"><span class="pre">llm_code_qc_hf()</span></code></a></li>
+<li><a class="reference internal" href="#llm_utils.mutate_prompts"><code class="docutils literal notranslate"><span class="pre">mutate_prompts()</span></code></a></li>
+<li><a class="reference internal" href="#llm_utils.retrieve_base_code"><code class="docutils literal notranslate"><span class="pre">retrieve_base_code()</span></code></a></li>
+<li><a class="reference internal" href="#llm_utils.split_file"><code class="docutils literal notranslate"><span class="pre">split_file()</span></code></a></li>
+<li><a class="reference internal" href="#llm_utils.str2bool"><code class="docutils literal notranslate"><span class="pre">str2bool()</span></code></a></li>
+<li><a class="reference internal" href="#llm_utils.submit_deepseek_local"><code class="docutils literal notranslate"><span class="pre">submit_deepseek_local()</span></code></a></li>
+<li><a class="reference internal" href="#llm_utils.submit_gemini_api"><code class="docutils literal notranslate"><span class="pre">submit_gemini_api()</span></code></a></li>
+<li><a class="reference internal" href="#llm_utils.submit_llama3_hf"><code class="docutils literal notranslate"><span class="pre">submit_llama3_hf()</span></code></a></li>
+<li><a class="reference internal" href="#llm_utils.submit_mixtral"><code class="docutils literal notranslate"><span class="pre">submit_mixtral()</span></code></a></li>
+<li><a class="reference internal" href="#llm_utils.submit_mixtral_hf"><code class="docutils literal notranslate"><span class="pre">submit_mixtral_hf()</span></code></a></li>
+<li><a class="reference internal" href="#llm_utils.submit_mixtral_local"><code class="docutils literal notranslate"><span class="pre">submit_mixtral_local()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

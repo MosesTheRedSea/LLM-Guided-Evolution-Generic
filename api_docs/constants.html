@@ -204,7 +204,12 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../point_cloud.html">Point Cloud Classification Optimization</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Point Cloud Classification Optimization</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/llm_crossover.html">llm_crossover</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/llm_mutation.html">llm_mutation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/llm_utils.html">llm_utils</a></li>
+</ul>
+</li>
 </ul>
 
 </div>
@@ -254,14 +259,8 @@
 </dd></dl>
 
 <dl class="py data">
-<dt class="sig sig-object py" id="constants.LLM_BASH_SCRIPT_CONFIG">
-<span class="sig-prename descclassname"><span class="pre">constants.</span></span><span class="sig-name descname"><span class="pre">LLM_BASH_SCRIPT_CONFIG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#constants.LLM_BASH_SCRIPT_CONFIG" title="Link to this definition">¶</a></dt>
-<dd><p>Job Sub Constants/Params</p>
-</dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="constants.LLM_BASH_SCRIPT_TEMPLATE">
-<span class="sig-prename descclassname"><span class="pre">constants.</span></span><span class="sig-name descname"><span class="pre">LLM_BASH_SCRIPT_TEMPLATE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\necho</span> <span class="pre">&quot;Launching</span> <span class="pre">AIsurBL&quot;\nhostname\n\n#</span> <span class="pre">Load</span> <span class="pre">GCC</span> <span class="pre">version</span> <span class="pre">9.2.0\n#</span> <span class="pre">module</span> <span class="pre">load</span> <span class="pre">gcc/13.2.0\n#</span> <span class="pre">module</span> <span class="pre">load</span> <span class="pre">cuda/11.8\nmodule</span> <span class="pre">load</span> <span class="pre">cuda\nmodule</span> <span class="pre">load</span> <span class="pre">anaconda3\n#</span> <span class="pre">Activate</span> <span class="pre">Conda</span> <span class="pre">environment\n#conda</span> <span class="pre">activate</span> <span class="pre">llm_guided_env\nsource</span> <span class="pre">.venv/bin/activate\nexport</span> <span class="pre">LD_LIBRARY_PATH=~/.conda/envs/llm_guided_env/lib/python3.12/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH\n#</span> <span class="pre">conda</span> <span class="pre">info\n\n#</span> <span class="pre">Set</span> <span class="pre">the</span> <span class="pre">TOKENIZERS_PARALLELISM</span> <span class="pre">environment</span> <span class="pre">variable</span> <span class="pre">if</span> <span class="pre">needed\n#</span> <span class="pre">export</span> <span class="pre">TOKENIZERS_PARALLELISM=false\n\n#</span> <span class="pre">Run</span> <span class="pre">Python</span> <span class="pre">script\n{}\n'</span></em><a class="headerlink" href="#constants.LLM_BASH_SCRIPT_TEMPLATE" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="constants.hof_size">
+<span class="sig-prename descclassname"><span class="pre">constants.</span></span><span class="sig-name descname"><span class="pre">hof_size</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">100</span></em><a class="headerlink" href="#constants.hof_size" title="Link to this definition">¶</a></dt>
 <dd><p>Misc. Non-sense</p>
 </dd></dl>
 
@@ -306,8 +305,7 @@
             <ul>
 <li><a class="reference internal" href="#">constants module</a><ul>
 <li><a class="reference internal" href="#constants.EVAL_RUNLINE"><code class="docutils literal notranslate"><span class="pre">EVAL_RUNLINE</span></code></a></li>
-<li><a class="reference internal" href="#constants.LLM_BASH_SCRIPT_CONFIG"><code class="docutils literal notranslate"><span class="pre">LLM_BASH_SCRIPT_CONFIG</span></code></a></li>
-<li><a class="reference internal" href="#constants.LLM_BASH_SCRIPT_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">LLM_BASH_SCRIPT_TEMPLATE</span></code></a></li>
+<li><a class="reference internal" href="#constants.hof_size"><code class="docutils literal notranslate"><span class="pre">hof_size</span></code></a></li>
 </ul>
 </li>
 </ul>
