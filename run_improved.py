@@ -2,6 +2,7 @@ import os
 import copy
 import glob
 import time
+import json
 import string
 import random
 import pickle
@@ -12,14 +13,19 @@ from deap import base, creator, tools
 from deap.tools import HallOfFame
 from src.utils.print_utils import print_population, print_scores, box_print, print_job_info
 from src.llm_utils import split_file, retrieve_base_code, mutate_prompts
-from src.cfg.constants import *
 from src.cfg import constants
+
 
 def print_ancestry(data):
     for gene in data.keys():
         print(f'gene: {gene}')
         print(f"\t{data[gene]['GENES']}")
         print(f"\t{data[gene]['MUTATE_TYPE']}")
+
+def load_config(file_path=constants.SLURM_CONFIG_DIR):
+    with open(file_path, 'r') as f:
+        config = json.load(f)
+    return config
 
 def update_ancestry(gene_id_child, gene_id_parent, ancestry, mutation_type=None, gene_id_parent2=None):
     """
@@ -141,17 +147,18 @@ def write_bash_script(input_filename_x=f'{SOTA_ROOT}/{SEED_NETWORK}',
         with open(file_path, 'w') as file:
             file.write(template_txt)
         temp_text = f'{python_file} {input_filename_x} {output_filename} {file_path} --top_p {top_p} --temperature {temperature}'
-        python_runline = f"python {temp_text} --apply_quality_control '{QC_CHECK_BOOL}' --hugging_face {HUGGING_FACE_BOOL}"
+        python_runline = f"python {temp_text} --apply_quality_control '{QC_CHECK_BOOL}' --inference_submission {INFERENCE_SUBMISSION}"
     elif python_file=='src/llm_crossover.py':
         gene_id_parent2 = fetch_gene(input_filename_y)
         GLOBAL_DATA_ANCESTRY = update_ancestry(gene_id_child, gene_id_parent, GLOBAL_DATA_ANCESTRY, 
                                                 mutation_type=None, gene_id_parent2=gene_id_parent2)
         
         temp_text = f"{python_file} {input_filename_x} {input_filename_y} {output_filename} --top_p {top_p} --temperature {temperature}"
-        python_runline = f"python {temp_text} --apply_quality_control '{QC_CHECK_BOOL}' --hugging_face {HUGGING_FACE_BOOL}"
+        python_runline = f"python {temp_text} --apply_quality_control '{QC_CHECK_BOOL}' --inference_submission {INFERENCE_SUBMISSION}"
     else:
         raise ValueError("Invalid python_file argument")
-    bash_script_content = LLM_BASH_SCRIPT_TEMPLATE.format(gpu, python_runline)
+    config = load_config()
+    bash_script_content = config.get("LLM_BASH_SCRIPT_TEMPLATE").format(gpu, python_runline)
     return bash_script_content
 
 def create_bash_file(file_path, **kwargs):
@@ -267,6 +274,7 @@ def generate_random_string(length=20):
 def create_individual(container, temp_min=0.05, temp_max=0.4):
     box_print("Create Individual", print_bbox_len=60, new_line_end=False)
     out_dir = str(GENERATION)
+    config = load_config()
     gene_id = generate_random_string(length=24)
     # Select prompte and temp
     temperature = round(random.uniform(temp_min, temp_max), 2)
@@ -275,7 +283,7 @@ def create_individual(container, temp_min=0.05, temp_max=0.4):
     successful_sub_flag, job_id, local_output = submit_bash(file_path, 
                                             input_filename_x=f'{SEED_NETWORK}',
                                             output_filename =f'{VARIANT_DIR}/{MODEL}_{gene_id}.py',
-                                            gpu=LLM_GPU,
+                                            gpu=config.get("LLM_GPU"),
                                             python_file='src/llm_mutation.py', 
                                             top_p=0.1, temperature=temperature)
     GLOBAL_DATA[gene_id] = {'sub_flag':successful_sub_flag, 'job_id':job_id, 
@@ -300,9 +308,10 @@ def create_individual(container, temp_min=0.05, temp_max=0.4):
 
 def submit_run(gene_id):
     def write_bash_script_py(gene_id, train_file=f'{TRAIN_FILE}'):
-        model_file_override = constants.RUNLINE_TMP.format(constants.MODEL, gene_id) 
-        python_runline = constants.EVAL_RUNLINE.format(train_file, model_file_override)
-        bash_script_content = PYTHON_BASH_SCRIPT_TEMPLATE.format(python_runline)
+        model_file_override = RUNLINE_TMP.format(MODEL, gene_id) 
+        python_runline = EVAL_RUNLINE.format(train_file, model_file_override)
+        config = load_config()
+        bash_script_content = config.get("PYTHON_BASH_SCRIPT_TEMPLATE").format(python_runline)
         return bash_script_content
 
     # This is for subbing the python code
@@ -620,6 +629,7 @@ def customCrossover(ind1, ind2):
         """
         global GLOBAL_DATA
         out_dir = str(GENERATION)
+        config = load_config()
         # Retrieve gene IDs from the individuals
         gene_id_1 = ind1[0]
         gene_id_2 = ind2[0]
@@ -634,7 +644,7 @@ def customCrossover(ind1, ind2):
                                           input_filename_x=f'{VARIANT_DIR}/{MODEL}_{gene_id_1}.py',
                                           input_filename_y=f'{VARIANT_DIR}/{MODEL}_{gene_id_2}.py',
                                           output_filename=f'{VARIANT_DIR}/{MODEL}_{new_gene_id}.py',
-                                          gpu=LLM_GPU,
+                                          gpu=config.get("LLM_GPU"),
                                           python_file='src/llm_crossover.py', 
                                           top_p=0.1, temperature=temperature)
 
@@ -701,6 +711,7 @@ def customMutation(individual, indpb, temp_min=0.02, temp_max=0.35):
     # if random.random() < indpb: # TODO: connect this to temp
     global DELAYED_CHECK
     out_dir = str(GENERATION)
+    config = load_config()
     old_gene_id = individual[0]
     # Generate a new gene ID
     new_gene_id = generate_random_string(length=24)
@@ -711,7 +722,7 @@ def customMutation(individual, indpb, temp_min=0.02, temp_max=0.35):
     successful_sub_flag, job_id, local_output = submit_bash(file_path, 
                                               input_filename_x= f'{VARIANT_DIR}/{MODEL}_{old_gene_id}.py',
                                               output_filename = f'{VARIANT_DIR}/{MODEL}_{new_gene_id}.py',
-                                              gpu=LLM_GPU,
+                                              gpu=config.get("LLM_GPU"),
                                               python_file='src/llm_mutation.py', 
                                               top_p=0.1, temperature=temperature)
     

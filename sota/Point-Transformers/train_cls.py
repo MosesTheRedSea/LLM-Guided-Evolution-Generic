@@ -17,8 +17,9 @@ import importlib
 import shutil
 import hydra
 import omegaconf
-from src.cfg import constants
-
+src_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src'))
+sys.path.append(src_path)
+from cfg import constants
 
 def test(model, loader, num_class=40):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -67,10 +68,10 @@ def main(args):
 
     if "_" in file_name:
         model_file_path = hydra.utils.to_absolute_path(
-            f'/home/hice1/madewolu9/scratch/madewolu9/LLM_PointNet/LLM-Guided-PointCloud-Class/sota/Point-Transformers/models/Menghao/llmge_models/{model_file}.py')
+            f'{constants.VARIANT_DIR}/{model_file}')
     else:
         model_file_path = hydra.utils.to_absolute_path(
-            f'/home/hice1/madewolu9/scratch/madewolu9/LLM_PointNet/LLM-Guided-PointCloud-Class/sota/Point-Transformers/models/Menghao/{model_file}.py')
+            f'{constants.VARIANT_DIR}/{model_file}')
 
     classifier = getattr(importlib.import_module(f'models.{args.model.name}.model'), 'PointTransformerCls')(args).to(device)
     criterion = torch.nn.CrossEntropyLoss()
@@ -181,11 +182,8 @@ def main(args):
         global_epoch += 1
 
     gene_id = model_file.split("_")
-
     second_part = gene_id[1].split(".")[0] if len(gene_id) > 1 else "unknown"
-
     filename = f'{constants.SOTA_ROOT}/results/{second_part}_results.txt'
-
     os.makedirs(os.path.dirname(filename), exist_ok=True)
 
     total_params = sum(p.numel() for p in classifier.parameters())

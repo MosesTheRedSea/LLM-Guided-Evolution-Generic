@@ -1,7 +1,6 @@
 import argparse
 import sys
 
-from new_server import generate_text
 sys.path.append("src")
 import re
 import os
@@ -40,26 +39,26 @@ def clean_code_from_llm(code_from_llm):
         code_generator = submit_gemini_api
     elif LLM_MODEL == 'deepseek':
         code_generator = submit_deepseek_local
-
-    code_checker_prompt = os.path.join(ROOT_DIR, 'templates/FixedPrompts/validation/code_validation_prompt.txt')
-    model_varaint_code = ""
-    if "```" in code_from_llm:
-        model_varaint_code = '\n'.join(code_from_llm.split("```")[1].strip().split("\n")[1:])
-    else:
-        model_varaint_code = None
-    if model_varaint_code:
-        box_print("VALIDATING LLM CODE", print_bbox_len=60, new_line_end=False)
-        template_text = ""
-        with open(code_checker_prompt, 'r') as file:
-            template_text = file.read()
-        prompt = template_text.format(model_varaint_code.strip())
-        print(prompt)
-        verified_code = code_generator(prompt, top_p=0.15, temperature=0.1) 
-        print(verified_code)
-        return '\n'.join(verified_code.strip().split("```")[1].split('\n')[1:])
+# code_checker_prompt = os.path.join(ROOT_DIR, 'templates/FixedPrompts/validation/code_validation_prompt.txt')
+    # model_varaint_code = ""
+    # if "```" in code_from_llm:
+    #     model_varaint_code = '\n'.join(code_from_llm.split("```")[1].strip().split("\n")[1:])
+    # else:
+    #     model_varaint_code = None
+    # if model_varaint_code:
+    #     box_print("VALIDATING LLM CODE", print_bbox_len=60, new_line_end=False)
+    #     template_text = ""
+    #     with open(code_checker_prompt, 'r') as file:
+    #         template_text = file.read()
+    #     prompt = template_text.format(model_varaint_code.strip())
+    #     print(prompt)
+    #     verified_code = code_generator(prompt, top_p=0.15, temperature=0.1) 
+    #     print(verified_code)
+    #     return '\n'.join(verified_code.strip().split("```")[1].split('\n')[1:])
+   
     return '\n'.join(code_from_llm.strip().split("```")[1].split('\n')[1:])
 
-def generate_augmented_code(txt2llm, augment_idx, apply_quality_control, top_p, temperature, hugging_face=False):
+def generate_augmented_code(txt2llm, augment_idx, apply_quality_control, top_p, temperature, inference_submission=False):
     """Generates augmented code using Mixtral."""
     box_print("PROMPT TO LLM", print_bbox_len=60, new_line_end=False)
     print(txt2llm)
@@ -387,6 +386,8 @@ def submit_gemini_api(txt2gemini, **kwargs):
     str
         Model's output from inference
     """   
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+    
     client = genai.Client(api_key=GEMINI_API_KEY)
     response = client.models.generate_content(
         model="gemini-2.0-flash",

@@ -1,9 +1,21 @@
 import os
+import subprocess
+import json
 from src.cfg import constants
 
 def replace_script_configuration(file_path, new_config):
     with open(file_path, 'w') as f:
         f.write(new_config if new_config.endswith('\n') else new_config + '\n')
+
+def save_to_config(llm, python, gpu, file_path=constants.SLURM_CONFIG_DIR):
+        config_data = {
+                "LLM_BASH_SCRIPT_TEMPLATE": llm,
+                "PYTHON_BASH_SCRIPT_TEMPLATE": python,
+                "LLM_GPU": gpu,
+        }
+        
+        with open(file_path, 'w') as f:
+                json.dump(config_data, f, indent=4)
 
 if __name__ == "__main__":
     configuration_path = f'slurm-config/{constants.CLUSTER}.txt'
@@ -20,11 +32,13 @@ module load anaconda3
 export CUDA_VISIBLE_DEVICES=0
 export MKL_THREADING_LAYER=GNU 
 export SERVER_HOSTNAME=$(hostname)
-source {constants.ENVIRONMENT_DIR}
-uvicorn new_server:app --host $SERVER_HOSTNAME --port 8000 --workers 1 &
+source {constants.ENVIRONMENT_DIR}/bin/activate
+#uvicorn new_server:app --host $SERVER_HOSTNAME --port 8000 --workers 1 & sleep 5
 python run_improved.py point_transformers_test
 """
         replace_script_configuration("run.sh", runsh_config_lines + run_sh)
+
+        # print(runsh_config_lines + run_sh)
 
         mixtsh_config_lines = "\n".join(content[indices[2]+1:indices[3]])
         
@@ -32,16 +46,19 @@ python run_improved.py point_transformers_test
 echo "Launching AIsurBL"
 hostname
 module load gcc/13.2.0
-source {constants.ENVIRONMENT_DIR}
+source ~/.bashrc
+source {constants.ENVIRONMENT_DIR}/bin/activate
 # Set the TOKENIZERS_PARALLELISM environment variable if needed
 export TOKENIZERS_PARALLELISM=false
 python llm_crossover.py '{constants.SEED_NETWORK}' '{constants.SOTA_ROOT}/models/Menghao/model_x.py' '{constants.SOTA_ROOT}/models/Menghao/model_z.py'  --top_p 0.15   --temperature 0.1 --apply_quality_control 'True' --bit 8
 """
         replace_script_configuration("src/mixt.sh", mixtsh_config_lines + mixt_sh)
 
-        constants.LLM_GPU = content[indices[4]+1:indices[5]][0]
+       # print(mixtsh_config_lines + mixt_sh)
 
-        constants.PYTHON_BASH_SCRIPT_TEMPLATE = "\n".join(content[indices[6]+1:indices[7]]) + """
+        llm_gpu = content[indices[4]+1:indices[5]][0]
+
+        python_script = "\n".join(content[indices[6]+1:indices[7]]) + f"""
 echo "Launching Python Evaluation"
 hostname
 # Load GCC version 9.2.0
@@ -49,15 +66,15 @@ hostname
 module load cuda
 module load anaconda3
 # Activate Virtual environment
-source {constants.ENVIRONMENT_DIR}
+source {constants.ENVIRONMENT_DIR}/bin/activate
 export LD_LIBRARY_PATH=~/.conda/envs/llm_guided_env/lib/python3.12/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
 # Set the TOKENIZERS_PARALLELISM environment variable if needed
 # export TOKENIZERS_PARALLELISM=false
 # Run Python script
-{}
+{{}}
 """
-
-        constants.LLM_BASH_SCRIPT_TEMPLATE = "\n".join(content[indices[8]+1:indices[9]]) +  """
+        llm_bash_config = "\n".join(content[indices[8]+1:indices[9]])
+        llm_script =  llm_bash_config +  f"""
 echo "Launching AIsurBL"
 hostname
 # Load GCC version 9.2.0
@@ -66,12 +83,10 @@ hostname
 module load cuda
 module load anaconda3
 # Activate Virtual environment
-source {constants.ENVIRONMENT_DIR}
+source {constants.ENVIRONMENT_DIR}/bin/activate
 # Set the TOKENIZERS_PARALLELISM environment variable if needed
 # export TOKENIZERS_PARALLELISM=false
-
 # Run Python script
-{}
+{{}}
 """
-
-    
+        save_to_config(llm_script, python_script, llm_gpu)

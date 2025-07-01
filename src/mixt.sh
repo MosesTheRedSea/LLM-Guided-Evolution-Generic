@@ -1,16 +1,15 @@
 #!/bin/bash
 #SBATCH --job-name=AIsur_x1
-#SBATCH --ntasks=2
-#SBATCH --cpus-per-task=32
-#SBATCH -c 16
-#SBATCH --mem=160G
-#SBATCH --gres=gpu:2
-#SBATCH -time=7-00:00
-#SBATCH -C "TeslaV100S-PCIE-32GB"
+#SBATCH -t 8-00:00
+#SBATCH --gres=gpu:3
+#SBATCH -C "A100-40GB|A100-80GB|H100|V100-16GB|V100-32GB|RTX6000|A40|L40S"
+#SBATCH --mem 10G
+#SBATCH -c 48
 echo "Launching AIsurBL"
 hostname
 module load gcc/13.2.0
-source 
+source ~/.bashrc
+source /home/hice1/madewolu9/scratch/madewolu9/LLMGE01/LLM-Guided-Evolution-Generic/.venv/bin/activate
 # Set the TOKENIZERS_PARALLELISM environment variable if needed
 export TOKENIZERS_PARALLELISM=false
-python llm_crossover.py '/gv1/projects/AI_Surrogate/dev/dev/clint/CodeLLama/codellama/LLM-Guided-Evolution-Generic/sota/PT/Point-Transformers/models/Menghao/model.py' 'LLM-Guided-Evolution-Generic/sota/PT/Point-Transformers/models/Menghao/model_x.py' 'LLM-Guided-Evolution-Generic/sota/PT/Point-Transformers/models/Menghao/model_z.py'  --top_p 0.15   --temperature 0.1 --apply_quality_control 'True' --bit 8
+python llm_crossover.py '/home/hice1/madewolu9/scratch/madewolu9/LLMGE01/LLM-Guided-Evolution-Generic/sota/Point-Transformers/models/Menghao/model.py' '/home/hice1/madewolu9/scratch/madewolu9/LLMGE01/LLM-Guided-Evolution-Generic/sota/Point-Transformers/models/Menghao/model_x.py' '/home/hice1/madewolu9/scratch/madewolu9/LLMGE01/LLM-Guided-Evolution-Generic/sota/Point-Transformers/models/Menghao/model_z.py'  --top_p 0.15   --temperature 0.1 --apply_quality_control 'True' --bit 8
