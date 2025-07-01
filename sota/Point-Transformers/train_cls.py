@@ -51,7 +51,7 @@ def main(args):
 
     '''DATA LOADING'''
     logger.info('Load dataset ...')
-    DATA_PATH = '/home/hice1/madewolu9/scratch/madewolu9/LLMGE_Point_Cloud_Generic/LLM-Guided-Evolution-Generic/sota/PT/Point-Transformers/modelnet40_normal_resampled/'
+    DATA_PATH = constants.DATA_PATH
     TRAIN_DATASET = ModelNetDataLoader(root=DATA_PATH, npoint=args.num_point, split='train', normal_channel=args.normal)
     TEST_DATASET = ModelNetDataLoader(root=DATA_PATH, npoint=args.num_point, split='test', normal_channel=args.normal)
     trainDataLoader = torch.utils.data.DataLoader(TRAIN_DATASET, batch_size=args.batch_size, shuffle=True, num_workers=24)
@@ -181,7 +181,8 @@ def main(args):
         global_epoch += 1
 
     gene_id = model_file.split("_")
-    second_part = gene_id.split(".")[0] if len(gene_id) > 1 else "unknown"
+
+    second_part = gene_id[1].split(".")[0] if len(gene_id) > 1 else "unknown"
 
     filename = f'{constants.SOTA_ROOT}/results/{second_part}_results.txt'
 

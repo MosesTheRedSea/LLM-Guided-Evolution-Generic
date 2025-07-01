@@ -46,15 +46,13 @@ def get_args():
 
 def main():
     # ADDED FOR LLM
-    os.chdir('/home/hice1/madewolu9/scratch/madewolu9/LLMGE_Point_Cloud_Generic/LLM-Guided-Evolution-Generic/sota/ExquisiteNetV2')
+    os.chdir(f'{constants.SOTA_ROOT}')
 
     args = get_args()
 
     # This is LLM Guided Code
     # Import the module dynamically
     networks_module = importlib.import_module(args.network)
-
-
 
     # Now you can use `networks_module` to access the contents of `networks`
     ExquisiteNetV2 = getattr(networks_module, 'ExquisiteNetV2')

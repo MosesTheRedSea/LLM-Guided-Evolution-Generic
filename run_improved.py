@@ -13,6 +13,7 @@ from deap.tools import HallOfFame
 from src.utils.print_utils import print_population, print_scores, box_print, print_job_info
 from src.llm_utils import split_file, retrieve_base_code, mutate_prompts
 from src.cfg.constants import *
+from src.cfg import constants
 
 def print_ancestry(data):
     for gene in data.keys():
@@ -23,11 +24,24 @@ def print_ancestry(data):
 def update_ancestry(gene_id_child, gene_id_parent, ancestry, mutation_type=None, gene_id_parent2=None):
     """
     Updates the ancestry data for a given child gene based on its parent(s).
-    :param gene_id_child: The ID of the child gene.
-    :param gene_id_parent: The ID of the first parent gene.
-    :param ancestry: The global data structure for ancestry.
-    :param mutation_type: The type of mutation (for the first part of the code). Default is None.
-    :param gene_id_parent2: The ID of the second parent gene (for the second part of the code). Default is None.
+
+    Parameters
+    ----------
+    gene_id_child: 
+        The ID of the child gene.
+    gene_id_parent: 
+        The ID of the first parent gene.
+    ancestry: dict 
+        The global data structure for ancestry.
+    mutation_type: 
+        The type of mutation (for the first part of the code). Default is None.
+    gene_id_parent2: 
+        The ID of the second parent gene (for the second part of the code). Default is None.
+
+    Returns
+    -------
+    dict
+        Ancestry dictionary
     """
     # Common part for both functionalities
     ancestry[gene_id_child] = copy.deepcopy(ancestry[gene_id_parent])
@@ -46,14 +60,28 @@ def update_ancestry(gene_id_child, gene_id_parent, ancestry, mutation_type=None,
 
 def generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, SOTA_ROOT, SEED_NETWORK, ROOT_DIR):
     """
-    :Generates a template based on given probabilities and gene information.
-    :param PROB_EOT: Probability for End of Tree (EoT) operation.
-    :param GEN_COUNT: Current generation count.
-    :param TOP_N_GENES: List of top N genes.
-    :param SOTA_ROOT: Directory path for state-of-the-art root.
-    :param SEED_NETWORK: Seed network file path.
-    :param ROOT_DIR: Root directory for templates.
-    :return: A tuple containing the template text and the mutation type.
+    Generates a template based on given probabilities and gene information.
+    Parameters
+    ----------
+    PROB_EOT: float
+        Probability for End of Tree (EoT) operation.
+    GEN_COUNT: 
+        Current generation count.
+    TOP_N_GENES: list
+        List of top N genes.
+    SOTA_ROOT: 
+        Directory path for state-of-the-art root.
+    SEED_NETWORK: 
+        Seed network file path.
+    ROOT_DIR: 
+        Root directory for templates.
+    
+    Returns
+    -------
+    template_txt : str
+        The template text for the mutation
+    mutation_type : str
+        The type of mutation generated
     """
     if (PROB_EOT > np.random.uniform()) and (GEN_COUNT > 0):
         print("\t‣ EoT")
@@ -185,16 +213,19 @@ def check_contents_for_error(contents):
 def check4job_completion(job_id, local_output=None, check_interval=60, timeout=120): 
     """
     Check for the completion of a job by searching for its output file and scanning for errors.
-
-    Parameters:
-    job_id (str): The job ID to check.
-    check_interval (int): Time in seconds between checks.
-    timeout (int): Maximum time in seconds to wait for job completion.
-
-    Returns:
-    bool: True if job completed successfully, False otherwise.
+    Parameters
+    ----------
+    job_id : str 
+        The job ID to check.
+    check_interval : int
+        Time in seconds between checks.
+    timeout: int
+        Maximum time in seconds to wait for job completion.
+    Returns
+    -------
+    state: bool
+        True if job completed successfully, False otherwise
     """
-
     if local_output is not None:
         state = check_contents_for_error(local_output)
         if state is None:
@@ -269,18 +300,8 @@ def create_individual(container, temp_min=0.05, temp_max=0.4):
 
 def submit_run(gene_id):
     def write_bash_script_py(gene_id, train_file=f'{TRAIN_FILE}'):
-        # ExquisiteNetV2 Python Runline Configuration
-        # if not MACOS:
-        #     tmp = f"-data {DATA_PATH} -end_lr 0.001 -seed 21 -val_r 0.2 -amp -epoch 2"
-        # else:
-        #     tmp = f"-data {DATA_PATH} -end_lr 0.001 -seed 21 -val_r 0.2 -epoch 2"
-        
-        # python_runline = f'python {train_file} -bs 216 -network "models.llmge_models.{MODEL}_{gene_id}" {tmp}'
-        
-        # bash_script_content = PYTHON_BASH_SCRIPT_TEMPLATE.format(python_runline)
-
-        model_file_override = f'model.file={MODEL}_{gene_id}.py'
-        python_runline = f'python {train_file} {model_file_override}'
+        model_file_override = constants.RUNLINE_TMP.format(constants.MODEL, gene_id) 
+        python_runline = constants.EVAL_RUNLINE.format(train_file, model_file_override)
         bash_script_content = PYTHON_BASH_SCRIPT_TEMPLATE.format(python_runline)
         return bash_script_content
 
@@ -469,12 +490,23 @@ def check_and_update_fitness(population, timeout=18000, loop_delay=60):
 def update_individual(ind, new_gene_id, old_gene_id=None, process_success=True, process_type='Mutation'):
     """
     Update an individual based on the success or failure of a process.
-
-    :param ind: The individual to be updated.
-    :param new_gene_id: The new gene ID to be assigned to the individual.
-    :param old_gene_id: The old gene ID to be removed from GLOBAL_DATA. Optional.
-    :param process_success: Flag indicating if the process was successful. Default is True.
-    :param process_type: Type of process ('Mutation', 'Mating', etc.). Default is 'Mutation'.
+    
+    Parameters
+    ----------
+    ind: 
+        The individual to be updated.
+    new_gene_id: 
+        The new gene ID to be assigned to the individual.
+    old_gene_id: optional, default=None 
+        The old gene ID to be removed from GLOBAL_DATA. Optional.
+    process_success: bool, optional, default=True
+        Flag indicating if the process was successful. Default is True.
+    process_type: str
+        Type of process ('Mutation', 'Mating', etc.). Default is 'Mutation'.
+    Returns
+    -------
+    ind:
+        Updated individual
     """
     operation = 'Mutated' if process_type == 'Mutation' else 'Mated'
 
@@ -540,6 +572,19 @@ def delayed_creation_check(offspring):
     return offspring
 
 def delayed_mutate_check(offspring):
+    """
+    Iterates through list of offspring and checks status of running mutation jobs.
+    
+    Parameters
+    ----------
+    offspring: list
+        List of offspring
+    
+    Returns
+    -------
+    offspring: list
+        Updated list of offspring
+    """
     if DELAYED_CHECK is True:
         for individual in offspring:
             k = individual[0]
@@ -638,12 +683,18 @@ def customCrossover(ind1, ind2):
     return offspring1, offspring2
 
 def customMutation(individual, indpb, temp_min=0.02, temp_max=0.35):
-    """ Custom mutation function that randomly changes the temperature parameter of the individual's task and assigns a new ID.
-    Parameters:
-    individual (list): The individual to be mutated.
-    indpb (float): The probability of mutating each gene.
-    Returns:
-    tuple: The mutated individual.
+    """
+    Custom mutation function that randomly changes the temperature parameter of the individual's task and assigns a new ID.
+    Parameters
+    ----------
+    individual: list 
+        The individual to be mutated
+    indpb: float 
+        The probability of mutating each gene
+    Returns
+    -------
+    individual:
+        The mutated individual
     """
     
     # Check if mutation occurs (based on the mutation probability)
@@ -778,7 +829,6 @@ GLOBAL_DATA_ANCESTRY = {}
 if __name__ == "__main__":
 
     # Set Cluter Configurations
-
     parser = argparse.ArgumentParser(description='Run Generation')
     # Add arguments
     parser.add_argument('checkpoints', type=str, help='Save Dir')

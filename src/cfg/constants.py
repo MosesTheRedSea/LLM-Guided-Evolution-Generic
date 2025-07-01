@@ -3,7 +3,7 @@ import numpy as np
 import torch
 
 ROOT_DIR = "LLM-Guided-Evolution-Generic"
-DATA_PATH = "./modelnet40_normal_resampled"
+DATA_PATH = "'/home/hice1/madewolu9/scratch/madewolu9/LLMGE_Point_Cloud_Generic/LLM-Guided-Evolution-Generic/sota/PT/Point-Transformers/modelnet40_normal_resampled/"
 SOTA_ROOT = os.path.join(ROOT_DIR, 'sota/PT/Point-Transformers')
 SEED_NETWORK = os.path.join(SOTA_ROOT, 'models/Menghao/model.py')
 MODEL = "model" 

@@ -20,7 +20,6 @@ module load anaconda3
 export CUDA_VISIBLE_DEVICES=0
 export MKL_THREADING_LAYER=GNU 
 export SERVER_HOSTNAME=$(hostname)
-source geminikey.sh
 source {constants.ENVIRONMENT_DIR}
 uvicorn new_server:app --host $SERVER_HOSTNAME --port 8000 --workers 1 &
 python run_improved.py point_transformers_test
@@ -36,7 +35,7 @@ module load gcc/13.2.0
 source {constants.ENVIRONMENT_DIR}
 # Set the TOKENIZERS_PARALLELISM environment variable if needed
 export TOKENIZERS_PARALLELISM=false
-python llm_crossover.py '/gv1/projects/AI_Surrogate/dev/dev/clint/CodeLLama/codellama/{constants.SEED_NETWORK}' '{constants.SOTA_ROOT}/models/Menghao/model_x.py' '{constants.SOTA_ROOT}/models/Menghao/model_z.py'  --top_p 0.15   --temperature 0.1 --apply_quality_control 'True' --bit 8
+python llm_crossover.py '{constants.SEED_NETWORK}' '{constants.SOTA_ROOT}/models/Menghao/model_x.py' '{constants.SOTA_ROOT}/models/Menghao/model_z.py'  --top_p 0.15   --temperature 0.1 --apply_quality_control 'True' --bit 8
 """
         replace_script_configuration("src/mixt.sh", mixtsh_config_lines + mixt_sh)
 
