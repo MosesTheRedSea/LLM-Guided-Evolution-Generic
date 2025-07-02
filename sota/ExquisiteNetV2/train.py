@@ -20,7 +20,6 @@ import os
 src_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src'))
 sys.path.append(src_path)
 from cfg.constants import *
-from src.cfg import constants
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -47,7 +46,7 @@ def get_args():
 
 def main():
     # ADDED FOR LLM
-    os.chdir(f'{constants.SOTA_ROOT}')
+    os.chdir(f'{SOTA_ROOT}')
 
     args = get_args()
 
