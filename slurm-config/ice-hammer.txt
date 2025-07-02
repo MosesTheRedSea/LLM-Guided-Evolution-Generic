@@ -52,7 +52,7 @@ llm-bash-script
 #SBATCH --job-name=llm_oper
 #SBATCH -time=5-00:00  
 #SBATCH --gres=gpu:2
-#SBATCH -C "{}"
+#SBATCH -C {}
 #SBATCH --mem=32G
 #SBATCH --ntasks=2
 #SBATCH --cpus-per-task=32

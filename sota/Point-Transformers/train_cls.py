@@ -193,7 +193,8 @@ def main(args):
     with open(filename, 'w') as file:
         file.write(results_text)
 
-    logger.info('End of training...')
+    print(f"results have been written to {filename}")
+    print('='*120);print('job done');print('='*120)
 
 if __name__ == '__main__':
     main()

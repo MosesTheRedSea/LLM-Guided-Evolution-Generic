@@ -1,30 +1,36 @@
-Here are a few ways to rephrase the text, highlighting different aspects:
+Okay, here are a few ways to rephrase the prompt, depending on the specific nuance you want to convey:
 
-**Option 1 (Focus on the researcher's reputation):**
+**Option 1 (Focus on the challenge):**
 
-> You've earned a reputation in AI research for your unorthodox approaches and startlingly insightful ideas. Your colleagues are consistently amazed by your ability to generate unconventional, yet highly effective solutions for improving models. Now, faced with this code snippet, can you apply that same ingenuity to significantly enhance its performance? Don't hesitate to create any helper functions you deem necessary!
+> A project requiring revitalization has been brought to your attention. Given your global reputation as an AI researcher known for your creative and unconventional techniques, we're tasking you with applying your unique expertise to it. Specifically:
 
-**Option 2 (Emphasis on the creative challenge):**
+> Q: How can you leverage your innovative approach to modify the default parameters or hyperparameters within the following code snippet, with the goal of improving its default performance?
 
-> Known for your creative thinking and ability to conjure innovative solutions, you're presented with a unique challenge. The goal: to substantially boost the performance of the following code snippet. Given your knack for thinking outside the box, can you devise some intricate and inventive alterations, incorporating any necessary helper functions, to achieve this?
+**Option 2 (More direct and concise):**
 
-**Option 3 (Direct and action-oriented):**
+> As a world-renowned AI researcher celebrated for your inventive and unorthodox methods, your skills are needed to revive a stalled project.
 
-> You are an AI researcher celebrated for your unconventional and creative solutions. Your challenge: significantly improve the performance of the code snippet below. Using your talent for out-of-the-box thinking, devise inventive and intricate alterations. Feel free to create any necessary helper functions.
+> Q: Considering your unique approach, how would you adjust the default parameters or hyperparameters in the following code to potentially optimize its performance when run with default settings?
 
-**Option 4 (More informal and engaging):**
+**Option 3 (Emphasis on your individual impact):**
 
-> Okay, AI wizard! You're known for your wild ideas and surprisingly effective model improvements. We've got a real head-scratcher here: how can we seriously boost the performance of this code snippet? Get creative! Think outside the box, invent new functions, do whatever it takes!
+> This dormant project requires a jolt of ingenuity. Given your renowned status as an AI researcher, celebrated for your inventive and unorthodox methods, we believe your unique perspective is key to unlocking its potential.
 
-**Key improvements across these options:**
+> Q: How would *you* leverage your distinctive approach to modify the default parameters or hyperparameters within the following code snippet to potentially improve its default performance?
 
-*   **More engaging opening:** Using phrases like "AI wizard" or "You've earned a reputation" can be more captivating.
-*   **Variety of word choice:** Replacing redundant words like "bizarre" and "remarkably effective" with synonyms adds flair.
-*   **Emphasis on action:** Using stronger verbs ("apply ingenuity", "devise alterations") encourages a proactive response.
-*   **Slightly restructured for clarity:** Improves the flow of information.
-*   **Removes the redundant "Q:"** The context already makes it clear it's a question.
+**Option 4 (More formal and professional):**
 
-Choose the option that best suits the overall tone and purpose of your writing. Remember to also include the code snippet after the rephrased text.
+> Your expertise as a globally recognized AI researcher, particularly your innovative and unorthodox methodologies, is requested to address a stagnant project.
+
+> Q: Employing your distinctive approach, how would you modify the default parameters or hyperparameters within the following code snippet to potentially enhance its inherent performance?
+
+**Key Considerations When Choosing a Rephrased Version:**
+
+*   **Audience:** Are you speaking to a colleague, a student, or a manager?
+*   **Tone:** Should the tone be challenging, encouraging, or formal?
+*   **Emphasis:** What aspect of the prompt do you want to highlight (the challenge, the user's skills, or the goal)?
+
+Choose the option that best aligns with your intended audience and communication goals. Remember to include the original "The current code block:" and the code snippet itself after the rephrased question.
 ```python
 {}
 ```

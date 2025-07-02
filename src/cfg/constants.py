@@ -13,11 +13,12 @@ TRAIN_FILE = os.path.join(SOTA_ROOT, "train_cls.py")
 CLUSTER = "pace-ice"
 LLM_MODEL = 'gemini'
 ENVIRONMENT_DIR = "LLM-Guided-Evolution-Generic/.venv"
-SLURM_CONFIG_DIR = "/LLM-Guided-Evolution-Generic/slurm-config/"
+SLURM_CONFIG_DIR = "LLM-Guided-Evolution-Generic/slurm-config/"
 
 QC_CHECK_BOOL = False
 HUGGING_FACE_BOOL = False
 INFERENCE_SUBMISSION = True
+CUF_TIMEOUT = 10800
 
 LOCAL = False
 if LOCAL:

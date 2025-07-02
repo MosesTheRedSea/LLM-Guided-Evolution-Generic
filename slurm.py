@@ -8,13 +8,9 @@ def replace_script_configuration(file_path, new_config):
         f.write(new_config if new_config.endswith('\n') else new_config + '\n')
 
 def save_to_yaml(llm, python, gpu, file_path=constants.SLURM_CONFIG_DIR):
-        yaml_data = """
-        - 'llm_bash_script: {}'
-        - 'python_bash_script: {}'
-        - 'gpu_selection: {}'
-        """.format(llm, python, gpu)
+        yaml_data = {"gpu_selection":gpu, "python_bash_script":python,  "llm_bash_script":llm}
         
-        with open(file_path, 'w') as f:
+        with open(f'{file_path}/slurm_config.yaml', 'w') as f:
                 yaml.dump(yaml_data, f, indent=4)
 
 if __name__ == "__main__":
@@ -52,7 +48,7 @@ source {constants.ENVIRONMENT_DIR}/bin/activate
 export TOKENIZERS_PARALLELISM=false
 python llm_crossover.py '{constants.SEED_NETWORK}' '{constants.SOTA_ROOT}/models/Menghao/model_x.py' '{constants.SOTA_ROOT}/models/Menghao/model_z.py'  --top_p 0.15   --temperature 0.1 --apply_quality_control 'True' --bit 8
 """
-        replace_script_configuration("C:/Users/madewolu9\Desktop/Moses_Files/Code/LLMGE01/LLM-Guided-Evolution-Generic/src/mixt.sh", mixtsh_config_lines + mixt_sh)
+        replace_script_configuration("src/mixt.sh", mixtsh_config_lines + mixt_sh)
 
        # print(mixtsh_config_lines + mixt_sh)
 
@@ -74,6 +70,7 @@ export LD_LIBRARY_PATH=~/.conda/envs/llm_guided_env/lib/python3.12/site-packages
 {{}}
 """
         llm_bash_config = "\n".join(content[indices[8]+1:indices[9]])
+    
         llm_script =  llm_bash_config +  f"""
 echo "Launching AIsurBL"
 hostname
@@ -88,5 +85,5 @@ source {constants.ENVIRONMENT_DIR}/bin/activate
 # export TOKENIZERS_PARALLELISM=false
 # Run Python script
 {{}}
-"""
+"""     
         save_to_yaml(llm_script, python_script, llm_gpu)

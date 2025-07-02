@@ -9,7 +9,7 @@ echo "Launching AIsurBL"
 hostname
 module load gcc/13.2.0
 source ~/.bashrc
-source LLM-Guided-Evolution-Generic/.venv/bin/activate
+source /home/hice1/madewolu9/scratch/madewolu9/LLMGE01_Generic/LLM-Guided-Evolution-Generic/.venv/bin/activate
 # Set the TOKENIZERS_PARALLELISM environment variable if needed
 export TOKENIZERS_PARALLELISM=false
-python llm_crossover.py 'LLM-Guided-Evolution-Generic\sota/Point-Transformers\models/Menghao/model.py' 'LLM-Guided-Evolution-Generic\sota/Point-Transformers/models/Menghao/model_x.py' 'LLM-Guided-Evolution-Generic\sota/Point-Transformers/models/Menghao/model_z.py'  --top_p 0.15   --temperature 0.1 --apply_quality_control 'True' --bit 8
+python llm_crossover.py '/home/hice1/madewolu9/scratch/madewolu9/LLMGE01_Generic/LLM-Guided-Evolution-Generic/sota/Point-Transformers/models/Menghao/model.py' '/home/hice1/madewolu9/scratch/madewolu9/LLMGE01_Generic/LLM-Guided-Evolution-Generic/sota/Point-Transformers/models/Menghao/model_x.py' '/home/hice1/madewolu9/scratch/madewolu9/LLMGE01_Generic/LLM-Guided-Evolution-Generic/sota/Point-Transformers/models/Menghao/model_z.py'  --top_p 0.15   --temperature 0.1 --apply_quality_control 'True' --bit 8

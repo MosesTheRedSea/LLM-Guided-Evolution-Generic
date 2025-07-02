@@ -12,6 +12,6 @@ module load anaconda3
 export CUDA_VISIBLE_DEVICES=0
 export MKL_THREADING_LAYER=GNU 
 export SERVER_HOSTNAME=$(hostname)
-source LLM-Guided-Evolution-Generic/.venv/bin/activate
+source /home/hice1/madewolu9/scratch/madewolu9/LLMGE01_Generic/LLM-Guided-Evolution-Generic/.venv/bin/activate
 #uvicorn new_server:app --host $SERVER_HOSTNAME --port 8000 --workers 1 & sleep 5
 python run_improved.py point_transformers_test
