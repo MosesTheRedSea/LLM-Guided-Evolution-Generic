@@ -568,7 +568,11 @@ Point Transformers Integration
 
     .. image:: point_cloud_resources/point-transformers-llmge-train-cls-py-1.png
 
+    - Model Loading grabbing correct variant model file
+
     .. image:: point_cloud_resources/point-transformers-llmge-train-cls-py-2.png
+
+    - Outputting model results once evaluation is concluded
 
      - Added section to print results to a text file that measures the best epoch's train accuracy, test accuracy, and class accuracy, and time each training cycle takes for that seed
     
