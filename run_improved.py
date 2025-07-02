@@ -23,7 +23,7 @@ def print_ancestry(data):
         print(f"\t{data[gene]['GENES']}")
         print(f"\t{data[gene]['MUTATE_TYPE']}")
 
-def load_config(file_path=constants.SLURM_CONFIG_DIR):
+def local_yaml(file_path=constants.SLURM_CONFIG_DIR):
     with open(file_path, 'r') as f:
         config = json.load(f)
     return config
@@ -668,9 +668,6 @@ def customCrossover(ind1, ind2):
         failed_process = True if (successful_sub_flag is False) or (job_done is False) else False
         # Return the new gene ID
         return new_gene_id, failed_process
-    
-    global GLOBAL_DATA
-    global DELAYED_CHECK
     
     new_gene_id1, failed_process1 = combine_elements(ind1, ind2)
     new_gene_id2, failed_process2 = combine_elements(ind2, ind1)

@@ -1,24 +1,24 @@
 import os
 import subprocess
-import json
+import yaml
 from src.cfg import constants
 
 def replace_script_configuration(file_path, new_config):
     with open(file_path, 'w') as f:
         f.write(new_config if new_config.endswith('\n') else new_config + '\n')
 
-def save_to_config(llm, python, gpu, file_path=constants.SLURM_CONFIG_DIR):
-        config_data = {
-                "LLM_BASH_SCRIPT_TEMPLATE": llm,
-                "PYTHON_BASH_SCRIPT_TEMPLATE": python,
-                "LLM_GPU": gpu,
-        }
+def save_to_yaml(llm, python, gpu, file_path=constants.SLURM_CONFIG_DIR):
+        yaml_data = """
+        - 'llm_bash_script: {}'
+        - 'python_bash_script: {}'
+        - 'gpu_selection: {}'
+        """.format(llm, python, gpu)
         
         with open(file_path, 'w') as f:
-                json.dump(config_data, f, indent=4)
+                yaml.dump(yaml_data, f, indent=4)
 
 if __name__ == "__main__":
-    configuration_path = f'slurm-config/{constants.CLUSTER}.txt'
+    configuration_path = f'{constants.SLURM_CONFIG_DIR}{constants.CLUSTER}.txt'
 
     with open(configuration_path, 'r') as file:
         content = [item.strip() for item in file.readlines()]
@@ -52,7 +52,7 @@ source {constants.ENVIRONMENT_DIR}/bin/activate
 export TOKENIZERS_PARALLELISM=false
 python llm_crossover.py '{constants.SEED_NETWORK}' '{constants.SOTA_ROOT}/models/Menghao/model_x.py' '{constants.SOTA_ROOT}/models/Menghao/model_z.py'  --top_p 0.15   --temperature 0.1 --apply_quality_control 'True' --bit 8
 """
-        replace_script_configuration("src/mixt.sh", mixtsh_config_lines + mixt_sh)
+        replace_script_configuration("C:/Users/madewolu9\Desktop/Moses_Files/Code/LLMGE01/LLM-Guided-Evolution-Generic/src/mixt.sh", mixtsh_config_lines + mixt_sh)
 
        # print(mixtsh_config_lines + mixt_sh)
 
@@ -89,4 +89,4 @@ source {constants.ENVIRONMENT_DIR}/bin/activate
 # Run Python script
 {{}}
 """
-        save_to_config(llm_script, python_script, llm_gpu)
+        save_to_yaml(llm_script, python_script, llm_gpu)
