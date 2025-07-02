@@ -1,4 +1,5 @@
 import os
+import sys
 import numpy as np
 import torch
 
@@ -13,7 +14,7 @@ TRAIN_FILE = os.path.join(SOTA_ROOT, "train_cls.py")
 CLUSTER = "pace-ice"
 LLM_MODEL = 'gemini'
 ENVIRONMENT_DIR = "LLM-Guided-Evolution-Generic/.venv"
-SLURM_CONFIG_DIR = "LLM-Guided-Evolution-Generic/slurm-config/"
+SLURM_CONFIG_DIR = "slurm-config"
 
 QC_CHECK_BOOL = False
 HUGGING_FACE_BOOL = False
