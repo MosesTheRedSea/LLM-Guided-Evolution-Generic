@@ -45,9 +45,6 @@ def get_args():
 
 
 def main():
-    # ADDED FOR LLM
-    os.chdir(f'{SOTA_ROOT}')
-
     args = get_args()
 
     # This is LLM Guided Code
