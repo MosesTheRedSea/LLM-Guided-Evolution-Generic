@@ -20,6 +20,7 @@ import os
 src_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src'))
 sys.path.append(src_path)
 from cfg.constants import *
+from src.cfg import constants
 
 def get_args():
     parser = argparse.ArgumentParser()
