@@ -273,9 +273,9 @@
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s1">&#39;MUTATE_TYPE&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="load_config">
-<a class="viewcode-back" href="../api_docs/run_improved.html#run_improved.load_config">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">load_config</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">SLURM_CONFIG_DIR</span><span class="p">):</span>
+<div class="viewcode-block" id="local_yaml">
+<a class="viewcode-back" href="../api_docs/run_improved.html#run_improved.local_yaml">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">local_yaml</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">SLURM_CONFIG_DIR</span><span class="p">):</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">config</span></div>
@@ -977,9 +977,6 @@
         <span class="n">failed_process</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="p">(</span><span class="n">successful_sub_flag</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">job_done</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)</span> <span class="k">else</span> <span class="kc">False</span>
         <span class="c1"># Return the new gene ID</span>
         <span class="k">return</span> <span class="n">new_gene_id</span><span class="p">,</span> <span class="n">failed_process</span>
-    
-    <span class="k">global</span> <span class="n">GLOBAL_DATA</span>
-    <span class="k">global</span> <span class="n">DELAYED_CHECK</span>
     
     <span class="n">new_gene_id1</span><span class="p">,</span> <span class="n">failed_process1</span> <span class="o">=</span> <span class="n">combine_elements</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span> <span class="n">ind2</span><span class="p">)</span>
     <span class="n">new_gene_id2</span><span class="p">,</span> <span class="n">failed_process2</span> <span class="o">=</span> <span class="n">combine_elements</span><span class="p">(</span><span class="n">ind2</span><span class="p">,</span> <span class="n">ind1</span><span class="p">)</span>

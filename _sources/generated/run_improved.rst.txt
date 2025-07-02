@@ -26,7 +26,7 @@
       generate_random_string
       generate_template
       load_checkpoint
-      load_config
+      local_yaml
       mutate_prompts
       print_ancestry
       print_job_info
