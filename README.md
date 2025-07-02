@@ -39,10 +39,6 @@ ______
   <img src="./assets/ge_run1.gif" alt="">
 </p>
 
-#### Point Transformers
-
-#### PointNet++
-
 ### Paper
 _____
 
