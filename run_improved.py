@@ -628,7 +628,6 @@ def customCrossover(ind1, ind2):
         Returns:
         str: The gene ID of the new individual.
         """
-        global GLOBAL_DATA
         out_dir = str(GENERATION)
         config = load_yaml()
         # Retrieve gene IDs from the individuals
@@ -707,7 +706,6 @@ def customMutation(individual, indpb, temp_min=0.02, temp_max=0.35):
     
     # Check if mutation occurs (based on the mutation probability)
     # if random.random() < indpb: # TODO: connect this to temp
-    global DELAYED_CHECK
     out_dir = str(GENERATION)
     config = load_yaml()
     old_gene_id = individual[0]
