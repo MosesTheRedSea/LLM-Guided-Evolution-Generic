@@ -29,7 +29,7 @@ export CUDA_VISIBLE_DEVICES=0
 export MKL_THREADING_LAYER=GNU 
 export SERVER_HOSTNAME=$(hostname)
 source {constants.ENVIRONMENT_DIR}/bin/activate
-#uvicorn new_server:app --host $SERVER_HOSTNAME --port 8000 --workers 1 & sleep 5
+{"#" if not constants.LOCAL_LLM else ""}uvicorn server:app --host $SERVER_HOSTNAME --port 8000 --workers 1 & sleep 30
 python run_improved.py point_transformers_test
 """
         replace_script_configuration("run.sh", runsh_config_lines + run_sh)
