@@ -19,6 +19,7 @@ dependencies = [
     "fastapi",
     "accelerate",
     "numpy",
+    "pydantic",
     "tqdm",
     "hydra-core==1.3.2",
     "omegaconf",
