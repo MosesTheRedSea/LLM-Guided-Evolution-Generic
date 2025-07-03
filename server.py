@@ -4,6 +4,7 @@ import transformers
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import threading
+import asyncio
 from src.cfg.constants import *
 
 app = FastAPI(title="LLM API", version="1.0")
