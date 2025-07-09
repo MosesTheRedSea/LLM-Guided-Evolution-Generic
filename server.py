@@ -12,19 +12,6 @@ app = FastAPI(title="LLM API", version="1.0")
 # Path To Local Large Language Model
 MODEL_PATH = "LLM_MODEL_PATH"
 
-import time
-import torch
-import transformers
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import threading
-from src.cfg.constants import *
-
-app = FastAPI(title="LLM API", version="1.0")
-
-# Path To Local Large Language Model
-MODEL_PATH = "/projects/frostbyte-1/Combat_Automation/LLM_guided_evolution/llms/llama3.3-70B-Instruct/"
-
 BATCH_SIZE = 8  # num of LLM requests to process at once
 BATCH_WAIT_TIME = 2  # max wait time for batch to fill in s
 
