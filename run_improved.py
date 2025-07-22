@@ -64,7 +64,6 @@ def update_ancestry(gene_id_child, gene_id_parent, ancestry, mutation_type=None,
         ancestry[gene_id_child]['MUTATE_TYPE'] = copy.deepcopy(ancestry[gene_id_parent]['MUTATE_TYPE']) + ["CrossOver"]
     return ancestry
 
-
 def generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, SOTA_ROOT, SEED_NETWORK, ROOT_DIR):
     """
     Generates a template based on given probabilities and gene information.
@@ -218,7 +217,7 @@ def check_contents_for_error(contents):
     else:
         return None
 
-def check4job_completion(job_id, local_output=None, check_interval=60, timeout=120): 
+def check4job_completion(job_id, local_output=None, check_interval=60, timeout=15500): 
     """
     Check for the completion of a job by searching for its output file and scanning for errors.
     Parameters
@@ -350,7 +349,6 @@ def submit_run(gene_id):
     GLOBAL_DATA[gene_id]['results_job'] = job_id
     GLOBAL_DATA[gene_id]['local_output'] = local_output
     print(f'\t‣ Running py File for {gene_id}, {job_id}')
-
 
 def evalModel(individual):
     gene_id = individual[0]
@@ -777,11 +775,14 @@ def save_checkpoint(gen, folder_name="checkpoints"):
         pickle.dump(checkpoint_data, file)
     print(f"Checkpoint saved as {filename}")
 
+def extract_generation(filename):
+    return int(filename.split('_')[2].split('.')[0])
+
 def load_checkpoint(folder_name="checkpoints", checkpoint_file=None):
     if not os.path.exists(folder_name):
         return None, None
     if checkpoint_file is None:
-        checkpoint_files = sorted(os.listdir(folder_name), reverse=True)
+        checkpoint_files = sorted(os.listdir(folder_name), key=extract_generation, reverse=True)
         checkpoint_file = checkpoint_files[0] if checkpoint_files else None
     if checkpoint_file:
         filepath = os.path.join(folder_name, checkpoint_file)
