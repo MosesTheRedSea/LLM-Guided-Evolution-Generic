@@ -3,24 +3,25 @@ import sys
 import numpy as np
 import torch
 
-ROOT_DIR = "LLM-Guided-Evolution-Generic"
-DATA_PATH = "modelnet40_normal_resampled/"
+ROOT_DIR = "/home/madewolu9/madewolu9_ICE/LLMGE01/LLM-Guided-Evolution-Generic"
+DATA_PATH = "/home/madewolu9/madewolu9_ICE/Data/modelnet40_normal_resampled/"
 SOTA_ROOT = os.path.join(ROOT_DIR, 'sota/Point-Transformers')
 SEED_NETWORK = os.path.join(SOTA_ROOT, 'models/Menghao/model.py')
 MODEL = "model" 
 VARIANT_DIR = os.path.join(SOTA_ROOT, "models/llmge_models") 
 TRAIN_FILE = os.path.join(SOTA_ROOT, "train_cls.py") 
 
-CLUSTER = "pace-ice"
-LLM_MODEL = 'gemini'
+CLUSTER = "ice-hammer"
+LLM_MODEL = 'llama3.3'
+ENVIRONMENT_DIR = "/home/madewolu9/madewolu9_ICE/LLMGE01/LLM-Guided-Evolution-Generic/.venv"
+SLURM_CONFIG_DIR = "/home/madewolu9/madewolu9_ICE/LLMGE01/LLM-Guided-Evolution-Generic/slurm-config/"
 LOCAL_LLM = True
-ENVIRONMENT_DIR = "LLM-Guided-Evolution-Generic/.venv"
-SLURM_CONFIG_DIR = "LLM-Guided-Evolution-Generic/slurm-config"
+HOSTNAME_DIR = "/home/madewolu9/madewolu9_ICE/LLMGE01/LLM-Guided-Evolution-Generic/hostname.log"
 
 QC_CHECK_BOOL = False
 HUGGING_FACE_BOOL = False
 INFERENCE_SUBMISSION = True
-CUF_TIMEOUT = 10800
+CUF_TIMEOUT = 20000
 
 LOCAL = False
 if LOCAL:
@@ -60,8 +61,8 @@ NUM_EOT_ELITES = 10
 GENERATION = 0
 PROB_QC = 0.0
 PROB_EOT = 0.25
-num_generations = 1 #25 10  # Number of generations
-start_population_size = 1 #32
+num_generations = 57 # Number of generations
+start_population_size = 32  # Starting population size
 # start_population_size = 144   # Size of the population 124=72
 #population_size = 44 # with cx_prob (0.25) and mute_prob (0.7) you get about %50 successful turnover
 population_size = 8 # with cx_prob (0.25) and mute_prob (0.7) you get about %50 successful turnover
