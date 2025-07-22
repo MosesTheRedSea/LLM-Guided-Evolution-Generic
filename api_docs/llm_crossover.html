@@ -178,7 +178,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -203,13 +203,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../point_cloud.html">Point Cloud Classification Optimization</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Point Cloud Classification Optimization</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../generated/run_improved.html">run_improved</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generated/llm_crossover.html">llm_crossover</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generated/llm_mutation.html">llm_mutation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generated/llm_utils.html">llm_utils</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
 </ul>
 
 </div>
@@ -244,26 +238,14 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="module-llm_crossover">
-<span id="llm-crossover-module"></span><h1>llm_crossover module<a class="headerlink" href="#module-llm_crossover" title="Link to this heading">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="llm_crossover.augment_network">
-<span class="sig-prename descclassname"><span class="pre">llm_crossover.</span></span><span class="sig-name descname"><span class="pre">augment_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_filename_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_filename_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_quality_control</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inference_submission</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/llm_crossover.html#augment_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#llm_crossover.augment_network" title="Link to this definition">¶</a></dt>
-<dd><p>Augment Python Network Script.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="llm_crossover.write_augmented_code">
-<span class="sig-prename descclassname"><span class="pre">llm_crossover.</span></span><span class="sig-name descname"><span class="pre">write_augmented_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parts_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parts_y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/llm_crossover.html#write_augmented_code"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#llm_crossover.write_augmented_code" title="Link to this definition">¶</a></dt>
-<dd><p>Writes the augmented code to the output file.</p>
-</dd></dl>
-
+          <section id="llm-crossover-module">
+<h1>llm_crossover module<a class="headerlink" href="#llm-crossover-module" title="Link to this heading">¶</a></h1>
 </section>
 
         </article>
@@ -291,28 +273,8 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            On this page
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">llm_crossover module</a><ul>
-<li><a class="reference internal" href="#llm_crossover.augment_network"><code class="docutils literal notranslate"><span class="pre">augment_network()</span></code></a></li>
-<li><a class="reference internal" href="#llm_crossover.write_augmented_code"><code class="docutils literal notranslate"><span class="pre">write_augmented_code()</span></code></a></li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>
