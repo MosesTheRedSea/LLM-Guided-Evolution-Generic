@@ -1,6 +1,5 @@
 import argparse
 import sys
-
 sys.path.append("src")
 import re
 import os
@@ -31,7 +30,7 @@ def clean_code_from_llm(code_from_llm):
     """Cleans the code received from LLM."""
     code_generator = None
     # Select Correct LLM
-    if LLM_MODEL == 'mixtral':
+    if LLM_MODEL == 'mixtral' or LLM_MODEL == 'llama3.3':
         code_generator = submit_mixtral_local
     elif LLM_MODEL == 'llama3':
         code_generator = submit_llama3_hf
@@ -39,35 +38,37 @@ def clean_code_from_llm(code_from_llm):
         code_generator = submit_gemini_api
     elif LLM_MODEL == 'deepseek':
         code_generator = submit_deepseek_local
-# code_checker_prompt = os.path.join(ROOT_DIR, 'templates/FixedPrompts/validation/code_validation_prompt.txt')
-    # model_varaint_code = ""
-    # if "```" in code_from_llm:
-    #     model_varaint_code = '\n'.join(code_from_llm.split("```")[1].strip().split("\n")[1:])
-    # else:
-    #     model_varaint_code = None
-    # if model_varaint_code:
-    #     box_print("VALIDATING LLM CODE", print_bbox_len=60, new_line_end=False)
-    #     template_text = ""
-    #     with open(code_checker_prompt, 'r') as file:
-    #         template_text = file.read()
-    #     prompt = template_text.format(model_varaint_code.strip())
-    #     print(prompt)
-    #     verified_code = code_generator(prompt, top_p=0.15, temperature=0.1) 
-    #     print(verified_code)
-    #     return '\n'.join(verified_code.strip().split("```")[1].split('\n')[1:])
+        # code_checker_prompt = os.path.join(ROOT_DIR, 'templates/FixedPrompts/validation/code_validation_prompt.txt')
+        # model_varaint_code = ""
+        # if "```" in code_from_llm:
+        #     model_varaint_code = '\n'.join(code_from_llm.split("```")[1].strip().split("\n")[1:])
+        # else:
+        #     model_varaint_code = None
+        # if model_varaint_code:
+        #     box_print("VALIDATING LLM CODE", print_bbox_len=60, new_line_end=False)
+        #     template_text = ""
+        #     with open(code_checker_prompt, 'r') as file:
+        #         template_text = file.read()
+        #     prompt = template_text.format(model_varaint_code.strip())
+        #     print(prompt)
+        #     verified_code = code_generator(prompt, top_p=0.15, temperature=0.1) 
+        #     print(verified_code)
+        #     return '\n'.join(verified_code.strip().split("```")[1].split('\n')[1:])
    
     return '\n'.join(code_from_llm.strip().split("```")[1].split('\n')[1:])
 
 def generate_augmented_code(txt2llm, augment_idx, apply_quality_control, top_p, temperature, inference_submission=False):
     """Generates augmented code using Mixtral."""
+
     box_print("PROMPT TO LLM", print_bbox_len=60, new_line_end=False)
-    print(txt2llm)
+
+    print(txt2llm, flush=True) # if you don't Flush the buffer it won't print immediately | James Tip
     
     if inference_submission is False:
-        llm_code_generator = submit_gemini_api
+        llm_code_generator = submit_mixtral_local
         qc_func = llm_code_qc
     else:
-        if LLM_MODEL == 'mixtral':
+        if LLM_MODEL == 'mixtral' or LLM_MODEL == 'llama3.3':
             llm_code_generator = submit_mixtral_local
         elif LLM_MODEL == 'llama3':
             llm_code_generator = submit_llama3_hf
@@ -102,6 +103,9 @@ def generate_augmented_code(txt2llm, augment_idx, apply_quality_control, top_p, 
 
     box_print("CODE FROM LLM", print_bbox_len=60, new_line_end=False)
     code_from_llm = clean_code_from_llm(code_from_llm)
+
+    print(code_from_llm)
+    
     return code_from_llm 
 
 def extract_note(txt):
@@ -249,16 +253,29 @@ def submit_mixtral(txt2mixtral, max_new_tokens=764, top_p=0.15, temperature=0.1,
     else:
         return output_txt, generate_text
     
+def get_llm_server_hostname():
+    hostname = None
+    hostname_file_path = HOSTNAME_DIR 
+    with open(hostname_file_path, 'r') as f:
+        hostname = f.readline().strip() 
+    return hostname
+
 def submit_mixtral_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, server_url=f"http://{os.getenv('SERVER_HOSTNAME', 'localhost')}:8000/generate", return_gen=False):
+    
     payload = {
         "prompt": prompt,
         "max_new_tokens": max_new_tokens, # can change to random between 800 - 1000 if needed
         "temperature": temperature,
         "top_p": top_p
     }
-    print(os.getenv("SERVER_HOSTNAME", "localhost"))
 
     headers = {"Content-Type": "application/json"}
+
+    llm_hostname = get_llm_server_hostname()
+    
+    print(llm_hostname)
+
+    server_url = f"http://{llm_hostname}:8000/generate"
     
     try:
         response = requests.post(server_url, headers=headers, json=payload)
@@ -278,7 +295,7 @@ def submit_mixtral_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15
         print(f"Request failed: {e}")
         return None
 
-def submit_deepseek_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, server_url=f"http://{os.getenv('SERVER_HOSTNAME', 'localhost')}:8000/generate", return_gen=False):
+def submit_deepseek_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, server_url=f"http://{get_llm_server_hostname()}:8000/generate", return_gen=False):
     payload = {
         "prompt": prompt,
         "max_new_tokens": max_new_tokens, # can change to random between 800 - 1000 if needed
@@ -405,7 +422,7 @@ def mutate_prompts(n=5):
         prompt_text = prompt_text.split("```")[0].strip()
         prompt = "Can you rephrase this text:\n```\n{}\n```".format(prompt_text)
         temp = np.random.uniform(0.01, 0.4)
-        if LLM_MODEL == 'mixtral':
+        if LLM_MODEL == 'mixtral' or LLM_MODEL == 'llama3.3':
             llm_code_generator = submit_mixtral_local
         elif LLM_MODEL == 'llama3':
             llm_code_generator = submit_llama3_hf
