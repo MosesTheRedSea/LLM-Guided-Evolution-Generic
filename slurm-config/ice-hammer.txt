@@ -58,3 +58,14 @@ llm-bash-script
 #SBATCH --cpus-per-task=32
 ------
 
+server-sh
+---------
+#!/bin/bash
+#SBATCH --job-name=LLMGE01_Server
+#SBATCH -t 7-00:00
+#SBATCH --gres=gpu:2
+#SBATCH -C "NVIDIAA10080GBPCIe|NVIDIAA100-SXM4-80GB|NVIDIAH100NVL"
+#SBATCH --mem 160G
+#SBATCH -c 16
+#SBATCH -w ice193
+---------
