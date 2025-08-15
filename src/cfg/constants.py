@@ -18,6 +18,9 @@ SLURM_CONFIG_DIR = "/home/madewolu9/madewolu9_ICE/LLMGE01/LLM-Guided-Evolution-G
 LOCAL_LLM = True
 HOSTNAME_DIR = "/home/madewolu9/madewolu9_ICE/LLMGE01/LLM-Guided-Evolution-Generic/hostname.log"
 
+LOCAL_LLM = True
+ENVIRONMENT_DIR = "/home/hice1/madewolu9/scratch/madewolu9/LLMGE01_Generic/LLM-Guided-Evolution-Generic/.venv"
+SLURM_CONFIG_DIR = "/home/hice1/madewolu9/scratch/madewolu9/LLMGE01_Generic/LLM-Guided-Evolution-Generic/slurm-config/"
 QC_CHECK_BOOL = False
 HUGGING_FACE_BOOL = False
 INFERENCE_SUBMISSION = True
@@ -30,7 +33,6 @@ if LOCAL:
 else: 
 	RUN_COMMAND = 'sbatch'
 	DELAYED_CHECK = True
-
 MACOS = False
 RUNLINE_AMP = ''
 if torch.mps.is_available():
@@ -41,22 +43,18 @@ elif torch.cuda.is_available():
 	DEVICE = 'cuda'
 else:
 	DEVICE = 'cpu'
-
 # ExquisiteNetV2
 # RUNLINE_TMP = f"-data {DATA_PATH} -end_lr 0.001 -seed 21 -val_r 0.2 {RUNLINE_AMP} -epoch 200"
-# EVAL_RUNLINE = 'python {} -bs 216 -network "models.llmge_models.{MODEL}_{}" {}'
-
+# EVAL_RUNLINE = 'python {} -bs 216 -network "models.llmge_models.{MODEL}_{}" {}
 # Point-Transformers
 RUNLINE_TMP = 'model.file={}_{}.py'
 EVAL_RUNLINE = 'python {} {}'
-
 """
 Evolution Constants/Params
 """
 FITNESS_WEIGHTS = (1.0, -1.0)
 INVALID_FITNESS_MAX = tuple([float(x*np.inf*-1) for x in FITNESS_WEIGHTS])
 PLACEHOLDER_FITNESS = tuple([int(x*9999999999*-1) for x in FITNESS_WEIGHTS])
-
 NUM_EOT_ELITES = 10
 GENERATION = 0
 PROB_QC = 0.0
@@ -70,7 +68,6 @@ crossover_probability = 0.35  # Probability of mating two individuals
 mutation_probability = 0.8 # Probability of mutating an individual
 num_elites = 44
 hof_size = 100
-
 """
 Misc. Non-sense
 """
