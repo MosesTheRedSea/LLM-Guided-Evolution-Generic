@@ -11,7 +11,6 @@ from torch import bfloat16
 from utils.privit import *
 from cfg.constants import *
 from utils.print_utils import box_print
-
 from typing import Optional
 import requests
 import huggingface_hub
@@ -20,6 +19,7 @@ import textwrap
 #from transformers import AutoTokenizer
 from google import genai
 from google.genai import types
+from zmq_client import zmq_generate
 
 def retrieve_base_code(idx):
     """Retrieves base code for quality control."""
@@ -388,7 +388,13 @@ def submit_llama3_hf(txt2llama,
         return results[0], None
     else:
         return results[0]
-    
+
+def submit_local_model(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, return_gen=False):
+    response = zmq_generate(prompt, max_new_tokens=max_new_tokens, top_p=top_p, temperature=temperature)
+    if "generated_text" in response:
+        return response["generated_text"] if not return_gen else (response["generated_text"], None)
+    return None
+  
 def submit_gemini_api(txt2gemini, **kwargs):
     """
     This function submits a model prompt to Gemini through its API
