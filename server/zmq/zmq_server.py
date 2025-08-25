@@ -10,7 +10,6 @@ from src.cfg.constants import *
 
 # Path To Local Large Language Model
 MODEL_PATH = "LLM_MODEL_PATH"
-
 BATCH_SIZE = 8
 BATCH_WAIT_TIME = 2  # seconds
 
@@ -148,30 +147,22 @@ class LLMModel:
 
 async def zmq_server():
     ctx = zmq.asyncio.Context()
-
     socket = ctx.socket(zmq.REP)
-    
     socket.bind("tcp://*:5555") 
-     
     model = LLMModel()
 
     print("ZMQ LLM Server running on port 5555...")
 
     while True:
         msg = await socket.recv()
-
         try:
             request = json.loads(msg.decode("utf-8"))
             start_time = time.time()
-            
             result = await model.generate(request)
-
             result["request_latency_sec"] = round(time.time() - start_time, 2)
             await socket.send_string(json.dumps(result))
-
         except Exception as e:
-
             await socket.send_string(json.dumps({"error": str(e)}))
 
-if __name__ == "__main__":
-    asyncio.run(zmq_server())
+# if __name__ == "__main__":
+#     asyncio.run(zmq_server())
