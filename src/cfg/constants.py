@@ -11,6 +11,8 @@ MODEL = "model"
 VARIANT_DIR = os.path.join(SOTA_ROOT, "models/llmge_models") 
 TRAIN_FILE = os.path.join(SOTA_ROOT, "train_cls.py") 
 
+CONFIG_FILE = 'C:\Users\madewolu9\Desktop\Moses_Files\Code\LLMGE01_Research\LLM-Guided-Evolution-Generic\sota\ExquisiteNetV2\config.yaml'
+
 CLUSTER = "ice-hammer"
 LLM_MODEL = 'llama3.3'
 ENVIRONMENT_DIR = "/home/madewolu9/madewolu9_ICE/LLMGE01/LLM-Guided-Evolution-Generic/.venv"
@@ -55,7 +57,6 @@ Evolution Constants/Params
 """
 
 FITNESS_WEIGHTS = (1.0, -1.0) # Optimize (1.0) Accuracy | Minimize (-1.0) | Parameter Count
-
 INVALID_FITNESS_MAX = tuple([float(x*np.inf*-1) for x in FITNESS_WEIGHTS])
 PLACEHOLDER_FITNESS = tuple([int(x*9999999999*-1) for x in FITNESS_WEIGHTS])
 
@@ -65,8 +66,8 @@ PROB_QC = 0.0
 PROB_EOT = 0.25
 
 num_generations = 57 # Number of generations
-start_population_size = 32  # Starting population size
-#start_population_size = 144   # Size of the population 124=72
+start_population_size = 32 # Starting population size
+#start_population_size = 144 # Size of the population 124=72
 #population_size = 44 # with cx_prob (0.25) and mute_prob (0.7) you get about %50 successful turnover
 population_size = 8 # with cx_prob (0.25) and mute_prob (0.7) you get about %50 successful turnover
 

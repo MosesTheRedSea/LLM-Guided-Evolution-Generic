@@ -5,6 +5,7 @@ import re
 import os
 import glob
 import time
+import random
 import numpy as np
 import transformers
 from torch import bfloat16
@@ -30,30 +31,86 @@ def clean_code_from_llm(code_from_llm):
     """Cleans the code received from LLM."""
     code_generator = None
     # Select Correct LLM
+
+    if LLM_MODEL == 'mixtral':
+        code_generator = submit_local_model_fastapi
+    elif LLM_MODEL == 'llama3.3':
+        code_generator = submit_llama3_hf
+    elif LLM_MODEL == 'llama3':
+        code_generator = submit_gemini_api
+    elif LLM_MODEL == 'gemini':
+        code_generator = submit_gemini_api
+    elif LLM_MODEL == 'deepseek':
+        code_generator = submit_local_model_fastapi
+
+    # Instead of just choosing this code_validation_prompt.txt
+    # Instead I want to pick one of the prompts at random
+    
+    # Randomly Choose a Template Prompt For the LLM to use
+    code_checker_prompt = os.path.join(ROOT_DIR, ['templates/FixedPrompts/validation/validation_prompt.txt',
+               'templates/FixedPrompts/validation/validate_completeness.txt',
+               'templates/FixedPrompts/validation/check_accuracy.txt'][random.randint(0, 2)])
+    
+    os.path.join(ROOT_DIR, 'templates/FixedPrompts/validation/code_validation_prompt.txt')
+
+    # I need to grab the Variant Code & The Variant Configuration For Evaluation
+
+    variant_model_code = None
+    variant_model_configuration = None
+
+    if "```" in code_from_llm:
+        variant_model_code = '\n'.join(code_from_llm.split("```")[1].strip().split("\n")[1:])
+
+    
+
+
+
+
+def clean_code_from_llm(code_from_llm):
+    """Cleans the code received from LLM."""
+    code_generator = None
+    # Select Correct LLM
+
     if LLM_MODEL == 'mixtral' or LLM_MODEL == 'llama3.3':
-        code_generator = submit_mixtral_local
+        code_generator = submit_local_model_fastapi
+        # code_generator = submit_local_model_zmq
     elif LLM_MODEL == 'llama3':
         code_generator = submit_llama3_hf
     elif LLM_MODEL == 'gemini':
         code_generator = submit_gemini_api
     elif LLM_MODEL == 'deepseek':
-        code_generator = submit_deepseek_local
-        # code_checker_prompt = os.path.join(ROOT_DIR, 'templates/FixedPrompts/validation/code_validation_prompt.txt')
-        # model_varaint_code = ""
-        # if "```" in code_from_llm:
-        #     model_varaint_code = '\n'.join(code_from_llm.split("```")[1].strip().split("\n")[1:])
-        # else:
-        #     model_varaint_code = None
-        # if model_varaint_code:
-        #     box_print("VALIDATING LLM CODE", print_bbox_len=60, new_line_end=False)
-        #     template_text = ""
-        #     with open(code_checker_prompt, 'r') as file:
-        #         template_text = file.read()
-        #     prompt = template_text.format(model_varaint_code.strip())
-        #     print(prompt)
-        #     verified_code = code_generator(prompt, top_p=0.15, temperature=0.1) 
-        #     print(verified_code)
-        #     return '\n'.join(verified_code.strip().split("```")[1].split('\n')[1:])
+        code_generator = submit_local_model_fastapi
+        # code_generator = submit_local_model_zmq
+
+        code_checker_prompt = os.path.join(ROOT_DIR, 'templates/FixedPrompts/validation/code_validation_prompt.txt')
+
+        model_varaint_code = ""
+
+        if "```" in code_from_llm:
+
+            model_varaint_code = '\n'.join(code_from_llm.split("```")[1].strip().split("\n")[1:])
+
+        else:
+            model_varaint_code = None
+
+        if model_varaint_code:
+
+            box_print("VALIDATING LLM CODE", print_bbox_len=60, new_line_end=False)
+
+            template_text = ""
+
+            with open(code_checker_prompt, 'r') as file:
+                template_text = file.read()
+                
+            prompt = template_text.format(model_varaint_code.strip())
+
+            print(prompt)
+
+            verified_code = code_generator(prompt, top_p=0.15, temperature=0.1) 
+
+            print(verified_code)
+
+            return '\n'.join(verified_code.strip().split("```")[1].split('\n')[1:])
    
     return '\n'.join(code_from_llm.strip().split("```")[1].split('\n')[1:])
 
@@ -65,20 +122,24 @@ def generate_augmented_code(txt2llm, augment_idx, apply_quality_control, top_p, 
     print(txt2llm, flush=True) # if you don't Flush the buffer it won't print immediately | James Tip
     
     if inference_submission is False:
-        llm_code_generator = submit_mixtral_local
+        llm_code_generator = submit_local_model_fastapi
+        # llm_code_generator = submit_local_model_zmq
         qc_func = llm_code_qc
     else:
         if LLM_MODEL == 'mixtral' or LLM_MODEL == 'llama3.3':
-            llm_code_generator = submit_mixtral_local
+            llm_code_generator = submit_local_model_fastapi
+            # llm_code_generator = submit_local_model_zmq
         elif LLM_MODEL == 'llama3':
             llm_code_generator = submit_llama3_hf
         elif LLM_MODEL == 'gemini':
             llm_code_generator = submit_gemini_api
         elif LLM_MODEL == 'deepseek':
-            llm_code_generator = submit_deepseek_local
+            llm_code_generator = submit_local_model_fastapi
+            # llm_code_generator = submit_local_model_zmq
         qc_func = llm_code_qc_hf
         
     retries = 0
+
     while retries < 3:
         if apply_quality_control:
             base_code = retrieve_base_code(augment_idx)
@@ -89,6 +150,8 @@ def generate_augmented_code(txt2llm, augment_idx, apply_quality_control, top_p, 
 
         print("Checking LLM Response")
 
+        # Simply Checks For A Valid Repsonse From the LLM
+
         if not code_from_llm :
             retries += 1
             print("Response Invalid")
@@ -97,11 +160,13 @@ def generate_augmented_code(txt2llm, augment_idx, apply_quality_control, top_p, 
             print("Response Valid")
             break
 
-        box_print("TEXT FROM LLM", print_bbox_len=60, new_line_end=False)
+    box_print("TEXT FROM LLM", print_bbox_len=60, new_line_end=False)
         
-        print(code_from_llm)
+    print(code_from_llm)
+
 
     box_print("CODE FROM LLM", print_bbox_len=60, new_line_end=False)
+    
     code_from_llm = clean_code_from_llm(code_from_llm)
 
     print(code_from_llm)
@@ -160,7 +225,7 @@ def llm_code_qc_hf(code_from_llm, base_code, generate_text=None):
     box_print("QC PROMPT TO LLM", print_bbox_len=120, new_line_end=False)
     print(prompt2llm)
     
-    code_from_llm = submit_mixtral_local(prompt2llm, max_new_tokens=1500, top_p=0.1, temperature=0.1, 
+    code_from_llm = submit_local_model_fastapi(prompt2llm, max_new_tokens=1500, top_p=0.1, temperature=0.1, 
                       model_id="mistralai/Mixtral-8x7B-v0.1", return_gen=False)
     box_print("TEXT FROM LLM", print_bbox_len=60, new_line_end=False)
     print(code_from_llm)
@@ -260,7 +325,7 @@ def get_llm_server_hostname():
         hostname = f.readline().strip() 
     return hostname
 
-def submit_mixtral_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, server_url=f"http://{os.getenv('SERVER_HOSTNAME', 'localhost')}:8000/generate", return_gen=False):
+def submit_local_model_fastapi(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, server_url=f"http://{os.getenv('SERVER_HOSTNAME', 'localhost')}:8000/generate", return_gen=False):
     
     payload = {
         "prompt": prompt,
@@ -276,35 +341,6 @@ def submit_mixtral_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15
     print(llm_hostname)
 
     server_url = f"http://{llm_hostname}:8000/generate"
-    
-    try:
-        response = requests.post(server_url, headers=headers, json=payload)
-        
-        if response.status_code == 200:
-            output_txt = response.json().get("generated_text", "No output received.")
-            print(f'{response.json().get("response_time_sec", "-1")} sec')
-            if return_gen is False:
-                return output_txt
-            else:
-                return output_txt, generate_text
-        else:
-            print(f"Error: {response.status_code}")
-            print(response.text)
-            return None
-    except requests.exceptions.RequestException as e:
-        print(f"Request failed: {e}")
-        return None
-
-def submit_deepseek_local(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, server_url=f"http://{get_llm_server_hostname()}:8000/generate", return_gen=False):
-    payload = {
-        "prompt": prompt,
-        "max_new_tokens": max_new_tokens, # can change to random between 800 - 1000 if needed
-        "temperature": temperature,
-        "top_p": top_p
-    }
-    print(os.getenv("SERVER_HOSTNAME", "localhost"))
-
-    headers = {"Content-Type": "application/json"}
     
     try:
         response = requests.post(server_url, headers=headers, json=payload)
@@ -389,7 +425,7 @@ def submit_llama3_hf(txt2llama,
     else:
         return results[0]
 
-def submit_local_model(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, return_gen=False):
+def submit_local_model_zmq(prompt, max_new_tokens=850, temperature=0.2, top_p=0.15, return_gen=False):
     response = zmq_generate(prompt, max_new_tokens=max_new_tokens, top_p=top_p, temperature=temperature)
     if "generated_text" in response:
         return response["generated_text"] if not return_gen else (response["generated_text"], None)
@@ -429,13 +465,13 @@ def mutate_prompts(n=5):
         prompt = "Can you rephrase this text:\n```\n{}\n```".format(prompt_text)
         temp = np.random.uniform(0.01, 0.4)
         if LLM_MODEL == 'mixtral' or LLM_MODEL == 'llama3.3':
-            llm_code_generator = submit_mixtral_local
+            llm_code_generator = submit_local_model_fastapi
         elif LLM_MODEL == 'llama3':
             llm_code_generator = submit_llama3_hf
         elif LLM_MODEL == 'gemini':
             llm_code_generator = submit_gemini_api
         elif LLM_MODEL == 'deepseek':
-            llm_code_generator = submit_deepseek_local
+            llm_code_generator = submit_local_model_fastapi
         output = llm_code_generator(prompt, temperature=temp).strip()
         if "```" in output:
             output = output.split("```")[0]

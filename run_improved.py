@@ -28,6 +28,11 @@ def load_yaml(file_path=constants.SLURM_CONFIG_DIR):
         config = yaml.safe_load(file)
     return config
 
+"""
+▄█─ █▀█ 
+─█─ ─▄▀ 
+▄█▄ █▄▄
+"""
 def update_ancestry(gene_id_child, gene_id_parent, ancestry, mutation_type=None, gene_id_parent2=None):
     """
     Updates the ancestry data for a given child gene based on its parent(s).
@@ -64,6 +69,11 @@ def update_ancestry(gene_id_child, gene_id_parent, ancestry, mutation_type=None,
         ancestry[gene_id_child]['MUTATE_TYPE'] = copy.deepcopy(ancestry[gene_id_parent]['MUTATE_TYPE']) + ["CrossOver"]
     return ancestry
 
+"""
+▄█  ▄█
+ █   █
+▄█▄ ▄█▄
+"""
 def generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, SOTA_ROOT, SEED_NETWORK, ROOT_DIR):
     """
     Generates a template based on given probabilities and gene information.
@@ -90,43 +100,77 @@ def generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, SOTA_ROOT, SEED_NETWORK,
         The type of mutation generated
     """
     if (PROB_EOT > np.random.uniform()) and (GEN_COUNT > 0):
+
         print("\t‣ EoT")
+
         top_gene = np.random.choice([x[0] for x in TOP_N_GENES])
         parts_x = split_file(f"{VARIANT_DIR}/{MODEL}_{top_gene}.py")
         parts_y = split_file(SEED_NETWORK)
+
         parts = [(x.strip(), y.strip(), idx) for idx, (x, y) in enumerate(zip(parts_x[1:], parts_y[1:]))]
+
         random.shuffle(parts)
+
         for x, y, augment_idx in parts:
             if x.strip() != y.strip():
                 break
+
         eot_template_path = os.path.join(ROOT_DIR, 'templates/EoT/EoT.txt')
+
         with open(eot_template_path, 'r') as file:
             eot_template_txt = file.read()
+
         template_txt = eot_template_txt.format(x, y, "{}")
+
         mute_type = "EoT"
+
     else:
+
         print("\t‣ FixedPrompts")
         prompt_templates = glob.glob(f'{ROOT_DIR}/templates/FixedPrompts/*/*.txt')
+
         template_path = np.random.choice(prompt_templates)
+
         mute_type = os.path.basename(template_path).split('.')[0]  # Assuming the file extension needs to be removed
+
         with open(template_path, 'r') as file:
             template_txt = file.read()
+
         with open(f'{ROOT_DIR}/templates/ConstantRules.txt', 'r') as file:
             rules_txt = file.read()
+            
         template_txt = f'{template_txt}\n{rules_txt}'
+
     return template_txt, mute_type
 
+"""
+▄▀▀▄ 
+▄▀▀▄ 
+▀▄▄▀
+"""
+
+"""
+ █▀▀█  █  █  █▀▀█  █▄  █  █▀▀█  █▀▀▀  █▀▀▀█ 
+ █     █▀▀█  █▄▄█  █ █ █  █ ▄▄  █▀▀▀  ▀▀▀▄▄ 
+ █▄▄█  █  █  █  █  █  ▀█  █▄▄█  █▄▄▄  █▄▄▄█
+"""
 def write_bash_script(input_filename_x=f'{SOTA_ROOT}/{SEED_NETWORK}',
+                      configuration_filename=f'{CONFIG_FILE}',
                       input_filename_y=None,
                       output_filename=f'{VARIANT_DIR}/{MODEL}_x.py',
                       gpu='TeslaV100-PCIE-32GB',
                       python_file='src/llm_mutation.py', 
                       top_p=0.1, temperature=0.2,
-                     
                      ):
     
+    """
+    ▄▀▀▄ 
+    ▀▄▄█ 
+    ─▄▄▀
+    """
     def fetch_gene(filepath):
         return os.path.basename(filepath).replace(f'{MODEL}_','').replace('.py','')
+    
     global GLOBAL_DATA_ANCESTRY
     QC_CHECK_BOOL = PROB_QC > np.random.uniform()
     # Extract the directory path from the file path
@@ -135,19 +179,33 @@ def write_bash_script(input_filename_x=f'{SOTA_ROOT}/{SEED_NETWORK}',
     os.makedirs(dir_path, exist_ok=True)
     gene_id_parent = fetch_gene(input_filename_x)
     gene_id_child = fetch_gene(output_filename)
+
+    """
+    ▄█─ █▀▀█ 
+    ─█─ █▄▀█ 
+    ▄█▄ █▄▄█
+    """
     if python_file=='src/llm_mutation.py':
         template_txt, mute_type = generate_template(PROB_EOT, GEN_COUNT, TOP_N_GENES, 
                                                     SOTA_ROOT, SEED_NETWORK, ROOT_DIR)
+        
         if GEN_COUNT >= 0: # this does not need to happen at creation of population
             GLOBAL_DATA_ANCESTRY = update_ancestry(gene_id_child, gene_id_parent, GLOBAL_DATA_ANCESTRY, 
                                                     mutation_type=mute_type, gene_id_parent2=None)
         out_dir = str(GENERATION)
+
         file_path = os.path.join(out_dir, f'{gene_id_child}_model.txt')
+
         os.makedirs(out_dir, exist_ok=True)
+
         with open(file_path, 'w') as file:
             file.write(template_txt)
-        temp_text = f'{python_file} {input_filename_x} {output_filename} {file_path} --top_p {top_p} --temperature {temperature}'
+
+        temp_text = f'{python_file} {input_filename_x} {configuration_filename} {output_filename} {file_path} --top_p {top_p} --temperature {temperature}'
+
         python_runline = f"python {temp_text} --apply_quality_control '{QC_CHECK_BOOL}' --inference_submission {INFERENCE_SUBMISSION}"
+
+
     elif python_file=='src/llm_crossover.py':
         gene_id_parent2 = fetch_gene(input_filename_y)
         GLOBAL_DATA_ANCESTRY = update_ancestry(gene_id_child, gene_id_parent, GLOBAL_DATA_ANCESTRY, 
@@ -161,8 +219,14 @@ def write_bash_script(input_filename_x=f'{SOTA_ROOT}/{SEED_NETWORK}',
     bash_script_content = config['llm_bash_script'].format(config['gpu_selection'], python_runline)
     return bash_script_content
 
+"""
+▀▀▀█ 
+  █
+ ▐▌
+"""
 def create_bash_file(file_path, **kwargs):
     bash_script_content = write_bash_script(**kwargs)
+
     # Extract the directory from the file path
     directory = os.path.dirname(file_path)
     # Check if the directory exists, and create it if it doesn't
@@ -173,24 +237,39 @@ def create_bash_file(file_path, **kwargs):
         file.write(bash_script_content)
     print(f"\t‣ Bash script saved to {file_path}", flush=True)
 
+"""
+█▀▀ 
+▀▀▄ 
+▄▄▀
+"""
 def submit_bash(file_path, **kwargs):
     """ This should be general for subbing anything and returning:
         successful_sub_flag 
         job_id
     """
+
+    """
+    ▄▀▀▄ 
+    █▄▄─ 
+    ▀▄▄▀
+    """
     create_bash_file(file_path, **kwargs)
+
     result = subprocess.run([RUN_COMMAND, file_path], capture_output=True, text=True)
     local_output = None
+
     if result.returncode == 0 and LOCAL:
         local_output = result.stdout.strip()
         print("\t‣ Output:", result.stdout.strip(), flush=True)
         job_id = None
         successful_sub_flag = True
+
     elif result.returncode == 0:
         print("\t‣ Output:", result.stdout.strip(), flush=True)
         # print("\t‣ Script Submitted Successfully.\n\t‣ Output:", result.stdout.strip(), flush=True)
         successful_sub_flag = True
         job_id = result.stdout.split('job ')[-1].strip()
+
     else:
         print("\t‣ Failed to Submit Script.\n\t‣ Error:", result.stderr.strip(), flush=True)
         successful_sub_flag = False
@@ -262,7 +341,8 @@ def check4job_completion(job_id, local_output=None, check_interval=60, timeout=1
         # Wait for some time before checking again
         time.sleep(check_interval)
         print(f'\t‣ Waiting on check4job_completion LLM job: {job_id} Time: {round(time.time() - start_time)}s', flush=True)
-        
+
+# Generates a Random String Length 20- asortment of charactes and numbers unique GeneId
 def generate_random_string(length=20):
     # Define the characters that can be used in the string
     characters = string.ascii_letters + string.digits
@@ -271,21 +351,45 @@ def generate_random_string(length=20):
     random_string = 'xXx'+random_string
     return random_string
 
+"""
+█▀▀█ 
+  ▀▄ 
+█▄▄█
+"""
+# First Method Called In the Evolutionary Sequence 
 def create_individual(container, temp_min=0.05, temp_max=0.4):
+
     box_print("Create Individual", print_bbox_len=60, new_line_end=False)
+
     out_dir = str(GENERATION)
+
     config = load_yaml()
     gene_id = generate_random_string(length=24)
-    # Select prompte and temp
+
+    # Select prompt and temp
     temperature = round(random.uniform(temp_min, temp_max), 2)
+
     # Assign a file path and name for the model creation bash
     file_path = os.path.join(out_dir, f'{gene_id}.sh')
+
+    """
+     █▀█
+    █▄▄█▄ 
+       █
+    """
+
+    # This is where we submit the SEED_NETWORK File
+    # I also want to include the config file for the model
+
     successful_sub_flag, job_id, local_output = submit_bash(file_path, 
                                             input_filename_x=f'{SEED_NETWORK}',
-                                            output_filename =f'{VARIANT_DIR}/{MODEL}_{gene_id}.py',
+                                            configuration_filename=f'{CONFIG_FILE}', # Added This Configuration File 
+                                            output_filename =f'{VARIANT_DIR}/{gene_id}/{MODEL}_{gene_id}.py',
+                                            config_output_filename = f'{VARIANT_DIR}/{gene_id}/config_{gene_id}.yaml',
                                             gpu=config.get("LLM_GPU"),
                                             python_file='src/llm_mutation.py', 
                                             top_p=0.1, temperature=temperature)
+    
     GLOBAL_DATA[gene_id] = {'sub_flag':successful_sub_flag, 'job_id':job_id, 
                             'status':'subbed file', 'fitness':None, 'start_time':time.time()}
     GLOBAL_DATA_ANCESTRY[gene_id] = {'GENES':[gene_id], 'MUTATE_TYPE':["CREATED"]}
@@ -304,6 +408,7 @@ def create_individual(container, temp_min=0.05, temp_max=0.4):
             print(f'Checking completion for {gene_id}', flush=True)
         job_done = check4job_completion(job_id=job_id, local_output=local_output)
         print(f'Model Files for {gene_id} are Loaded') if job_done else print(f'Error Loading Model Files for {gene_id}', flush=True)
+
     return individual
 
 def submit_run(gene_id):
@@ -812,12 +917,20 @@ def createPopulation():
 
 # Define the problem
 creator.create("FitnessMulti", base.Fitness, weights=FITNESS_WEIGHTS)  # Adjust weights as needed
+
 creator.create("Individual", list, fitness=creator.FitnessMulti, file_id=None)
 
 # Initialize the toolbox
 toolbox = base.Toolbox()
+
+"""
+█▀█ 
+ ▄▀ 
+█▄▄
+"""
 toolbox.register("individual", create_individual, creator.Individual)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
+
 toolbox.register("evaluate", evalModel)
 toolbox.register("mate", customCrossover)
 toolbox.register("mutate", customMutation, indpb=0.2)
@@ -861,8 +974,16 @@ if __name__ == "__main__":
     else:
         # Create an initial population | Make this
         start_gen = 0
+
         box_print("CREATING POPULATION FROM SEED CODE")
+
+        """  
+        ▄█
+         █
+        ▄█▄
+        """
         population = toolbox.population(n=start_population_size)
+
         box_print("Batch Checking Created Genes", print_bbox_len=60, new_line_end=False)
         delayed_creation_check(population)
         hof = tools.HallOfFame(hof_size)
@@ -910,6 +1031,7 @@ if __name__ == "__main__":
         
         # Clone the selected individuals
         offspring = list(map(toolbox.clone, offspring))
+
         GLOBAL_DATA_HIST.update(GLOBAL_DATA.copy())
 
         # Apply crossover on the offspring
