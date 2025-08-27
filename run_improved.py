@@ -838,12 +838,18 @@ if __name__ == "__main__":
 
     # Set Cluter Configurations
     parser = argparse.ArgumentParser(description='Run Generation')
+
     # Add arguments
     parser.add_argument('checkpoints', type=str, help='Save Dir')
+
     # Parse the arguments
     args = parser.parse_args()
+
     print(DNA_TXT)
+
     checkpoint, start_gen = load_checkpoint(folder_name=args.checkpoints)
+    
+    # Load Checkpoint 
     if checkpoint:
         box_print("LOADING CHECKPOINT")
         GLOBAL_DATA = checkpoint["GLOBAL_DATA"]
@@ -851,8 +857,9 @@ if __name__ == "__main__":
         GLOBAL_DATA_ANCESTRY = checkpoint["GLOBAL_DATA_ANCESTRY"]
         population = checkpoint["population"]
         hof = checkpoint["hof"]
+
     else:
-        # Create an initial population
+        # Create an initial population | Make this
         start_gen = 0
         box_print("CREATING POPULATION FROM SEED CODE")
         population = toolbox.population(n=start_population_size)
@@ -865,6 +872,7 @@ if __name__ == "__main__":
         ind.fitness.values = PLACEHOLDER_FITNESS
         
     check_and_update_fitness(population)
+
     # Evolution
     for gen in range(start_gen, num_generations):
         GEN_COUNT = gen

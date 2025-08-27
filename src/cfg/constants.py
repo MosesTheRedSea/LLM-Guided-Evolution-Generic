@@ -49,28 +49,36 @@ else:
 # Point-Transformers
 RUNLINE_TMP = 'model.file={}_{}.py'
 EVAL_RUNLINE = 'python {} {}'
+
 """
 Evolution Constants/Params
 """
-FITNESS_WEIGHTS = (1.0, -1.0)
+
+FITNESS_WEIGHTS = (1.0, -1.0) # Optimize (1.0) Accuracy | Minimize (-1.0) | Parameter Count
+
 INVALID_FITNESS_MAX = tuple([float(x*np.inf*-1) for x in FITNESS_WEIGHTS])
 PLACEHOLDER_FITNESS = tuple([int(x*9999999999*-1) for x in FITNESS_WEIGHTS])
+
 NUM_EOT_ELITES = 10
 GENERATION = 0
 PROB_QC = 0.0
 PROB_EOT = 0.25
+
 num_generations = 57 # Number of generations
 start_population_size = 32  # Starting population size
-# start_population_size = 144   # Size of the population 124=72
+#start_population_size = 144   # Size of the population 124=72
 #population_size = 44 # with cx_prob (0.25) and mute_prob (0.7) you get about %50 successful turnover
 population_size = 8 # with cx_prob (0.25) and mute_prob (0.7) you get about %50 successful turnover
+
 crossover_probability = 0.35  # Probability of mating two individuals
 mutation_probability = 0.8 # Probability of mutating an individual
 num_elites = 44
 hof_size = 100
+
 """
 Misc. Non-sense
 """
+
 DNA_TXT = """
 ⠀⠀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⢀⣠⣤⣶⣶⠶⣶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
