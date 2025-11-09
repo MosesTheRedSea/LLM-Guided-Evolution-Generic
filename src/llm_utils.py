@@ -27,6 +27,99 @@ def retrieve_base_code(idx):
     base_network = SEED_NETWORK
     return split_file(base_network)[1:][idx].strip()
 
+def remove_redudant_lines(code):
+    """Removes redundant lines of code received from the llm"""
+    """
+        file_path = "test.txt"
+        library = set()
+        seen_by_indent = {}
+        cleaned_lines = []
+        in_code_section = False
+        prev_line = ""
+
+        with open(file_path, 'r') as file:
+            for line in file:
+                
+                # This code just handles blank lines
+                if line.strip() == "":
+                    cleaned_lines.append(line)
+                    prev_line = line
+                    continue
+
+                stripped_line = line.strip()
+                # Keep Track of the scope indent_levels
+                indent_level = len(line) - len(line.lstrip())
+                # this line repalces multiple spaces inside a line with a single space
+                normalized_line = re.sub(r'\s+', ' ', stripped_line)
+                if not in_code_section and normalized_line.startswith(('class ', 'def ')):
+                    in_code_section = True
+
+                if normalized_line.startswith("#"):
+                    cleaned_lines.append(line)
+                    prev_line = line
+                    continue
+                if not in_code_section:
+                    if normalized_line not in library:
+                        library.add(normalized_line)
+                        cleaned_lines.append(line)
+                else:
+                    is_in_conditional_branch = any(prev_line.strip().startswith(k) for k in ("if ", "elif ", "else"))
+                    if not is_in_conditional_branch:
+                        seen_by_indent.setdefault(indent_level, set())
+                        if normalized_line not in seen_by_indent[indent_level]:
+                            seen_by_indent[indent_level].add(normalized_line)
+                            cleaned_lines.append(line)
+                    else:
+                        cleaned_lines.append(line)
+                prev_line = line
+        with open(file_path, 'w') as file:
+            file.writelines(cleaned_lines)
+
+        print(f"Cleaning complete for {file_path}.")
+    """
+    library = set()
+    seen_by_indent = {}
+    cleaned_lines = []
+    in_code_section = False
+    prev_line = ""
+
+    for line in code.splitlines(keepends=True):  
+        # Preserve blank lines
+        if line.strip() == "":
+            cleaned_lines.append(line)
+            prev_line = line
+            continue
+        stripped_line = line.strip()
+        indent_level = len(line) - len(line.lstrip())
+        normalized_line = re.sub(r'\s+', ' ', stripped_line)
+        if not in_code_section and normalized_line.startswith(("class ", "def ")):
+            in_code_section = True
+        if normalized_line.startswith("#"):
+            cleaned_lines.append(line)
+            prev_line = line
+            continue
+        if not in_code_section:
+            if normalized_line not in library:
+                library.add(normalized_line)
+                cleaned_lines.append(line)
+            else:
+                print(f"Removed duplicate import/setup: {normalized_line}")
+        else:
+            is_in_conditional_branch = any(prev_line.strip().startswith(k) for k in ("if ", "elif ", "else"))
+            if not is_in_conditional_branch:
+                seen_by_indent.setdefault(indent_level, set())
+                if normalized_line not in seen_by_indent[indent_level]:
+                    seen_by_indent[indent_level].add(normalized_line)
+                    cleaned_lines.append(line)
+                else:
+                    print(f"Removed duplicate in code (indent {indent_level}): {normalized_line}")
+            else:
+                cleaned_lines.append(line)
+        prev_line = line
+    cleaned_code = "".join(cleaned_lines)
+    return cleaned_code
+
+
 def clean_code_from_llm(code_from_llm):
     """Cleans the code received from LLM."""
     code_generator = None
@@ -47,6 +140,7 @@ def clean_code_from_llm(code_from_llm):
     # Instead I want to pick one of the prompts at random
     
     # Randomly Choose a Template Prompt For the LLM to use
+    
     code_checker_prompt = os.path.join(ROOT_DIR, ['templates/FixedPrompts/validation/validation_prompt.txt',
                'templates/FixedPrompts/validation/validate_completeness.txt',
                'templates/FixedPrompts/validation/check_accuracy.txt'][random.randint(0, 2)])
@@ -54,65 +148,27 @@ def clean_code_from_llm(code_from_llm):
     os.path.join(ROOT_DIR, 'templates/FixedPrompts/validation/code_validation_prompt.txt')
 
     # I need to grab the Variant Code & The Variant Configuration For Evaluation
-
     variant_model_code = None
     variant_model_configuration = None
 
     if "```" in code_from_llm:
         variant_model_code = '\n'.join(code_from_llm.split("```")[1].strip().split("\n")[1:])
-
     
+    # New Method Created For Code Validation
+    variant_model_code = remove_redudant_lines(variant_model_code)
+    
+    if variant_model_code:
+        box_print("VALIDATING LLM CODE", print_bbox_len=60, new_line_end=False)
+        with open(code_checker_prompt, 'r') as file:
+            variant_model_configuration = file.read()
+        prompt = variant_model_configuration.format(variant_model_code.strip())
+        print(prompt)
+        verified_code = code_generator(prompt, top_p=0.15, temperature=0.1) 
+        print(verified_code)
+        return '\n'.join(verified_code.strip().split("```")[1].split('\n')[1:])
 
-
-
-
-def clean_code_from_llm(code_from_llm):
-    """Cleans the code received from LLM."""
-    code_generator = None
-    # Select Correct LLM
-
-    if LLM_MODEL == 'mixtral' or LLM_MODEL == 'llama3.3':
-        code_generator = submit_local_model_fastapi
-        # code_generator = submit_local_model_zmq
-    elif LLM_MODEL == 'llama3':
-        code_generator = submit_llama3_hf
-    elif LLM_MODEL == 'gemini':
-        code_generator = submit_gemini_api
-    elif LLM_MODEL == 'deepseek':
-        code_generator = submit_local_model_fastapi
-        # code_generator = submit_local_model_zmq
-
-        code_checker_prompt = os.path.join(ROOT_DIR, 'templates/FixedPrompts/validation/code_validation_prompt.txt')
-
-        model_varaint_code = ""
-
-        if "```" in code_from_llm:
-
-            model_varaint_code = '\n'.join(code_from_llm.split("```")[1].strip().split("\n")[1:])
-
-        else:
-            model_varaint_code = None
-
-        if model_varaint_code:
-
-            box_print("VALIDATING LLM CODE", print_bbox_len=60, new_line_end=False)
-
-            template_text = ""
-
-            with open(code_checker_prompt, 'r') as file:
-                template_text = file.read()
-                
-            prompt = template_text.format(model_varaint_code.strip())
-
-            print(prompt)
-
-            verified_code = code_generator(prompt, top_p=0.15, temperature=0.1) 
-
-            print(verified_code)
-
-            return '\n'.join(verified_code.strip().split("```")[1].split('\n')[1:])
-   
     return '\n'.join(code_from_llm.strip().split("```")[1].split('\n')[1:])
+    
 
 def generate_augmented_code(txt2llm, augment_idx, apply_quality_control, top_p, temperature, inference_submission=False):
     """Generates augmented code using Mixtral."""

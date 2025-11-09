@@ -1,6 +1,6 @@
+As an expert Python reviewer and logic auditor, evaluate the following machine-generated Python code for logical accuracy and consistency with its intended purpose.
 
-
-Q: 
+Q: Can you verify and correct issues such as: Incorrect or inconsistent variable usage, Logical or comparison errors in conditions or loops, Misplaced return statements or flow control issues, Typographical or structural mistakes that alter behavior, Do not change the core algorithmic intent or add import statements. , Return only the corrected, logically accurate Python code enclosed in triple backticks.
 
 The current code block:
 ```python
